@@ -1,0 +1,47 @@
+{
+  "name": "believe",
+  "abstract": "The official PostgreSQL extension for the Believe API.",
+  "tags": [
+    "api",
+    "http",
+    "rest",
+    "sdk"
+  ],
+  "version": "0.0.1",
+  "release_status": "testing",
+  "maintainer": "Believe <wave@cjav.dev>",
+  "generated_by": "Stainless (https://stainless.com)",
+  "license": "mit",
+  "resources": {
+    "homepage": "https://www.github.com/stainless-sdks/believe-sql",
+    "bugtracker": {
+      "web": "https://www.github.com/stainless-sdks/believe-sql/issues",
+      "mailto": "wave@cjav.dev"
+    },
+    "repository": {
+      "url": "git://github.com/stainless-sdks/believe-sql.git",
+      "web": "https://www.github.com/stainless-sdks/believe-sql",
+      "type": "git"
+    }
+  },
+  "provides": {
+    "believe": {
+      "abstract": "The official PostgreSQL extension for the Believe API.",
+      "file": "sql/build/believe--0.0.1.sql",
+      "docfile": "README.md",
+      "version": "0.0.1"
+    }
+  },
+  "prereqs": {
+    "runtime": {
+      "requires": {
+        "PostgreSQL": "14.0.0",
+        "plpython3u": "0"
+      }
+    }
+  },
+  "meta-spec": {
+    "version": "1.0.0",
+    "url": "https://pgxn.org/meta/spec.txt"
+  }
+}
