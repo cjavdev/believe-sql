@@ -3,5 +3,5 @@ name = "believe-sql"
 version = "0.0.0"
 requires-python = ">=3.9.18"
 dependencies = [
-    "believe @ https://github.com/stainless-sdks/believe-python.git",
+    "believe @ https://github.com/cjavdev/believe-python.git",
 ]
