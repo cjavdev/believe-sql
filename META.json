@@ -13,14 +13,14 @@
   "generated_by": "Stainless (https://stainless.com)",
   "license": "mit",
   "resources": {
-    "homepage": "https://www.github.com/stainless-sdks/believe-sql",
+    "homepage": "https://www.github.com/cjavdev/believe-sql",
     "bugtracker": {
-      "web": "https://www.github.com/stainless-sdks/believe-sql/issues",
+      "web": "https://www.github.com/cjavdev/believe-sql/issues",
       "mailto": "wave@cjav.dev"
     },
     "repository": {
-      "url": "git://github.com/stainless-sdks/believe-sql.git",
-      "web": "https://www.github.com/stainless-sdks/believe-sql",
+      "url": "git://github.com/cjavdev/believe-sql.git",
+      "web": "https://www.github.com/cjavdev/believe-sql",
       "type": "git"
     }
   },
