@@ -39,7 +39,7 @@ This extension requires:
 
 ```sql
 SELECT *
-FROM believe_character.list();
+FROM believe_characters.list();
 ```
 
 ## Client configuration
@@ -61,10 +61,10 @@ See this table for the available configuration parameters:
 
 To send a request to the Believe API, call the relevant SQL function with values corresponding to the parameter types and `SELECT` the columns you need from the returned rows.
 
-To construct [composite type](https://www.postgresql.org/docs/current/rowtypes.html) parameters, use the parameter type's provided `make_*` function. For example, `believe_character.emotional_stats` may be constructed like so:
+To construct [composite type](https://www.postgresql.org/docs/current/rowtypes.html) parameters, use the parameter type's provided `make_*` function. For example, `believe_characters.emotional_stats` may be constructed like so:
 
 ```sql
-believe_character.make_emotional_stats(
+believe_characters.make_emotional_stats(
   curiosity := 40,
   empathy := 85,
   optimism := 45,
@@ -81,7 +81,7 @@ For example, the following query will make the minimum number of requests necess
 
 ```sql
 SELECT *
-FROM believe_character.list()
+FROM believe_characters.list()
 LIMIT 200;
 ```
 

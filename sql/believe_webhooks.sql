@@ -1,4 +1,4 @@
-ALTER TYPE believe_webhook.registered_webhook
+ALTER TYPE believe_webhooks.registered_webhook
   ADD ATTRIBUTE "id" TEXT,
   ADD ATTRIBUTE created_at TIMESTAMP,
   ADD ATTRIBUTE event_types TEXT[],
@@ -6,7 +6,7 @@ ALTER TYPE believe_webhook.registered_webhook
   ADD ATTRIBUTE url TEXT,
   ADD ATTRIBUTE description TEXT;
 
-CREATE OR REPLACE FUNCTION believe_webhook.make_registered_webhook(
+CREATE OR REPLACE FUNCTION believe_webhooks.make_registered_webhook(
   "id" TEXT,
   created_at TIMESTAMP,
   event_types TEXT[],
@@ -14,51 +14,51 @@ CREATE OR REPLACE FUNCTION believe_webhook.make_registered_webhook(
   url TEXT,
   description TEXT DEFAULT NULL
 )
-RETURNS believe_webhook.registered_webhook
+RETURNS believe_webhooks.registered_webhook
 LANGUAGE SQL
 IMMUTABLE
 AS $$
   SELECT ROW(
     "id", created_at, event_types, secret, url, description
-  )::believe_webhook.registered_webhook;
+  )::believe_webhooks.registered_webhook;
 $$;
 
-ALTER TYPE believe_webhook.webhook_create_response
-  ADD ATTRIBUTE webhook believe_webhook.registered_webhook,
+ALTER TYPE believe_webhooks.webhook_create_response
+  ADD ATTRIBUTE webhook believe_webhooks.registered_webhook,
   ADD ATTRIBUTE message TEXT,
   ADD ATTRIBUTE ted_says TEXT;
 
-CREATE OR REPLACE FUNCTION believe_webhook.make_webhook_create_response(
-  webhook believe_webhook.registered_webhook,
+CREATE OR REPLACE FUNCTION believe_webhooks.make_webhook_create_response(
+  webhook believe_webhooks.registered_webhook,
   message TEXT DEFAULT NULL,
   ted_says TEXT DEFAULT NULL
 )
-RETURNS believe_webhook.webhook_create_response
+RETURNS believe_webhooks.webhook_create_response
 LANGUAGE SQL
 IMMUTABLE
 AS $$
   SELECT ROW(
     webhook, message, ted_says
-  )::believe_webhook.webhook_create_response;
+  )::believe_webhooks.webhook_create_response;
 $$;
 
-ALTER TYPE believe_webhook.webhook_trigger_event_response
-  ADD ATTRIBUTE deliveries believe_webhook.webhook_trigger_event_response_delivery[],
+ALTER TYPE believe_webhooks.webhook_trigger_event_response
+  ADD ATTRIBUTE deliveries believe_webhooks.webhook_trigger_event_response_delivery[],
   ADD ATTRIBUTE event_id TEXT,
   ADD ATTRIBUTE event_type TEXT,
   ADD ATTRIBUTE successful_deliveries BIGINT,
   ADD ATTRIBUTE ted_says TEXT,
   ADD ATTRIBUTE total_webhooks BIGINT;
 
-CREATE OR REPLACE FUNCTION believe_webhook.make_webhook_trigger_event_response(
-  deliveries believe_webhook.webhook_trigger_event_response_delivery[],
+CREATE OR REPLACE FUNCTION believe_webhooks.make_webhook_trigger_event_response(
+  deliveries believe_webhooks.webhook_trigger_event_response_delivery[],
   event_id TEXT,
   event_type TEXT,
   successful_deliveries BIGINT,
   ted_says TEXT,
   total_webhooks BIGINT
 )
-RETURNS believe_webhook.webhook_trigger_event_response
+RETURNS believe_webhooks.webhook_trigger_event_response
 LANGUAGE SQL
 IMMUTABLE
 AS $$
@@ -69,47 +69,47 @@ AS $$
     successful_deliveries,
     ted_says,
     total_webhooks
-  )::believe_webhook.webhook_trigger_event_response;
+  )::believe_webhooks.webhook_trigger_event_response;
 $$;
 
-ALTER TYPE believe_webhook.webhook_trigger_event_response_delivery
+ALTER TYPE believe_webhooks.webhook_trigger_event_response_delivery
   ADD ATTRIBUTE success BOOLEAN,
   ADD ATTRIBUTE url TEXT,
   ADD ATTRIBUTE webhook_id TEXT,
   ADD ATTRIBUTE "error" TEXT,
   ADD ATTRIBUTE status_code BIGINT;
 
-CREATE OR REPLACE FUNCTION believe_webhook.make_webhook_trigger_event_response_delivery(
+CREATE OR REPLACE FUNCTION believe_webhooks.make_webhook_trigger_event_response_delivery(
   success BOOLEAN,
   url TEXT,
   webhook_id TEXT,
   "error" TEXT DEFAULT NULL,
   status_code BIGINT DEFAULT NULL
 )
-RETURNS believe_webhook.webhook_trigger_event_response_delivery
+RETURNS believe_webhooks.webhook_trigger_event_response_delivery
 LANGUAGE SQL
 IMMUTABLE
 AS $$
   SELECT ROW(
     success, url, webhook_id, "error", status_code
-  )::believe_webhook.webhook_trigger_event_response_delivery;
+  )::believe_webhooks.webhook_trigger_event_response_delivery;
 $$;
 
-ALTER TYPE believe_webhook.payload
-  ADD ATTRIBUTE "data" believe_webhook.match_completed_data,
+ALTER TYPE believe_webhooks.payload
+  ADD ATTRIBUTE "data" believe_webhooks.match_completed_data,
   ADD ATTRIBUTE event_type TEXT;
 
-CREATE OR REPLACE FUNCTION believe_webhook.make_payload(
-  "data" believe_webhook.match_completed_data, event_type TEXT DEFAULT NULL
+CREATE OR REPLACE FUNCTION believe_webhooks.make_payload(
+  "data" believe_webhooks.match_completed_data, event_type TEXT DEFAULT NULL
 )
-RETURNS believe_webhook.payload
+RETURNS believe_webhooks.payload
 LANGUAGE SQL
 IMMUTABLE
 AS $$
-  SELECT ROW("data", event_type)::believe_webhook.payload;
+  SELECT ROW("data", event_type)::believe_webhooks.payload;
 $$;
 
-ALTER TYPE believe_webhook.match_completed_data
+ALTER TYPE believe_webhooks.match_completed_data
   ADD ATTRIBUTE away_score BIGINT,
   ADD ATTRIBUTE away_team_id TEXT,
   ADD ATTRIBUTE completed_at TIMESTAMP,
@@ -134,7 +134,7 @@ ALTER TYPE believe_webhook.match_completed_data
   ADD ATTRIBUTE transfer_fee_gbp TEXT,
   ADD ATTRIBUTE years_with_previous_team BIGINT;
 
-CREATE OR REPLACE FUNCTION believe_webhook.make_match_completed_data(
+CREATE OR REPLACE FUNCTION believe_webhooks.make_match_completed_data(
   away_score BIGINT DEFAULT NULL,
   away_team_id TEXT DEFAULT NULL,
   completed_at TIMESTAMP DEFAULT NULL,
@@ -159,7 +159,7 @@ CREATE OR REPLACE FUNCTION believe_webhook.make_match_completed_data(
   transfer_fee_gbp TEXT DEFAULT NULL,
   years_with_previous_team BIGINT DEFAULT NULL
 )
-RETURNS believe_webhook.match_completed_data
+RETURNS believe_webhooks.match_completed_data
 LANGUAGE SQL
 IMMUTABLE
 AS $$
@@ -187,10 +187,10 @@ AS $$
     previous_team_name,
     transfer_fee_gbp,
     years_with_previous_team
-  )::believe_webhook.match_completed_data;
+  )::believe_webhooks.match_completed_data;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_webhook._create(
+CREATE OR REPLACE FUNCTION believe_webhooks._create(
   url TEXT, description TEXT DEFAULT NULL, event_types TEXT[] DEFAULT NULL
 )
 RETURNS JSONB
@@ -210,22 +210,22 @@ AS $$
   return response.text()
 $$;
 
-CREATE OR REPLACE FUNCTION believe_webhook.create(
+CREATE OR REPLACE FUNCTION believe_webhooks.create(
   url TEXT, description TEXT DEFAULT NULL, event_types TEXT[] DEFAULT NULL
 )
-RETURNS believe_webhook.webhook_create_response
+RETURNS believe_webhooks.webhook_create_response
 LANGUAGE plpgsql
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN jsonb_populate_record(
-      NULL::believe_webhook.webhook_create_response,
-      believe_webhook._create(url, description, event_types)
+      NULL::believe_webhooks.webhook_create_response,
+      believe_webhooks._create(url, description, event_types)
     );
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_webhook._retrieve(webhook_id TEXT)
+CREATE OR REPLACE FUNCTION believe_webhooks._retrieve(webhook_id TEXT)
 RETURNS JSONB
 LANGUAGE plpython3u
 STABLE
@@ -240,21 +240,21 @@ AS $$
   return response.text()
 $$;
 
-CREATE OR REPLACE FUNCTION believe_webhook.retrieve(webhook_id TEXT)
-RETURNS believe_webhook.registered_webhook
+CREATE OR REPLACE FUNCTION believe_webhooks.retrieve(webhook_id TEXT)
+RETURNS believe_webhooks.registered_webhook
 LANGUAGE plpgsql
 STABLE
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN jsonb_populate_record(
-      NULL::believe_webhook.registered_webhook,
-      believe_webhook._retrieve(webhook_id)
+      NULL::believe_webhooks.registered_webhook,
+      believe_webhooks._retrieve(webhook_id)
     );
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_webhook._list()
+CREATE OR REPLACE FUNCTION believe_webhooks._list()
 RETURNS JSONB
 LANGUAGE plpython3u
 STABLE
@@ -267,20 +267,20 @@ AS $$
   return response.text()
 $$;
 
-CREATE OR REPLACE FUNCTION believe_webhook.list()
-RETURNS SETOF believe_webhook.registered_webhook
+CREATE OR REPLACE FUNCTION believe_webhooks.list()
+RETURNS SETOF believe_webhooks.registered_webhook
 LANGUAGE plpgsql
 STABLE
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN QUERY SELECT * FROM jsonb_populate_recordset(
-      NULL::believe_webhook.registered_webhook, believe_webhook._list()
+      NULL::believe_webhooks.registered_webhook, believe_webhooks._list()
     );
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_webhook._delete(webhook_id TEXT)
+CREATE OR REPLACE FUNCTION believe_webhooks._delete(webhook_id TEXT)
 RETURNS JSONB
 LANGUAGE plpython3u
 AS $$
@@ -294,18 +294,18 @@ AS $$
   return response.text()
 $$;
 
-CREATE OR REPLACE FUNCTION believe_webhook.delete(webhook_id TEXT)
+CREATE OR REPLACE FUNCTION believe_webhooks.delete(webhook_id TEXT)
 RETURNS JSONB
 LANGUAGE plpgsql
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
-    RETURN believe_webhook._delete(webhook_id);
+    RETURN believe_webhooks._delete(webhook_id);
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_webhook._trigger_event(
-  event_type TEXT, payload believe_webhook.payload DEFAULT NULL
+CREATE OR REPLACE FUNCTION believe_webhooks._trigger_event(
+  event_type TEXT, payload believe_webhooks.payload DEFAULT NULL
 )
 RETURNS JSONB
 LANGUAGE plpython3u
@@ -323,17 +323,17 @@ AS $$
   return response.text()
 $$;
 
-CREATE OR REPLACE FUNCTION believe_webhook.trigger_event(
-  event_type TEXT, payload believe_webhook.payload DEFAULT NULL
+CREATE OR REPLACE FUNCTION believe_webhooks.trigger_event(
+  event_type TEXT, payload believe_webhooks.payload DEFAULT NULL
 )
-RETURNS believe_webhook.webhook_trigger_event_response
+RETURNS believe_webhooks.webhook_trigger_event_response
 LANGUAGE plpgsql
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN jsonb_populate_record(
-      NULL::believe_webhook.webhook_trigger_event_response,
-      believe_webhook._trigger_event(event_type, payload)
+      NULL::believe_webhooks.webhook_trigger_event_response,
+      believe_webhooks._trigger_event(event_type, payload)
     );
   END;
 $$;
