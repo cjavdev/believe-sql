@@ -19,13 +19,22 @@ Install the extension from [PGXN](https://pgxn.org/dist/believe):
 pgxn install believe
 ```
 
-And load it into your database:
+Load it into your database:
 
 ```sh
 pgxn load -d yourb believe
 ```
 
-See [PGXN Client's documentation](https://pgxn.github.io/pgxnclient) for more information on installing from PGXN.
+And install the Python SDK dependency:
+
+```sh
+# install from the production repo
+pip install git+ssh://git@github.com/cjavdev/believe-python.git
+```
+
+See [PGXN Client's documentation](https://pgxn.github.io/pgxnclient) for more information on installing from PGXN, and [`./scripts/test`](./scripts/test) how to use a [Python virtual environment](https://docs.python.org/3/library/sys_path_init.html#sys-path-init-virtual-environments) if you prefer that instead.
+
+Use [the troubleshooting section](#troubleshooting) if you encounter issues during or after installation.
 
 ## Requirements
 
@@ -34,6 +43,7 @@ This extension requires:
 - PostgreSQL 14 or higher
 - [PL/Python](https://www.postgresql.org/docs/current/plpython.html)
 - Python 3.9 or higher
+- The believe Python package
 
 ## Usage
 
@@ -49,6 +59,9 @@ Configure the client by setting configuration parameters at the database level:
 ```sql
 ALTER DATABASE my_database SET believe.api_key = 'My API Key';
 ```
+
+> [!NOTE] > `ALTER DATABASE` persistently alters the database, but doesn't take effect until the next session. To
+> ephemerally modify the current session, use `SET believe.api_key TO 'My API Key';`.
 
 See this table for the available configuration parameters:
 
@@ -105,14 +118,35 @@ Install the extension:
 make install
 ```
 
-And load it into the relevant database:
+Load it into the relevant database:
 
 ```sql
 CREATE EXTENSION IF NOT EXISTS plpython3u; -- Dependency
 CREATE EXTENSION believe;
 ```
 
-### Troubleshooting
+And install the Python SDK dependency:
+
+```sh
+# install from the production repo
+pip install git+ssh://git@github.com/cjavdev/believe-python.git
+```
+
+See [`./scripts/test`](./scripts/test) how to use a [Python virtual environment](https://docs.python.org/3/library/sys_path_init.html#sys-path-init-virtual-environments) if you prefer that instead.
+
+Use [the troubleshooting section](#troubleshooting) if you encounter issues during or after installation.
+
+## Troubleshooting
+
+### Installation
+
+If you encounter an error such as:
+
+```
+Operation not permitted
+```
+
+Then run with `sudo`. If necessary, ensure your terminal has full disk access.
 
 If you encounter an error such as:
 
@@ -137,6 +171,20 @@ You must also ensure that the prefix is included in the following [`postgresql.c
 ```conf
 extension_control_path = '/usr/local/extras/postgresql/share:$system'
 dynamic_library_path   = '/usr/local/extras/postgresql/lib:$libdir'
+```
+
+### Loading
+
+If you encounter an error such as:
+
+```
+ERROR: could not load library
+```
+
+Then ensure your Python installation is linked to the directory where PostgreSQL was looking for it. You can print out the directory of your Python installation with this command:
+
+```sh
+python3 -c "import sys; print(sys.prefix)"
 ```
 
 ## Semantic versioning
