@@ -95,6 +95,243 @@ AS $$
   )::believe_webhooks.webhook_trigger_event_response_delivery;
 $$;
 
+ALTER TYPE believe_webhooks.match_completed_webhook_event
+  ADD ATTRIBUTE created_at TIMESTAMP,
+  ADD ATTRIBUTE "data" believe_webhooks.match_completed_webhook_event_data,
+  ADD ATTRIBUTE event_id TEXT,
+  ADD ATTRIBUTE event_type TEXT;
+
+CREATE OR REPLACE FUNCTION believe_webhooks.make_match_completed_webhook_event(
+  created_at TIMESTAMP,
+  "data" believe_webhooks.match_completed_webhook_event_data,
+  event_id TEXT,
+  event_type TEXT
+)
+RETURNS believe_webhooks.match_completed_webhook_event
+LANGUAGE SQL
+IMMUTABLE
+AS $$
+  SELECT ROW(
+    created_at, "data", event_id, event_type
+  )::believe_webhooks.match_completed_webhook_event;
+$$;
+
+ALTER TYPE believe_webhooks.match_completed_webhook_event_data
+  ADD ATTRIBUTE away_score BIGINT,
+  ADD ATTRIBUTE away_team_id TEXT,
+  ADD ATTRIBUTE completed_at TIMESTAMP,
+  ADD ATTRIBUTE home_score BIGINT,
+  ADD ATTRIBUTE home_team_id TEXT,
+  ADD ATTRIBUTE match_id TEXT,
+  ADD ATTRIBUTE match_type TEXT,
+  ADD ATTRIBUTE "result" TEXT,
+  ADD ATTRIBUTE ted_post_match_quote TEXT,
+  ADD ATTRIBUTE lesson_learned TEXT,
+  ADD ATTRIBUTE man_of_the_match TEXT;
+
+CREATE OR REPLACE FUNCTION believe_webhooks.make_match_completed_webhook_event_data(
+  away_score BIGINT,
+  away_team_id TEXT,
+  completed_at TIMESTAMP,
+  home_score BIGINT,
+  home_team_id TEXT,
+  match_id TEXT,
+  match_type TEXT,
+  "result" TEXT,
+  ted_post_match_quote TEXT,
+  lesson_learned TEXT DEFAULT NULL,
+  man_of_the_match TEXT DEFAULT NULL
+)
+RETURNS believe_webhooks.match_completed_webhook_event_data
+LANGUAGE SQL
+IMMUTABLE
+AS $$
+  SELECT ROW(
+    away_score,
+    away_team_id,
+    completed_at,
+    home_score,
+    home_team_id,
+    match_id,
+    match_type,
+    "result",
+    ted_post_match_quote,
+    lesson_learned,
+    man_of_the_match
+  )::believe_webhooks.match_completed_webhook_event_data;
+$$;
+
+ALTER TYPE believe_webhooks.team_member_transferred_webhook_event
+  ADD ATTRIBUTE created_at TIMESTAMP,
+  ADD ATTRIBUTE "data" believe_webhooks.team_member_transferred_webhook_event_data,
+  ADD ATTRIBUTE event_id TEXT,
+  ADD ATTRIBUTE event_type TEXT;
+
+CREATE OR REPLACE FUNCTION believe_webhooks.make_team_member_transferred_webhook_event(
+  created_at TIMESTAMP,
+  "data" believe_webhooks.team_member_transferred_webhook_event_data,
+  event_id TEXT,
+  event_type TEXT
+)
+RETURNS believe_webhooks.team_member_transferred_webhook_event
+LANGUAGE SQL
+IMMUTABLE
+AS $$
+  SELECT ROW(
+    created_at, "data", event_id, event_type
+  )::believe_webhooks.team_member_transferred_webhook_event;
+$$;
+
+ALTER TYPE believe_webhooks.team_member_transferred_webhook_event_data
+  ADD ATTRIBUTE character_id TEXT,
+  ADD ATTRIBUTE character_name TEXT,
+  ADD ATTRIBUTE member_type TEXT,
+  ADD ATTRIBUTE team_id TEXT,
+  ADD ATTRIBUTE team_member_id TEXT,
+  ADD ATTRIBUTE team_name TEXT,
+  ADD ATTRIBUTE ted_reaction TEXT,
+  ADD ATTRIBUTE transfer_type TEXT,
+  ADD ATTRIBUTE previous_team_id TEXT,
+  ADD ATTRIBUTE previous_team_name TEXT,
+  ADD ATTRIBUTE transfer_fee_gbp TEXT,
+  ADD ATTRIBUTE years_with_previous_team BIGINT;
+
+CREATE OR REPLACE FUNCTION believe_webhooks.make_team_member_transferred_webhook_event_data(
+  character_id TEXT,
+  character_name TEXT,
+  member_type TEXT,
+  team_id TEXT,
+  team_member_id TEXT,
+  team_name TEXT,
+  ted_reaction TEXT,
+  transfer_type TEXT,
+  previous_team_id TEXT DEFAULT NULL,
+  previous_team_name TEXT DEFAULT NULL,
+  transfer_fee_gbp TEXT DEFAULT NULL,
+  years_with_previous_team BIGINT DEFAULT NULL
+)
+RETURNS believe_webhooks.team_member_transferred_webhook_event_data
+LANGUAGE SQL
+IMMUTABLE
+AS $$
+  SELECT ROW(
+    character_id,
+    character_name,
+    member_type,
+    team_id,
+    team_member_id,
+    team_name,
+    ted_reaction,
+    transfer_type,
+    previous_team_id,
+    previous_team_name,
+    transfer_fee_gbp,
+    years_with_previous_team
+  )::believe_webhooks.team_member_transferred_webhook_event_data;
+$$;
+
+ALTER TYPE believe_webhooks.unwrap_webhook_event
+  ADD ATTRIBUTE created_at TIMESTAMP,
+  ADD ATTRIBUTE "data" believe_webhooks.match_completed_webhook_event_data1,
+  ADD ATTRIBUTE event_id TEXT,
+  ADD ATTRIBUTE event_type TEXT;
+
+CREATE OR REPLACE FUNCTION believe_webhooks.make_unwrap_webhook_event(
+  created_at TIMESTAMP,
+  "data" believe_webhooks.match_completed_webhook_event_data1,
+  event_id TEXT,
+  event_type TEXT
+)
+RETURNS believe_webhooks.unwrap_webhook_event
+LANGUAGE SQL
+IMMUTABLE
+AS $$
+  SELECT ROW(
+    created_at, "data", event_id, event_type
+  )::believe_webhooks.unwrap_webhook_event;
+$$;
+
+ALTER TYPE believe_webhooks.match_completed_webhook_event_data1
+  ADD ATTRIBUTE away_score BIGINT,
+  ADD ATTRIBUTE away_team_id TEXT,
+  ADD ATTRIBUTE completed_at TIMESTAMP,
+  ADD ATTRIBUTE home_score BIGINT,
+  ADD ATTRIBUTE home_team_id TEXT,
+  ADD ATTRIBUTE match_id TEXT,
+  ADD ATTRIBUTE match_type TEXT,
+  ADD ATTRIBUTE "result" TEXT,
+  ADD ATTRIBUTE ted_post_match_quote TEXT,
+  ADD ATTRIBUTE lesson_learned TEXT,
+  ADD ATTRIBUTE man_of_the_match TEXT,
+  ADD ATTRIBUTE character_id TEXT,
+  ADD ATTRIBUTE character_name TEXT,
+  ADD ATTRIBUTE member_type TEXT,
+  ADD ATTRIBUTE team_id TEXT,
+  ADD ATTRIBUTE team_member_id TEXT,
+  ADD ATTRIBUTE team_name TEXT,
+  ADD ATTRIBUTE ted_reaction TEXT,
+  ADD ATTRIBUTE transfer_type TEXT,
+  ADD ATTRIBUTE previous_team_id TEXT,
+  ADD ATTRIBUTE previous_team_name TEXT,
+  ADD ATTRIBUTE transfer_fee_gbp TEXT,
+  ADD ATTRIBUTE years_with_previous_team BIGINT;
+
+CREATE OR REPLACE FUNCTION believe_webhooks.make_match_completed_webhook_event_data1(
+  away_score BIGINT DEFAULT NULL,
+  away_team_id TEXT DEFAULT NULL,
+  completed_at TIMESTAMP DEFAULT NULL,
+  home_score BIGINT DEFAULT NULL,
+  home_team_id TEXT DEFAULT NULL,
+  match_id TEXT DEFAULT NULL,
+  match_type TEXT DEFAULT NULL,
+  "result" TEXT DEFAULT NULL,
+  ted_post_match_quote TEXT DEFAULT NULL,
+  lesson_learned TEXT DEFAULT NULL,
+  man_of_the_match TEXT DEFAULT NULL,
+  character_id TEXT DEFAULT NULL,
+  character_name TEXT DEFAULT NULL,
+  member_type TEXT DEFAULT NULL,
+  team_id TEXT DEFAULT NULL,
+  team_member_id TEXT DEFAULT NULL,
+  team_name TEXT DEFAULT NULL,
+  ted_reaction TEXT DEFAULT NULL,
+  transfer_type TEXT DEFAULT NULL,
+  previous_team_id TEXT DEFAULT NULL,
+  previous_team_name TEXT DEFAULT NULL,
+  transfer_fee_gbp TEXT DEFAULT NULL,
+  years_with_previous_team BIGINT DEFAULT NULL
+)
+RETURNS believe_webhooks.match_completed_webhook_event_data1
+LANGUAGE SQL
+IMMUTABLE
+AS $$
+  SELECT ROW(
+    away_score,
+    away_team_id,
+    completed_at,
+    home_score,
+    home_team_id,
+    match_id,
+    match_type,
+    "result",
+    ted_post_match_quote,
+    lesson_learned,
+    man_of_the_match,
+    character_id,
+    character_name,
+    member_type,
+    team_id,
+    team_member_id,
+    team_name,
+    ted_reaction,
+    transfer_type,
+    previous_team_id,
+    previous_team_name,
+    transfer_fee_gbp,
+    years_with_previous_team
+  )::believe_webhooks.match_completed_webhook_event_data1;
+$$;
+
 ALTER TYPE believe_webhooks.payload
   ADD ATTRIBUTE "data" believe_webhooks.match_completed_data,
   ADD ATTRIBUTE event_type TEXT;

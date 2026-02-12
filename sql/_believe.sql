@@ -189,6 +189,12 @@ CREATE TYPE believe_webhooks.registered_webhook AS ();
 CREATE TYPE believe_webhooks.webhook_create_response AS ();
 CREATE TYPE believe_webhooks.webhook_trigger_event_response AS ();
 CREATE TYPE believe_webhooks.webhook_trigger_event_response_delivery AS ();
+CREATE TYPE believe_webhooks.match_completed_webhook_event AS ();
+CREATE TYPE believe_webhooks.match_completed_webhook_event_data AS ();
+CREATE TYPE believe_webhooks.team_member_transferred_webhook_event AS ();
+CREATE TYPE believe_webhooks.team_member_transferred_webhook_event_data AS ();
+CREATE TYPE believe_webhooks.unwrap_webhook_event AS ();
+CREATE TYPE believe_webhooks.match_completed_webhook_event_data1 AS ();
 CREATE TYPE believe_webhooks.payload AS ();
 CREATE TYPE believe_webhooks.match_completed_data AS ();
 
