@@ -1,36 +1,36 @@
-ALTER TYPE believe_character.character
+ALTER TYPE believe_characters.character
   ADD ATTRIBUTE "id" TEXT,
   ADD ATTRIBUTE background TEXT,
-  ADD ATTRIBUTE emotional_stats believe_character.emotional_stats,
+  ADD ATTRIBUTE emotional_stats believe_characters.emotional_stats,
   ADD ATTRIBUTE "name" TEXT,
   ADD ATTRIBUTE personality_traits TEXT[],
   ADD ATTRIBUTE "role" TEXT,
   ADD ATTRIBUTE date_of_birth DATE,
   ADD ATTRIBUTE email TEXT,
-  ADD ATTRIBUTE growth_arcs believe_character.growth_arc[],
+  ADD ATTRIBUTE growth_arcs believe_characters.growth_arc[],
   ADD ATTRIBUTE height_meters DOUBLE PRECISION,
   ADD ATTRIBUTE profile_image_url TEXT,
   ADD ATTRIBUTE salary_gbp TEXT,
   ADD ATTRIBUTE signature_quotes TEXT[],
   ADD ATTRIBUTE team_id TEXT;
 
-CREATE OR REPLACE FUNCTION believe_character.make_character(
+CREATE OR REPLACE FUNCTION believe_characters.make_character(
   "id" TEXT,
   background TEXT,
-  emotional_stats believe_character.emotional_stats,
+  emotional_stats believe_characters.emotional_stats,
   "name" TEXT,
   personality_traits TEXT[],
   "role" TEXT,
   date_of_birth DATE DEFAULT NULL,
   email TEXT DEFAULT NULL,
-  growth_arcs believe_character.growth_arc[] DEFAULT NULL,
+  growth_arcs believe_characters.growth_arc[] DEFAULT NULL,
   height_meters DOUBLE PRECISION DEFAULT NULL,
   profile_image_url TEXT DEFAULT NULL,
   salary_gbp TEXT DEFAULT NULL,
   signature_quotes TEXT[] DEFAULT NULL,
   team_id TEXT DEFAULT NULL
 )
-RETURNS believe_character.character
+RETURNS believe_characters.character
 LANGUAGE SQL
 IMMUTABLE
 AS $$
@@ -49,64 +49,64 @@ AS $$
     salary_gbp,
     signature_quotes,
     team_id
-  )::believe_character.character;
+  )::believe_characters.character;
 $$;
 
-ALTER TYPE believe_character.emotional_stats
+ALTER TYPE believe_characters.emotional_stats
   ADD ATTRIBUTE curiosity BIGINT,
   ADD ATTRIBUTE empathy BIGINT,
   ADD ATTRIBUTE optimism BIGINT,
   ADD ATTRIBUTE resilience BIGINT,
   ADD ATTRIBUTE vulnerability BIGINT;
 
-CREATE OR REPLACE FUNCTION believe_character.make_emotional_stats(
+CREATE OR REPLACE FUNCTION believe_characters.make_emotional_stats(
   curiosity BIGINT,
   empathy BIGINT,
   optimism BIGINT,
   resilience BIGINT,
   vulnerability BIGINT
 )
-RETURNS believe_character.emotional_stats
+RETURNS believe_characters.emotional_stats
 LANGUAGE SQL
 IMMUTABLE
 AS $$
   SELECT ROW(
     curiosity, empathy, optimism, resilience, vulnerability
-  )::believe_character.emotional_stats;
+  )::believe_characters.emotional_stats;
 $$;
 
-ALTER TYPE believe_character.growth_arc
+ALTER TYPE believe_characters.growth_arc
   ADD ATTRIBUTE breakthrough TEXT,
   ADD ATTRIBUTE challenge TEXT,
   ADD ATTRIBUTE ending_point TEXT,
   ADD ATTRIBUTE season BIGINT,
   ADD ATTRIBUTE starting_point TEXT;
 
-CREATE OR REPLACE FUNCTION believe_character.make_growth_arc(
+CREATE OR REPLACE FUNCTION believe_characters.make_growth_arc(
   breakthrough TEXT,
   challenge TEXT,
   ending_point TEXT,
   season BIGINT,
   starting_point TEXT
 )
-RETURNS believe_character.growth_arc
+RETURNS believe_characters.growth_arc
 LANGUAGE SQL
 IMMUTABLE
 AS $$
   SELECT ROW(
     breakthrough, challenge, ending_point, season, starting_point
-  )::believe_character.growth_arc;
+  )::believe_characters.growth_arc;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_character._create(
+CREATE OR REPLACE FUNCTION believe_characters._create(
   background TEXT,
-  emotional_stats believe_character.emotional_stats,
+  emotional_stats believe_characters.emotional_stats,
   "name" TEXT,
   personality_traits TEXT[],
   "role" TEXT,
   date_of_birth DATE DEFAULT NULL,
   email TEXT DEFAULT NULL,
-  growth_arcs believe_character.growth_arc[] DEFAULT NULL,
+  growth_arcs believe_characters.growth_arc[] DEFAULT NULL,
   height_meters DOUBLE PRECISION DEFAULT NULL,
   profile_image_url TEXT DEFAULT NULL,
   salary_gbp JSONB DEFAULT NULL,
@@ -141,29 +141,29 @@ AS $$
   return response.text()
 $$;
 
-CREATE OR REPLACE FUNCTION believe_character.create(
+CREATE OR REPLACE FUNCTION believe_characters.create(
   background TEXT,
-  emotional_stats believe_character.emotional_stats,
+  emotional_stats believe_characters.emotional_stats,
   "name" TEXT,
   personality_traits TEXT[],
   "role" TEXT,
   date_of_birth DATE DEFAULT NULL,
   email TEXT DEFAULT NULL,
-  growth_arcs believe_character.growth_arc[] DEFAULT NULL,
+  growth_arcs believe_characters.growth_arc[] DEFAULT NULL,
   height_meters DOUBLE PRECISION DEFAULT NULL,
   profile_image_url TEXT DEFAULT NULL,
   salary_gbp JSONB DEFAULT NULL,
   signature_quotes TEXT[] DEFAULT NULL,
   team_id TEXT DEFAULT NULL
 )
-RETURNS believe_character.character
+RETURNS believe_characters.character
 LANGUAGE plpgsql
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN jsonb_populate_record(
-      NULL::believe_character.character,
-      believe_character._create(
+      NULL::believe_characters.character,
+      believe_characters._create(
         background,
         emotional_stats,
         "name",
@@ -182,7 +182,7 @@ AS $$
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_character._retrieve(character_id TEXT)
+CREATE OR REPLACE FUNCTION believe_characters._retrieve(character_id TEXT)
 RETURNS JSONB
 LANGUAGE plpython3u
 STABLE
@@ -197,27 +197,27 @@ AS $$
   return response.text()
 $$;
 
-CREATE OR REPLACE FUNCTION believe_character.retrieve(character_id TEXT)
-RETURNS believe_character.character
+CREATE OR REPLACE FUNCTION believe_characters.retrieve(character_id TEXT)
+RETURNS believe_characters.character
 LANGUAGE plpgsql
 STABLE
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN jsonb_populate_record(
-      NULL::believe_character.character,
-      believe_character._retrieve(character_id)
+      NULL::believe_characters.character,
+      believe_characters._retrieve(character_id)
     );
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_character._update(
+CREATE OR REPLACE FUNCTION believe_characters._update(
   character_id TEXT,
   background TEXT DEFAULT NULL,
   date_of_birth DATE DEFAULT NULL,
   email TEXT DEFAULT NULL,
-  emotional_stats believe_character.emotional_stats DEFAULT NULL,
-  growth_arcs believe_character.growth_arc[] DEFAULT NULL,
+  emotional_stats believe_characters.emotional_stats DEFAULT NULL,
+  growth_arcs believe_characters.growth_arc[] DEFAULT NULL,
   height_meters DOUBLE PRECISION DEFAULT NULL,
   "name" TEXT DEFAULT NULL,
   personality_traits TEXT[] DEFAULT NULL,
@@ -256,13 +256,13 @@ AS $$
   return response.text()
 $$;
 
-CREATE OR REPLACE FUNCTION believe_character.update(
+CREATE OR REPLACE FUNCTION believe_characters.update(
   character_id TEXT,
   background TEXT DEFAULT NULL,
   date_of_birth DATE DEFAULT NULL,
   email TEXT DEFAULT NULL,
-  emotional_stats believe_character.emotional_stats DEFAULT NULL,
-  growth_arcs believe_character.growth_arc[] DEFAULT NULL,
+  emotional_stats believe_characters.emotional_stats DEFAULT NULL,
+  growth_arcs believe_characters.growth_arc[] DEFAULT NULL,
   height_meters DOUBLE PRECISION DEFAULT NULL,
   "name" TEXT DEFAULT NULL,
   personality_traits TEXT[] DEFAULT NULL,
@@ -272,14 +272,14 @@ CREATE OR REPLACE FUNCTION believe_character.update(
   signature_quotes TEXT[] DEFAULT NULL,
   team_id TEXT DEFAULT NULL
 )
-RETURNS believe_character.character
+RETURNS believe_characters.character
 LANGUAGE plpgsql
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN jsonb_populate_record(
-      NULL::believe_character.character,
-      believe_character._update(
+      NULL::believe_characters.character,
+      believe_characters._update(
         character_id,
         background,
         date_of_birth,
@@ -299,7 +299,7 @@ AS $$
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_character._list_first_page_py(
+CREATE OR REPLACE FUNCTION believe_characters._list_first_page_py(
   "limit" BIGINT DEFAULT NULL,
   min_optimism BIGINT DEFAULT NULL,
   "role" TEXT DEFAULT NULL,
@@ -340,8 +340,8 @@ AS $$
   )
 $$;
 
--- A simpler wrapper around `believe_character._list_first_page` that ensures the global client is initialized.
-CREATE OR REPLACE FUNCTION believe_character._list_first_page(
+-- A simpler wrapper around `believe_characters._list_first_page` that ensures the global client is initialized.
+CREATE OR REPLACE FUNCTION believe_characters._list_first_page(
   "limit" BIGINT DEFAULT NULL,
   min_optimism BIGINT DEFAULT NULL,
   "role" TEXT DEFAULT NULL,
@@ -354,13 +354,13 @@ STABLE
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
-    RETURN believe_character._list_first_page_py(
+    RETURN believe_characters._list_first_page_py(
       "limit", min_optimism, "role", "skip", team_id
     );
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_character._list_next_page(request_options JSONB)
+CREATE OR REPLACE FUNCTION believe_characters._list_next_page(request_options JSONB)
 RETURNS believe_internal.page
 LANGUAGE plpython3u
 STABLE
@@ -396,20 +396,20 @@ AS $$
   )
 $$;
 
-CREATE OR REPLACE FUNCTION believe_character.list(
+CREATE OR REPLACE FUNCTION believe_characters.list(
   "limit" BIGINT DEFAULT NULL,
   min_optimism BIGINT DEFAULT NULL,
   "role" TEXT DEFAULT NULL,
   "skip" BIGINT DEFAULT NULL,
   team_id TEXT DEFAULT NULL
 )
-RETURNS SETOF believe_character.character
+RETURNS SETOF believe_characters.character
 LANGUAGE SQL
 STABLE
 AS $$
   WITH RECURSIVE paginated AS (
     SELECT page.*
-    FROM believe_character._list_first_page(
+    FROM believe_characters._list_first_page(
       "limit", min_optimism, "role", "skip", team_id
     ) AS page
 
@@ -417,13 +417,13 @@ AS $$
 
     SELECT page.*
     FROM paginated
-    CROSS JOIN believe_character._list_next_page(paginated.next_request_options) AS page
+    CROSS JOIN believe_characters._list_next_page(paginated.next_request_options) AS page
     WHERE paginated.next_request_options IS NOT NULL
   )
-  SELECT (jsonb_populate_recordset(NULL::believe_character.character, "data")).* FROM paginated;
+  SELECT (jsonb_populate_recordset(NULL::believe_characters.character, "data")).* FROM paginated;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_character._delete(character_id TEXT)
+CREATE OR REPLACE FUNCTION believe_characters._delete(character_id TEXT)
 RETURNS VOID
 LANGUAGE plpython3u
 AS $$
@@ -432,17 +432,17 @@ AS $$
   )
 $$;
 
-CREATE OR REPLACE FUNCTION believe_character.delete(character_id TEXT)
+CREATE OR REPLACE FUNCTION believe_characters.delete(character_id TEXT)
 RETURNS VOID
 LANGUAGE plpgsql
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
-    PERFORM believe_character._delete(character_id);
+    PERFORM believe_characters._delete(character_id);
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_character._get_quotes(character_id TEXT)
+CREATE OR REPLACE FUNCTION believe_characters._get_quotes(character_id TEXT)
 RETURNS JSONB
 LANGUAGE plpython3u
 STABLE
@@ -457,7 +457,7 @@ AS $$
   return response.text()
 $$;
 
-CREATE OR REPLACE FUNCTION believe_character.get_quotes(character_id TEXT)
+CREATE OR REPLACE FUNCTION believe_characters.get_quotes(character_id TEXT)
 RETURNS SETOF TEXT
 LANGUAGE plpgsql
 STABLE
@@ -465,7 +465,7 @@ AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN QUERY SELECT * FROM jsonb_populate_recordset(
-      NULL::TEXT, believe_character._get_quotes(character_id)
+      NULL::TEXT, believe_characters._get_quotes(character_id)
     );
   END;
 $$;

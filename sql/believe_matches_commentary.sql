@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION believe_match_commentary._stream(match_id TEXT)
+CREATE OR REPLACE FUNCTION believe_matches_commentary._stream(match_id TEXT)
 RETURNS JSONB
 LANGUAGE plpython3u
 AS $$
@@ -12,12 +12,12 @@ AS $$
   return response.text()
 $$;
 
-CREATE OR REPLACE FUNCTION believe_match_commentary.stream(match_id TEXT)
+CREATE OR REPLACE FUNCTION believe_matches_commentary.stream(match_id TEXT)
 RETURNS JSONB
 LANGUAGE plpgsql
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
-    RETURN believe_match_commentary._stream(match_id);
+    RETURN believe_matches_commentary._stream(match_id);
   END;
 $$;

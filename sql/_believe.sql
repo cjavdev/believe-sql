@@ -105,46 +105,46 @@ CREATE TYPE believe_internal.page AS (
 
 CREATE SCHEMA IF NOT EXISTS believe;
 
-CREATE SCHEMA IF NOT EXISTS believe_character;
+CREATE SCHEMA IF NOT EXISTS believe_characters;
 
-CREATE TYPE believe_character.character AS ();
-CREATE TYPE believe_character.emotional_stats AS ();
-CREATE TYPE believe_character.growth_arc AS ();
+CREATE TYPE believe_characters.character AS ();
+CREATE TYPE believe_characters.emotional_stats AS ();
+CREATE TYPE believe_characters.growth_arc AS ();
 
-CREATE SCHEMA IF NOT EXISTS believe_team;
+CREATE SCHEMA IF NOT EXISTS believe_teams;
 
-CREATE TYPE believe_team.geo_location AS ();
-CREATE TYPE believe_team.team AS ();
-CREATE TYPE believe_team.team_values AS ();
+CREATE TYPE believe_teams.geo_location AS ();
+CREATE TYPE believe_teams.team AS ();
+CREATE TYPE believe_teams.team_values AS ();
 
-CREATE SCHEMA IF NOT EXISTS believe_team_logo;
+CREATE SCHEMA IF NOT EXISTS believe_teams_logo;
 
-CREATE TYPE believe_team_logo.file_upload AS ();
+CREATE TYPE believe_teams_logo.file_upload AS ();
 
-CREATE SCHEMA IF NOT EXISTS believe_match;
+CREATE SCHEMA IF NOT EXISTS believe_matches;
 
-CREATE TYPE believe_match.match AS ();
-CREATE TYPE believe_match.turning_point AS ();
+CREATE TYPE believe_matches.match AS ();
+CREATE TYPE believe_matches.turning_point AS ();
 
-CREATE SCHEMA IF NOT EXISTS believe_match_commentary;
+CREATE SCHEMA IF NOT EXISTS believe_matches_commentary;
 
-CREATE SCHEMA IF NOT EXISTS believe_episode;
+CREATE SCHEMA IF NOT EXISTS believe_episodes;
 
-CREATE TYPE believe_episode.episode AS ();
-CREATE TYPE believe_episode.paginated_response AS ();
+CREATE TYPE believe_episodes.episode AS ();
+CREATE TYPE believe_episodes.paginated_response AS ();
 
-CREATE SCHEMA IF NOT EXISTS believe_quote;
+CREATE SCHEMA IF NOT EXISTS believe_quotes;
 
-CREATE TYPE believe_quote.paginated_response_quote AS ();
-CREATE TYPE believe_quote.quote AS ();
+CREATE TYPE believe_quotes.paginated_response_quote AS ();
+CREATE TYPE believe_quotes.quote AS ();
 
 CREATE SCHEMA IF NOT EXISTS believe_believe;
 
 CREATE TYPE believe_believe.believe_submit_response AS ();
 
-CREATE SCHEMA IF NOT EXISTS believe_conflict;
+CREATE SCHEMA IF NOT EXISTS believe_conflicts;
 
-CREATE TYPE believe_conflict.conflict_resolve_response AS ();
+CREATE TYPE believe_conflicts.conflict_resolve_response AS ();
 
 CREATE SCHEMA IF NOT EXISTS believe_reframe;
 
@@ -154,13 +154,13 @@ CREATE SCHEMA IF NOT EXISTS believe_press;
 
 CREATE TYPE believe_press.press_simulate_response AS ();
 
-CREATE SCHEMA IF NOT EXISTS believe_coaching_principle;
+CREATE SCHEMA IF NOT EXISTS believe_coaching_principles;
 
-CREATE TYPE believe_coaching_principle.coaching_principle AS ();
+CREATE TYPE believe_coaching_principles.coaching_principle AS ();
 
-CREATE SCHEMA IF NOT EXISTS believe_biscuit;
+CREATE SCHEMA IF NOT EXISTS believe_biscuits;
 
-CREATE TYPE believe_biscuit.biscuit AS ();
+CREATE TYPE believe_biscuits.biscuit AS ();
 
 CREATE SCHEMA IF NOT EXISTS believe_pep_talk;
 
@@ -169,31 +169,31 @@ CREATE TYPE believe_pep_talk.pep_talk_retrieve_response_chunk AS ();
 
 CREATE SCHEMA IF NOT EXISTS believe_stream;
 
-CREATE SCHEMA IF NOT EXISTS believe_team_member;
+CREATE SCHEMA IF NOT EXISTS believe_team_members;
 
-CREATE TYPE believe_team_member.coach AS ();
-CREATE TYPE believe_team_member.equipment_manager AS ();
-CREATE TYPE believe_team_member.medical_staff AS ();
-CREATE TYPE believe_team_member.player AS ();
-CREATE TYPE believe_team_member.team_member_create_response AS ();
-CREATE TYPE believe_team_member.team_member_retrieve_response AS ();
-CREATE TYPE believe_team_member.team_member_update_response AS ();
-CREATE TYPE believe_team_member.team_member_list_response AS ();
-CREATE TYPE believe_team_member.team_member_list_staff_response AS ();
-CREATE TYPE believe_team_member.member AS ();
-CREATE TYPE believe_team_member.update AS ();
+CREATE TYPE believe_team_members.coach AS ();
+CREATE TYPE believe_team_members.equipment_manager AS ();
+CREATE TYPE believe_team_members.medical_staff AS ();
+CREATE TYPE believe_team_members.player AS ();
+CREATE TYPE believe_team_members.team_member_create_response AS ();
+CREATE TYPE believe_team_members.team_member_retrieve_response AS ();
+CREATE TYPE believe_team_members.team_member_update_response AS ();
+CREATE TYPE believe_team_members.team_member_list_response AS ();
+CREATE TYPE believe_team_members.team_member_list_staff_response AS ();
+CREATE TYPE believe_team_members.member AS ();
+CREATE TYPE believe_team_members.update AS ();
 
-CREATE SCHEMA IF NOT EXISTS believe_webhook;
+CREATE SCHEMA IF NOT EXISTS believe_webhooks;
 
-CREATE TYPE believe_webhook.registered_webhook AS ();
-CREATE TYPE believe_webhook.webhook_create_response AS ();
-CREATE TYPE believe_webhook.webhook_trigger_event_response AS ();
-CREATE TYPE believe_webhook.webhook_trigger_event_response_delivery AS ();
-CREATE TYPE believe_webhook.payload AS ();
-CREATE TYPE believe_webhook.match_completed_data AS ();
+CREATE TYPE believe_webhooks.registered_webhook AS ();
+CREATE TYPE believe_webhooks.webhook_create_response AS ();
+CREATE TYPE believe_webhooks.webhook_trigger_event_response AS ();
+CREATE TYPE believe_webhooks.webhook_trigger_event_response_delivery AS ();
+CREATE TYPE believe_webhooks.payload AS ();
+CREATE TYPE believe_webhooks.match_completed_data AS ();
 
 CREATE SCHEMA IF NOT EXISTS believe_health;
 
 CREATE SCHEMA IF NOT EXISTS believe_version;
 
-CREATE SCHEMA IF NOT EXISTS believe_client_w;
+CREATE SCHEMA IF NOT EXISTS believe_client_ws;

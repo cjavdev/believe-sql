@@ -1,4 +1,4 @@
-ALTER TYPE believe_team_logo.file_upload
+ALTER TYPE believe_teams_logo.file_upload
   ADD ATTRIBUTE checksum_sha256 TEXT,
   ADD ATTRIBUTE content_type TEXT,
   ADD ATTRIBUTE file_id TEXT,
@@ -6,7 +6,7 @@ ALTER TYPE believe_team_logo.file_upload
   ADD ATTRIBUTE size_bytes BIGINT,
   ADD ATTRIBUTE uploaded_at TIMESTAMP;
 
-CREATE OR REPLACE FUNCTION believe_team_logo.make_file_upload(
+CREATE OR REPLACE FUNCTION believe_teams_logo.make_file_upload(
   checksum_sha256 TEXT,
   content_type TEXT,
   file_id TEXT,
@@ -14,16 +14,18 @@ CREATE OR REPLACE FUNCTION believe_team_logo.make_file_upload(
   size_bytes BIGINT,
   uploaded_at TIMESTAMP
 )
-RETURNS believe_team_logo.file_upload
+RETURNS believe_teams_logo.file_upload
 LANGUAGE SQL
 IMMUTABLE
 AS $$
   SELECT ROW(
     checksum_sha256, content_type, file_id, filename, size_bytes, uploaded_at
-  )::believe_team_logo.file_upload;
+  )::believe_teams_logo.file_upload;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_team_logo._delete(team_id TEXT, file_id TEXT)
+CREATE OR REPLACE FUNCTION believe_teams_logo._delete(
+  team_id TEXT, file_id TEXT
+)
 RETURNS VOID
 LANGUAGE plpython3u
 AS $$
@@ -33,17 +35,17 @@ AS $$
   )
 $$;
 
-CREATE OR REPLACE FUNCTION believe_team_logo.delete(team_id TEXT, file_id TEXT)
+CREATE OR REPLACE FUNCTION believe_teams_logo.delete(team_id TEXT, file_id TEXT)
 RETURNS VOID
 LANGUAGE plpgsql
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
-    PERFORM believe_team_logo._delete(team_id, file_id);
+    PERFORM believe_teams_logo._delete(team_id, file_id);
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_team_logo._download(
+CREATE OR REPLACE FUNCTION believe_teams_logo._download(
   team_id TEXT, file_id TEXT
 )
 RETURNS JSONB
@@ -61,7 +63,7 @@ AS $$
   return response.text()
 $$;
 
-CREATE OR REPLACE FUNCTION believe_team_logo.download(
+CREATE OR REPLACE FUNCTION believe_teams_logo.download(
   team_id TEXT, file_id TEXT
 )
 RETURNS JSONB
@@ -70,11 +72,11 @@ STABLE
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
-    RETURN believe_team_logo._download(team_id, file_id);
+    RETURN believe_teams_logo._download(team_id, file_id);
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_team_logo._upload(team_id TEXT, "file" TEXT)
+CREATE OR REPLACE FUNCTION believe_teams_logo._upload(team_id TEXT, "file" TEXT)
 RETURNS JSONB
 LANGUAGE plpython3u
 AS $$
@@ -89,15 +91,15 @@ AS $$
   return response.text()
 $$;
 
-CREATE OR REPLACE FUNCTION believe_team_logo.upload(team_id TEXT, "file" TEXT)
-RETURNS believe_team_logo.file_upload
+CREATE OR REPLACE FUNCTION believe_teams_logo.upload(team_id TEXT, "file" TEXT)
+RETURNS believe_teams_logo.file_upload
 LANGUAGE plpgsql
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN jsonb_populate_record(
-      NULL::believe_team_logo.file_upload,
-      believe_team_logo._upload(team_id, "file")
+      NULL::believe_teams_logo.file_upload,
+      believe_teams_logo._upload(team_id, "file")
     );
   END;
 $$;

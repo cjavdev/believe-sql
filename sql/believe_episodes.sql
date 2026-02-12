@@ -1,4 +1,4 @@
-ALTER TYPE believe_episode.episode
+ALTER TYPE believe_episodes.episode
   ADD ATTRIBUTE "id" TEXT,
   ADD ATTRIBUTE air_date DATE,
   ADD ATTRIBUTE character_focus TEXT[],
@@ -16,7 +16,7 @@ ALTER TYPE believe_episode.episode
   ADD ATTRIBUTE us_viewers_millions DOUBLE PRECISION,
   ADD ATTRIBUTE viewer_rating DOUBLE PRECISION;
 
-CREATE OR REPLACE FUNCTION believe_episode.make_episode(
+CREATE OR REPLACE FUNCTION believe_episodes.make_episode(
   "id" TEXT,
   air_date DATE,
   character_focus TEXT[],
@@ -34,7 +34,7 @@ CREATE OR REPLACE FUNCTION believe_episode.make_episode(
   us_viewers_millions DOUBLE PRECISION DEFAULT NULL,
   viewer_rating DOUBLE PRECISION DEFAULT NULL
 )
-RETURNS believe_episode.episode
+RETURNS believe_episodes.episode
 LANGUAGE SQL
 IMMUTABLE
 AS $$
@@ -55,11 +55,11 @@ AS $$
     memorable_moments,
     us_viewers_millions,
     viewer_rating
-  )::believe_episode.episode;
+  )::believe_episodes.episode;
 $$;
 
-ALTER TYPE believe_episode.paginated_response
-  ADD ATTRIBUTE "data" believe_episode.episode[],
+ALTER TYPE believe_episodes.paginated_response
+  ADD ATTRIBUTE "data" believe_episodes.episode[],
   ADD ATTRIBUTE has_more BOOLEAN,
   ADD ATTRIBUTE "limit" BIGINT,
   ADD ATTRIBUTE page BIGINT,
@@ -67,8 +67,8 @@ ALTER TYPE believe_episode.paginated_response
   ADD ATTRIBUTE "skip" BIGINT,
   ADD ATTRIBUTE total BIGINT;
 
-CREATE OR REPLACE FUNCTION believe_episode.make_paginated_response(
-  "data" believe_episode.episode[],
+CREATE OR REPLACE FUNCTION believe_episodes.make_paginated_response(
+  "data" believe_episodes.episode[],
   has_more BOOLEAN,
   "limit" BIGINT,
   page BIGINT,
@@ -76,16 +76,16 @@ CREATE OR REPLACE FUNCTION believe_episode.make_paginated_response(
   "skip" BIGINT,
   total BIGINT
 )
-RETURNS believe_episode.paginated_response
+RETURNS believe_episodes.paginated_response
 LANGUAGE SQL
 IMMUTABLE
 AS $$
   SELECT ROW(
     "data", has_more, "limit", page, pages, "skip", total
-  )::believe_episode.paginated_response;
+  )::believe_episodes.paginated_response;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_episode._create(
+CREATE OR REPLACE FUNCTION believe_episodes._create(
   air_date DATE,
   character_focus TEXT[],
   director TEXT,
@@ -131,7 +131,7 @@ AS $$
   return response.text()
 $$;
 
-CREATE OR REPLACE FUNCTION believe_episode.create(
+CREATE OR REPLACE FUNCTION believe_episodes.create(
   air_date DATE,
   character_focus TEXT[],
   director TEXT,
@@ -148,14 +148,14 @@ CREATE OR REPLACE FUNCTION believe_episode.create(
   us_viewers_millions DOUBLE PRECISION DEFAULT NULL,
   viewer_rating DOUBLE PRECISION DEFAULT NULL
 )
-RETURNS believe_episode.episode
+RETURNS believe_episodes.episode
 LANGUAGE plpgsql
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN jsonb_populate_record(
-      NULL::believe_episode.episode,
-      believe_episode._create(
+      NULL::believe_episodes.episode,
+      believe_episodes._create(
         air_date,
         character_focus,
         director,
@@ -176,7 +176,7 @@ AS $$
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_episode._retrieve(episode_id TEXT)
+CREATE OR REPLACE FUNCTION believe_episodes._retrieve(episode_id TEXT)
 RETURNS JSONB
 LANGUAGE plpython3u
 STABLE
@@ -191,20 +191,20 @@ AS $$
   return response.text()
 $$;
 
-CREATE OR REPLACE FUNCTION believe_episode.retrieve(episode_id TEXT)
-RETURNS believe_episode.episode
+CREATE OR REPLACE FUNCTION believe_episodes.retrieve(episode_id TEXT)
+RETURNS believe_episodes.episode
 LANGUAGE plpgsql
 STABLE
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN jsonb_populate_record(
-      NULL::believe_episode.episode, believe_episode._retrieve(episode_id)
+      NULL::believe_episodes.episode, believe_episodes._retrieve(episode_id)
     );
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_episode._update(
+CREATE OR REPLACE FUNCTION believe_episodes._update(
   episode_id TEXT,
   air_date DATE DEFAULT NULL,
   biscuits_with_boss_moment TEXT DEFAULT NULL,
@@ -252,7 +252,7 @@ AS $$
   return response.text()
 $$;
 
-CREATE OR REPLACE FUNCTION believe_episode.update(
+CREATE OR REPLACE FUNCTION believe_episodes.update(
   episode_id TEXT,
   air_date DATE DEFAULT NULL,
   biscuits_with_boss_moment TEXT DEFAULT NULL,
@@ -270,14 +270,14 @@ CREATE OR REPLACE FUNCTION believe_episode.update(
   viewer_rating DOUBLE PRECISION DEFAULT NULL,
   writer TEXT DEFAULT NULL
 )
-RETURNS believe_episode.episode
+RETURNS believe_episodes.episode
 LANGUAGE plpgsql
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN jsonb_populate_record(
-      NULL::believe_episode.episode,
-      believe_episode._update(
+      NULL::believe_episodes.episode,
+      believe_episodes._update(
         episode_id,
         air_date,
         biscuits_with_boss_moment,
@@ -299,7 +299,7 @@ AS $$
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_episode._list_first_page_py(
+CREATE OR REPLACE FUNCTION believe_episodes._list_first_page_py(
   character_focus TEXT DEFAULT NULL,
   "limit" BIGINT DEFAULT NULL,
   season BIGINT DEFAULT NULL,
@@ -338,8 +338,8 @@ AS $$
   )
 $$;
 
--- A simpler wrapper around `believe_episode._list_first_page` that ensures the global client is initialized.
-CREATE OR REPLACE FUNCTION believe_episode._list_first_page(
+-- A simpler wrapper around `believe_episodes._list_first_page` that ensures the global client is initialized.
+CREATE OR REPLACE FUNCTION believe_episodes._list_first_page(
   character_focus TEXT DEFAULT NULL,
   "limit" BIGINT DEFAULT NULL,
   season BIGINT DEFAULT NULL,
@@ -351,13 +351,13 @@ STABLE
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
-    RETURN believe_episode._list_first_page_py(
+    RETURN believe_episodes._list_first_page_py(
       character_focus, "limit", season, "skip"
     );
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_episode._list_next_page(request_options JSONB)
+CREATE OR REPLACE FUNCTION believe_episodes._list_next_page(request_options JSONB)
 RETURNS believe_internal.page
 LANGUAGE plpython3u
 STABLE
@@ -393,19 +393,19 @@ AS $$
   )
 $$;
 
-CREATE OR REPLACE FUNCTION believe_episode.list(
+CREATE OR REPLACE FUNCTION believe_episodes.list(
   character_focus TEXT DEFAULT NULL,
   "limit" BIGINT DEFAULT NULL,
   season BIGINT DEFAULT NULL,
   "skip" BIGINT DEFAULT NULL
 )
-RETURNS SETOF believe_episode.episode
+RETURNS SETOF believe_episodes.episode
 LANGUAGE SQL
 STABLE
 AS $$
   WITH RECURSIVE paginated AS (
     SELECT page.*
-    FROM believe_episode._list_first_page(
+    FROM believe_episodes._list_first_page(
       character_focus, "limit", season, "skip"
     ) AS page
 
@@ -413,13 +413,13 @@ AS $$
 
     SELECT page.*
     FROM paginated
-    CROSS JOIN believe_episode._list_next_page(paginated.next_request_options) AS page
+    CROSS JOIN believe_episodes._list_next_page(paginated.next_request_options) AS page
     WHERE paginated.next_request_options IS NOT NULL
   )
-  SELECT (jsonb_populate_recordset(NULL::believe_episode.episode, "data")).* FROM paginated;
+  SELECT (jsonb_populate_recordset(NULL::believe_episodes.episode, "data")).* FROM paginated;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_episode._delete(episode_id TEXT)
+CREATE OR REPLACE FUNCTION believe_episodes._delete(episode_id TEXT)
 RETURNS VOID
 LANGUAGE plpython3u
 AS $$
@@ -428,17 +428,17 @@ AS $$
   )
 $$;
 
-CREATE OR REPLACE FUNCTION believe_episode.delete(episode_id TEXT)
+CREATE OR REPLACE FUNCTION believe_episodes.delete(episode_id TEXT)
 RETURNS VOID
 LANGUAGE plpgsql
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
-    PERFORM believe_episode._delete(episode_id);
+    PERFORM believe_episodes._delete(episode_id);
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_episode._get_wisdom(episode_id TEXT)
+CREATE OR REPLACE FUNCTION believe_episodes._get_wisdom(episode_id TEXT)
 RETURNS JSONB
 LANGUAGE plpython3u
 STABLE
@@ -453,18 +453,18 @@ AS $$
   return response.text()
 $$;
 
-CREATE OR REPLACE FUNCTION believe_episode.get_wisdom(episode_id TEXT)
+CREATE OR REPLACE FUNCTION believe_episodes.get_wisdom(episode_id TEXT)
 RETURNS JSONB
 LANGUAGE plpgsql
 STABLE
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
-    RETURN believe_episode._get_wisdom(episode_id);
+    RETURN believe_episodes._get_wisdom(episode_id);
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_episode._list_by_season_first_page_py(
+CREATE OR REPLACE FUNCTION believe_episodes._list_by_season_first_page_py(
   season_number BIGINT, "limit" BIGINT DEFAULT NULL, "skip" BIGINT DEFAULT NULL
 )
 RETURNS believe_internal.page
@@ -499,8 +499,8 @@ AS $$
   )
 $$;
 
--- A simpler wrapper around `believe_episode._list_by_season_first_page` that ensures the global client is initialized.
-CREATE OR REPLACE FUNCTION believe_episode._list_by_season_first_page(
+-- A simpler wrapper around `believe_episodes._list_by_season_first_page` that ensures the global client is initialized.
+CREATE OR REPLACE FUNCTION believe_episodes._list_by_season_first_page(
   season_number BIGINT, "limit" BIGINT DEFAULT NULL, "skip" BIGINT DEFAULT NULL
 )
 RETURNS believe_internal.page
@@ -509,13 +509,13 @@ STABLE
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
-    RETURN believe_episode._list_by_season_first_page_py(
+    RETURN believe_episodes._list_by_season_first_page_py(
       season_number, "limit", "skip"
     );
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_episode._list_by_season_next_page(request_options JSONB)
+CREATE OR REPLACE FUNCTION believe_episodes._list_by_season_next_page(request_options JSONB)
 RETURNS believe_internal.page
 LANGUAGE plpython3u
 STABLE
@@ -551,16 +551,16 @@ AS $$
   )
 $$;
 
-CREATE OR REPLACE FUNCTION believe_episode.list_by_season(
+CREATE OR REPLACE FUNCTION believe_episodes.list_by_season(
   season_number BIGINT, "limit" BIGINT DEFAULT NULL, "skip" BIGINT DEFAULT NULL
 )
-RETURNS SETOF believe_episode.episode
+RETURNS SETOF believe_episodes.episode
 LANGUAGE SQL
 STABLE
 AS $$
   WITH RECURSIVE paginated AS (
     SELECT page.*
-    FROM believe_episode._list_by_season_first_page(
+    FROM believe_episodes._list_by_season_first_page(
       season_number, "limit", "skip"
     ) AS page
 
@@ -568,8 +568,8 @@ AS $$
 
     SELECT page.*
     FROM paginated
-    CROSS JOIN believe_episode._list_by_season_next_page(paginated.next_request_options) AS page
+    CROSS JOIN believe_episodes._list_by_season_next_page(paginated.next_request_options) AS page
     WHERE paginated.next_request_options IS NOT NULL
   )
-  SELECT (jsonb_populate_recordset(NULL::believe_episode.episode, "data")).* FROM paginated;
+  SELECT (jsonb_populate_recordset(NULL::believe_episodes.episode, "data")).* FROM paginated;
 $$;
