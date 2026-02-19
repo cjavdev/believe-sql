@@ -1,17 +1,17 @@
 ALTER TYPE believe_biscuits.biscuit
-  ADD ATTRIBUTE "id" TEXT,
+  ADD ATTRIBUTE id TEXT,
   ADD ATTRIBUTE message TEXT,
   ADD ATTRIBUTE pairs_well_with TEXT,
   ADD ATTRIBUTE ted_note TEXT,
-  ADD ATTRIBUTE "type" TEXT,
+  ADD ATTRIBUTE type TEXT,
   ADD ATTRIBUTE warmth_level BIGINT;
 
 CREATE OR REPLACE FUNCTION believe_biscuits.make_biscuit(
-  "id" TEXT,
+  id TEXT,
   message TEXT,
   pairs_well_with TEXT,
   ted_note TEXT,
-  "type" TEXT,
+  type TEXT,
   warmth_level BIGINT
 )
 RETURNS believe_biscuits.biscuit
@@ -19,7 +19,7 @@ LANGUAGE SQL
 IMMUTABLE
 AS $$
   SELECT ROW(
-    "id", message, pairs_well_with, ted_note, "type", warmth_level
+    id, message, pairs_well_with, ted_note, type, warmth_level
   )::believe_biscuits.biscuit;
 $$;
 
@@ -52,7 +52,7 @@ AS $$
 $$;
 
 CREATE OR REPLACE FUNCTION believe_biscuits._list_first_page_py(
-  "limit" BIGINT DEFAULT NULL, "skip" BIGINT DEFAULT NULL
+  "limit" BIGINT DEFAULT NULL, skip BIGINT DEFAULT NULL
 )
 RETURNS believe_internal.page
 LANGUAGE plpython3u
@@ -87,7 +87,7 @@ $$;
 
 -- A simpler wrapper around `believe_biscuits._list_first_page` that ensures the global client is initialized.
 CREATE OR REPLACE FUNCTION believe_biscuits._list_first_page(
-  "limit" BIGINT DEFAULT NULL, "skip" BIGINT DEFAULT NULL
+  "limit" BIGINT DEFAULT NULL, skip BIGINT DEFAULT NULL
 )
 RETURNS believe_internal.page
 LANGUAGE plpgsql
@@ -95,7 +95,7 @@ STABLE
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
-    RETURN believe_biscuits._list_first_page_py("limit", "skip");
+    RETURN believe_biscuits._list_first_page_py("limit", skip);
   END;
 $$;
 
@@ -136,7 +136,7 @@ AS $$
 $$;
 
 CREATE OR REPLACE FUNCTION believe_biscuits.list(
-  "limit" BIGINT DEFAULT NULL, "skip" BIGINT DEFAULT NULL
+  "limit" BIGINT DEFAULT NULL, skip BIGINT DEFAULT NULL
 )
 RETURNS SETOF believe_biscuits.biscuit
 LANGUAGE SQL
@@ -144,7 +144,7 @@ STABLE
 AS $$
   WITH RECURSIVE paginated AS (
     SELECT page.*
-    FROM believe_biscuits._list_first_page("limit", "skip") AS page
+    FROM believe_biscuits._list_first_page("limit", skip) AS page
 
     UNION ALL
 
@@ -153,7 +153,7 @@ AS $$
     CROSS JOIN believe_biscuits._list_next_page(paginated.next_request_options) AS page
     WHERE paginated.next_request_options IS NOT NULL
   )
-  SELECT (jsonb_populate_recordset(NULL::believe_biscuits.biscuit, "data")).* FROM paginated;
+  SELECT (jsonb_populate_recordset(NULL::believe_biscuits.biscuit, data)).* FROM paginated;
 $$;
 
 CREATE OR REPLACE FUNCTION believe_biscuits._get_fresh()

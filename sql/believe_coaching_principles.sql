@@ -1,5 +1,5 @@
 ALTER TYPE believe_coaching_principles.coaching_principle
-  ADD ATTRIBUTE "id" TEXT,
+  ADD ATTRIBUTE id TEXT,
   ADD ATTRIBUTE application TEXT,
   ADD ATTRIBUTE example_from_show TEXT,
   ADD ATTRIBUTE explanation TEXT,
@@ -7,7 +7,7 @@ ALTER TYPE believe_coaching_principles.coaching_principle
   ADD ATTRIBUTE ted_quote TEXT;
 
 CREATE OR REPLACE FUNCTION believe_coaching_principles.make_coaching_principle(
-  "id" TEXT,
+  id TEXT,
   application TEXT,
   example_from_show TEXT,
   explanation TEXT,
@@ -19,7 +19,7 @@ LANGUAGE SQL
 IMMUTABLE
 AS $$
   SELECT ROW(
-    "id", application, example_from_show, explanation, principle, ted_quote
+    id, application, example_from_show, explanation, principle, ted_quote
   )::believe_coaching_principles.coaching_principle;
 $$;
 
@@ -57,7 +57,7 @@ AS $$
 $$;
 
 CREATE OR REPLACE FUNCTION believe_coaching_principles._list_first_page_py(
-  "limit" BIGINT DEFAULT NULL, "skip" BIGINT DEFAULT NULL
+  "limit" BIGINT DEFAULT NULL, skip BIGINT DEFAULT NULL
 )
 RETURNS believe_internal.page
 LANGUAGE plpython3u
@@ -92,7 +92,7 @@ $$;
 
 -- A simpler wrapper around `believe_coaching_principles._list_first_page` that ensures the global client is initialized.
 CREATE OR REPLACE FUNCTION believe_coaching_principles._list_first_page(
-  "limit" BIGINT DEFAULT NULL, "skip" BIGINT DEFAULT NULL
+  "limit" BIGINT DEFAULT NULL, skip BIGINT DEFAULT NULL
 )
 RETURNS believe_internal.page
 LANGUAGE plpgsql
@@ -100,7 +100,7 @@ STABLE
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
-    RETURN believe_coaching_principles._list_first_page_py("limit", "skip");
+    RETURN believe_coaching_principles._list_first_page_py("limit", skip);
   END;
 $$;
 
@@ -141,7 +141,7 @@ AS $$
 $$;
 
 CREATE OR REPLACE FUNCTION believe_coaching_principles.list(
-  "limit" BIGINT DEFAULT NULL, "skip" BIGINT DEFAULT NULL
+  "limit" BIGINT DEFAULT NULL, skip BIGINT DEFAULT NULL
 )
 RETURNS SETOF believe_coaching_principles.coaching_principle
 LANGUAGE SQL
@@ -149,7 +149,7 @@ STABLE
 AS $$
   WITH RECURSIVE paginated AS (
     SELECT page.*
-    FROM believe_coaching_principles._list_first_page("limit", "skip") AS page
+    FROM believe_coaching_principles._list_first_page("limit", skip) AS page
 
     UNION ALL
 
@@ -158,7 +158,7 @@ AS $$
     CROSS JOIN believe_coaching_principles._list_next_page(paginated.next_request_options) AS page
     WHERE paginated.next_request_options IS NOT NULL
   )
-  SELECT (jsonb_populate_recordset(NULL::believe_coaching_principles.coaching_principle, "data")).* FROM paginated;
+  SELECT (jsonb_populate_recordset(NULL::believe_coaching_principles.coaching_principle, data)).* FROM paginated;
 $$;
 
 CREATE OR REPLACE FUNCTION believe_coaching_principles._get_random()

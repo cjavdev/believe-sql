@@ -1,35 +1,32 @@
 ALTER TYPE believe_pep_talk.pep_talk_retrieve_response
   ADD ATTRIBUTE chunks believe_pep_talk.pep_talk_retrieve_response_chunk[],
-  ADD ATTRIBUTE "text" TEXT;
+  ADD ATTRIBUTE text TEXT;
 
 CREATE OR REPLACE FUNCTION believe_pep_talk.make_pep_talk_retrieve_response(
-  chunks believe_pep_talk.pep_talk_retrieve_response_chunk[], "text" TEXT
+  chunks believe_pep_talk.pep_talk_retrieve_response_chunk[], text TEXT
 )
 RETURNS believe_pep_talk.pep_talk_retrieve_response
 LANGUAGE SQL
 IMMUTABLE
 AS $$
-  SELECT ROW(chunks, "text")::believe_pep_talk.pep_talk_retrieve_response;
+  SELECT ROW(chunks, text)::believe_pep_talk.pep_talk_retrieve_response;
 $$;
 
 ALTER TYPE believe_pep_talk.pep_talk_retrieve_response_chunk
   ADD ATTRIBUTE chunk_id BIGINT,
   ADD ATTRIBUTE is_final BOOLEAN,
-  ADD ATTRIBUTE "text" TEXT,
+  ADD ATTRIBUTE text TEXT,
   ADD ATTRIBUTE emotional_beat TEXT;
 
 CREATE OR REPLACE FUNCTION believe_pep_talk.make_pep_talk_retrieve_response_chunk(
-  chunk_id BIGINT,
-  is_final BOOLEAN,
-  "text" TEXT,
-  emotional_beat TEXT DEFAULT NULL
+  chunk_id BIGINT, is_final BOOLEAN, text TEXT, emotional_beat TEXT DEFAULT NULL
 )
 RETURNS believe_pep_talk.pep_talk_retrieve_response_chunk
 LANGUAGE SQL
 IMMUTABLE
 AS $$
   SELECT ROW(
-    chunk_id, is_final, "text", emotional_beat
+    chunk_id, is_final, text, emotional_beat
   )::believe_pep_talk.pep_talk_retrieve_response_chunk;
 $$;
 

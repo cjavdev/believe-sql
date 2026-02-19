@@ -1,5 +1,5 @@
 ALTER TYPE believe_webhooks.registered_webhook
-  ADD ATTRIBUTE "id" TEXT,
+  ADD ATTRIBUTE id TEXT,
   ADD ATTRIBUTE created_at TIMESTAMP,
   ADD ATTRIBUTE event_types TEXT[],
   ADD ATTRIBUTE secret TEXT,
@@ -7,7 +7,7 @@ ALTER TYPE believe_webhooks.registered_webhook
   ADD ATTRIBUTE description TEXT;
 
 CREATE OR REPLACE FUNCTION believe_webhooks.make_registered_webhook(
-  "id" TEXT,
+  id TEXT,
   created_at TIMESTAMP,
   event_types TEXT[],
   secret TEXT,
@@ -19,7 +19,7 @@ LANGUAGE SQL
 IMMUTABLE
 AS $$
   SELECT ROW(
-    "id", created_at, event_types, secret, url, description
+    id, created_at, event_types, secret, url, description
   )::believe_webhooks.registered_webhook;
 $$;
 
@@ -76,14 +76,14 @@ ALTER TYPE believe_webhooks.webhook_trigger_event_response_delivery
   ADD ATTRIBUTE success BOOLEAN,
   ADD ATTRIBUTE url TEXT,
   ADD ATTRIBUTE webhook_id TEXT,
-  ADD ATTRIBUTE "error" TEXT,
+  ADD ATTRIBUTE error TEXT,
   ADD ATTRIBUTE status_code BIGINT;
 
 CREATE OR REPLACE FUNCTION believe_webhooks.make_webhook_trigger_event_response_delivery(
   success BOOLEAN,
   url TEXT,
   webhook_id TEXT,
-  "error" TEXT DEFAULT NULL,
+  error TEXT DEFAULT NULL,
   status_code BIGINT DEFAULT NULL
 )
 RETURNS believe_webhooks.webhook_trigger_event_response_delivery
@@ -91,19 +91,19 @@ LANGUAGE SQL
 IMMUTABLE
 AS $$
   SELECT ROW(
-    success, url, webhook_id, "error", status_code
+    success, url, webhook_id, error, status_code
   )::believe_webhooks.webhook_trigger_event_response_delivery;
 $$;
 
 ALTER TYPE believe_webhooks.match_completed_webhook_event
   ADD ATTRIBUTE created_at TIMESTAMP,
-  ADD ATTRIBUTE "data" believe_webhooks.match_completed_webhook_event_data,
+  ADD ATTRIBUTE data believe_webhooks.match_completed_webhook_event_data,
   ADD ATTRIBUTE event_id TEXT,
   ADD ATTRIBUTE event_type TEXT;
 
 CREATE OR REPLACE FUNCTION believe_webhooks.make_match_completed_webhook_event(
   created_at TIMESTAMP,
-  "data" believe_webhooks.match_completed_webhook_event_data,
+  data believe_webhooks.match_completed_webhook_event_data,
   event_id TEXT,
   event_type TEXT
 )
@@ -112,7 +112,7 @@ LANGUAGE SQL
 IMMUTABLE
 AS $$
   SELECT ROW(
-    created_at, "data", event_id, event_type
+    created_at, data, event_id, event_type
   )::believe_webhooks.match_completed_webhook_event;
 $$;
 
@@ -124,7 +124,7 @@ ALTER TYPE believe_webhooks.match_completed_webhook_event_data
   ADD ATTRIBUTE home_team_id TEXT,
   ADD ATTRIBUTE match_id TEXT,
   ADD ATTRIBUTE match_type TEXT,
-  ADD ATTRIBUTE "result" TEXT,
+  ADD ATTRIBUTE result TEXT,
   ADD ATTRIBUTE ted_post_match_quote TEXT,
   ADD ATTRIBUTE lesson_learned TEXT,
   ADD ATTRIBUTE man_of_the_match TEXT;
@@ -137,7 +137,7 @@ CREATE OR REPLACE FUNCTION believe_webhooks.make_match_completed_webhook_event_d
   home_team_id TEXT,
   match_id TEXT,
   match_type TEXT,
-  "result" TEXT,
+  result TEXT,
   ted_post_match_quote TEXT,
   lesson_learned TEXT DEFAULT NULL,
   man_of_the_match TEXT DEFAULT NULL
@@ -154,7 +154,7 @@ AS $$
     home_team_id,
     match_id,
     match_type,
-    "result",
+    result,
     ted_post_match_quote,
     lesson_learned,
     man_of_the_match
@@ -163,13 +163,13 @@ $$;
 
 ALTER TYPE believe_webhooks.team_member_transferred_webhook_event
   ADD ATTRIBUTE created_at TIMESTAMP,
-  ADD ATTRIBUTE "data" believe_webhooks.team_member_transferred_webhook_event_data,
+  ADD ATTRIBUTE data believe_webhooks.team_member_transferred_webhook_event_data,
   ADD ATTRIBUTE event_id TEXT,
   ADD ATTRIBUTE event_type TEXT;
 
 CREATE OR REPLACE FUNCTION believe_webhooks.make_team_member_transferred_webhook_event(
   created_at TIMESTAMP,
-  "data" believe_webhooks.team_member_transferred_webhook_event_data,
+  data believe_webhooks.team_member_transferred_webhook_event_data,
   event_id TEXT,
   event_type TEXT
 )
@@ -178,7 +178,7 @@ LANGUAGE SQL
 IMMUTABLE
 AS $$
   SELECT ROW(
-    created_at, "data", event_id, event_type
+    created_at, data, event_id, event_type
   )::believe_webhooks.team_member_transferred_webhook_event;
 $$;
 
@@ -232,13 +232,13 @@ $$;
 
 ALTER TYPE believe_webhooks.unwrap_webhook_event
   ADD ATTRIBUTE created_at TIMESTAMP,
-  ADD ATTRIBUTE "data" believe_webhooks.match_completed_webhook_event_data1,
+  ADD ATTRIBUTE data believe_webhooks.match_completed_webhook_event_data1,
   ADD ATTRIBUTE event_id TEXT,
   ADD ATTRIBUTE event_type TEXT;
 
 CREATE OR REPLACE FUNCTION believe_webhooks.make_unwrap_webhook_event(
   created_at TIMESTAMP,
-  "data" believe_webhooks.match_completed_webhook_event_data1,
+  data believe_webhooks.match_completed_webhook_event_data1,
   event_id TEXT,
   event_type TEXT
 )
@@ -247,7 +247,7 @@ LANGUAGE SQL
 IMMUTABLE
 AS $$
   SELECT ROW(
-    created_at, "data", event_id, event_type
+    created_at, data, event_id, event_type
   )::believe_webhooks.unwrap_webhook_event;
 $$;
 
@@ -259,7 +259,7 @@ ALTER TYPE believe_webhooks.match_completed_webhook_event_data1
   ADD ATTRIBUTE home_team_id TEXT,
   ADD ATTRIBUTE match_id TEXT,
   ADD ATTRIBUTE match_type TEXT,
-  ADD ATTRIBUTE "result" TEXT,
+  ADD ATTRIBUTE result TEXT,
   ADD ATTRIBUTE ted_post_match_quote TEXT,
   ADD ATTRIBUTE lesson_learned TEXT,
   ADD ATTRIBUTE man_of_the_match TEXT,
@@ -284,7 +284,7 @@ CREATE OR REPLACE FUNCTION believe_webhooks.make_match_completed_webhook_event_d
   home_team_id TEXT DEFAULT NULL,
   match_id TEXT DEFAULT NULL,
   match_type TEXT DEFAULT NULL,
-  "result" TEXT DEFAULT NULL,
+  result TEXT DEFAULT NULL,
   ted_post_match_quote TEXT DEFAULT NULL,
   lesson_learned TEXT DEFAULT NULL,
   man_of_the_match TEXT DEFAULT NULL,
@@ -313,7 +313,7 @@ AS $$
     home_team_id,
     match_id,
     match_type,
-    "result",
+    result,
     ted_post_match_quote,
     lesson_learned,
     man_of_the_match,
@@ -333,17 +333,17 @@ AS $$
 $$;
 
 ALTER TYPE believe_webhooks.payload
-  ADD ATTRIBUTE "data" believe_webhooks.match_completed_data,
+  ADD ATTRIBUTE data believe_webhooks.match_completed_data,
   ADD ATTRIBUTE event_type TEXT;
 
 CREATE OR REPLACE FUNCTION believe_webhooks.make_payload(
-  "data" believe_webhooks.match_completed_data, event_type TEXT DEFAULT NULL
+  data believe_webhooks.match_completed_data, event_type TEXT DEFAULT NULL
 )
 RETURNS believe_webhooks.payload
 LANGUAGE SQL
 IMMUTABLE
 AS $$
-  SELECT ROW("data", event_type)::believe_webhooks.payload;
+  SELECT ROW(data, event_type)::believe_webhooks.payload;
 $$;
 
 ALTER TYPE believe_webhooks.match_completed_data
@@ -354,7 +354,7 @@ ALTER TYPE believe_webhooks.match_completed_data
   ADD ATTRIBUTE home_team_id TEXT,
   ADD ATTRIBUTE match_id TEXT,
   ADD ATTRIBUTE match_type TEXT,
-  ADD ATTRIBUTE "result" TEXT,
+  ADD ATTRIBUTE result TEXT,
   ADD ATTRIBUTE ted_post_match_quote TEXT,
   ADD ATTRIBUTE lesson_learned TEXT,
   ADD ATTRIBUTE man_of_the_match TEXT,
@@ -379,7 +379,7 @@ CREATE OR REPLACE FUNCTION believe_webhooks.make_match_completed_data(
   home_team_id TEXT DEFAULT NULL,
   match_id TEXT DEFAULT NULL,
   match_type TEXT DEFAULT NULL,
-  "result" TEXT DEFAULT NULL,
+  result TEXT DEFAULT NULL,
   ted_post_match_quote TEXT DEFAULT NULL,
   lesson_learned TEXT DEFAULT NULL,
   man_of_the_match TEXT DEFAULT NULL,
@@ -408,7 +408,7 @@ AS $$
     home_team_id,
     match_id,
     match_type,
-    "result",
+    result,
     ted_post_match_quote,
     lesson_learned,
     man_of_the_match,

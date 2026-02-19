@@ -1,19 +1,19 @@
 ALTER TYPE believe_quotes.paginated_response_quote
-  ADD ATTRIBUTE "data" believe_quotes.quote[],
+  ADD ATTRIBUTE data believe_quotes.quote[],
   ADD ATTRIBUTE has_more BOOLEAN,
   ADD ATTRIBUTE "limit" BIGINT,
   ADD ATTRIBUTE page BIGINT,
   ADD ATTRIBUTE pages BIGINT,
-  ADD ATTRIBUTE "skip" BIGINT,
+  ADD ATTRIBUTE skip BIGINT,
   ADD ATTRIBUTE total BIGINT;
 
 CREATE OR REPLACE FUNCTION believe_quotes.make_paginated_response_quote(
-  "data" believe_quotes.quote[],
+  data believe_quotes.quote[],
   has_more BOOLEAN,
   "limit" BIGINT,
   page BIGINT,
   pages BIGINT,
-  "skip" BIGINT,
+  skip BIGINT,
   total BIGINT
 )
 RETURNS believe_quotes.paginated_response_quote
@@ -21,16 +21,16 @@ LANGUAGE SQL
 IMMUTABLE
 AS $$
   SELECT ROW(
-    "data", has_more, "limit", page, pages, "skip", total
+    data, has_more, "limit", page, pages, skip, total
   )::believe_quotes.paginated_response_quote;
 $$;
 
 ALTER TYPE believe_quotes.quote
-  ADD ATTRIBUTE "id" TEXT,
+  ADD ATTRIBUTE id TEXT,
   ADD ATTRIBUTE character_id TEXT,
   ADD ATTRIBUTE context TEXT,
   ADD ATTRIBUTE moment_type TEXT,
-  ADD ATTRIBUTE "text" TEXT,
+  ADD ATTRIBUTE text TEXT,
   ADD ATTRIBUTE theme TEXT,
   ADD ATTRIBUTE episode_id TEXT,
   ADD ATTRIBUTE is_funny BOOLEAN,
@@ -40,11 +40,11 @@ ALTER TYPE believe_quotes.quote
   ADD ATTRIBUTE times_shared BIGINT;
 
 CREATE OR REPLACE FUNCTION believe_quotes.make_quote(
-  "id" TEXT,
+  id TEXT,
   character_id TEXT,
   context TEXT,
   moment_type TEXT,
-  "text" TEXT,
+  text TEXT,
   theme TEXT,
   episode_id TEXT DEFAULT NULL,
   is_funny BOOLEAN DEFAULT NULL,
@@ -58,11 +58,11 @@ LANGUAGE SQL
 IMMUTABLE
 AS $$
   SELECT ROW(
-    "id",
+    id,
     character_id,
     context,
     moment_type,
-    "text",
+    text,
     theme,
     episode_id,
     is_funny,
@@ -77,7 +77,7 @@ CREATE OR REPLACE FUNCTION believe_quotes._create(
   character_id TEXT,
   context TEXT,
   moment_type TEXT,
-  "text" TEXT,
+  text TEXT,
   theme TEXT,
   episode_id TEXT DEFAULT NULL,
   is_funny BOOLEAN DEFAULT NULL,
@@ -115,7 +115,7 @@ CREATE OR REPLACE FUNCTION believe_quotes.create(
   character_id TEXT,
   context TEXT,
   moment_type TEXT,
-  "text" TEXT,
+  text TEXT,
   theme TEXT,
   episode_id TEXT DEFAULT NULL,
   is_funny BOOLEAN DEFAULT NULL,
@@ -135,7 +135,7 @@ AS $$
         character_id,
         context,
         moment_type,
-        "text",
+        text,
         theme,
         episode_id,
         is_funny,
@@ -186,7 +186,7 @@ CREATE OR REPLACE FUNCTION believe_quotes._update(
   moment_type TEXT DEFAULT NULL,
   popularity_score DOUBLE PRECISION DEFAULT NULL,
   secondary_themes TEXT[] DEFAULT NULL,
-  "text" TEXT DEFAULT NULL,
+  text TEXT DEFAULT NULL,
   theme TEXT DEFAULT NULL,
   times_shared BIGINT DEFAULT NULL
 )
@@ -226,7 +226,7 @@ CREATE OR REPLACE FUNCTION believe_quotes.update(
   moment_type TEXT DEFAULT NULL,
   popularity_score DOUBLE PRECISION DEFAULT NULL,
   secondary_themes TEXT[] DEFAULT NULL,
-  "text" TEXT DEFAULT NULL,
+  text TEXT DEFAULT NULL,
   theme TEXT DEFAULT NULL,
   times_shared BIGINT DEFAULT NULL
 )
@@ -247,7 +247,7 @@ AS $$
         moment_type,
         popularity_score,
         secondary_themes,
-        "text",
+        text,
         theme,
         times_shared
       )
@@ -261,7 +261,7 @@ CREATE OR REPLACE FUNCTION believe_quotes._list_first_page_py(
   inspirational BOOLEAN DEFAULT NULL,
   "limit" BIGINT DEFAULT NULL,
   moment_type TEXT DEFAULT NULL,
-  "skip" BIGINT DEFAULT NULL,
+  skip BIGINT DEFAULT NULL,
   theme TEXT DEFAULT NULL
 )
 RETURNS believe_internal.page
@@ -307,7 +307,7 @@ CREATE OR REPLACE FUNCTION believe_quotes._list_first_page(
   inspirational BOOLEAN DEFAULT NULL,
   "limit" BIGINT DEFAULT NULL,
   moment_type TEXT DEFAULT NULL,
-  "skip" BIGINT DEFAULT NULL,
+  skip BIGINT DEFAULT NULL,
   theme TEXT DEFAULT NULL
 )
 RETURNS believe_internal.page
@@ -317,7 +317,7 @@ AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN believe_quotes._list_first_page_py(
-      character_id, funny, inspirational, "limit", moment_type, "skip", theme
+      character_id, funny, inspirational, "limit", moment_type, skip, theme
     );
   END;
 $$;
@@ -364,7 +364,7 @@ CREATE OR REPLACE FUNCTION believe_quotes.list(
   inspirational BOOLEAN DEFAULT NULL,
   "limit" BIGINT DEFAULT NULL,
   moment_type TEXT DEFAULT NULL,
-  "skip" BIGINT DEFAULT NULL,
+  skip BIGINT DEFAULT NULL,
   theme TEXT DEFAULT NULL
 )
 RETURNS SETOF believe_quotes.quote
@@ -374,7 +374,7 @@ AS $$
   WITH RECURSIVE paginated AS (
     SELECT page.*
     FROM believe_quotes._list_first_page(
-      character_id, funny, inspirational, "limit", moment_type, "skip", theme
+      character_id, funny, inspirational, "limit", moment_type, skip, theme
     ) AS page
 
     UNION ALL
@@ -384,7 +384,7 @@ AS $$
     CROSS JOIN believe_quotes._list_next_page(paginated.next_request_options) AS page
     WHERE paginated.next_request_options IS NOT NULL
   )
-  SELECT (jsonb_populate_recordset(NULL::believe_quotes.quote, "data")).* FROM paginated;
+  SELECT (jsonb_populate_recordset(NULL::believe_quotes.quote, data)).* FROM paginated;
 $$;
 
 CREATE OR REPLACE FUNCTION believe_quotes._delete(quote_id TEXT)
@@ -448,7 +448,7 @@ AS $$
 $$;
 
 CREATE OR REPLACE FUNCTION believe_quotes._list_by_character_first_page_py(
-  character_id TEXT, "limit" BIGINT DEFAULT NULL, "skip" BIGINT DEFAULT NULL
+  character_id TEXT, "limit" BIGINT DEFAULT NULL, skip BIGINT DEFAULT NULL
 )
 RETURNS believe_internal.page
 LANGUAGE plpython3u
@@ -484,7 +484,7 @@ $$;
 
 -- A simpler wrapper around `believe_quotes._list_by_character_first_page` that ensures the global client is initialized.
 CREATE OR REPLACE FUNCTION believe_quotes._list_by_character_first_page(
-  character_id TEXT, "limit" BIGINT DEFAULT NULL, "skip" BIGINT DEFAULT NULL
+  character_id TEXT, "limit" BIGINT DEFAULT NULL, skip BIGINT DEFAULT NULL
 )
 RETURNS believe_internal.page
 LANGUAGE plpgsql
@@ -493,7 +493,7 @@ AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN believe_quotes._list_by_character_first_page_py(
-      character_id, "limit", "skip"
+      character_id, "limit", skip
     );
   END;
 $$;
@@ -535,7 +535,7 @@ AS $$
 $$;
 
 CREATE OR REPLACE FUNCTION believe_quotes.list_by_character(
-  character_id TEXT, "limit" BIGINT DEFAULT NULL, "skip" BIGINT DEFAULT NULL
+  character_id TEXT, "limit" BIGINT DEFAULT NULL, skip BIGINT DEFAULT NULL
 )
 RETURNS SETOF believe_quotes.quote
 LANGUAGE SQL
@@ -544,7 +544,7 @@ AS $$
   WITH RECURSIVE paginated AS (
     SELECT page.*
     FROM believe_quotes._list_by_character_first_page(
-      character_id, "limit", "skip"
+      character_id, "limit", skip
     ) AS page
 
     UNION ALL
@@ -554,11 +554,11 @@ AS $$
     CROSS JOIN believe_quotes._list_by_character_next_page(paginated.next_request_options) AS page
     WHERE paginated.next_request_options IS NOT NULL
   )
-  SELECT (jsonb_populate_recordset(NULL::believe_quotes.quote, "data")).* FROM paginated;
+  SELECT (jsonb_populate_recordset(NULL::believe_quotes.quote, data)).* FROM paginated;
 $$;
 
 CREATE OR REPLACE FUNCTION believe_quotes._list_by_theme_first_page_py(
-  theme TEXT, "limit" BIGINT DEFAULT NULL, "skip" BIGINT DEFAULT NULL
+  theme TEXT, "limit" BIGINT DEFAULT NULL, skip BIGINT DEFAULT NULL
 )
 RETURNS believe_internal.page
 LANGUAGE plpython3u
@@ -594,7 +594,7 @@ $$;
 
 -- A simpler wrapper around `believe_quotes._list_by_theme_first_page` that ensures the global client is initialized.
 CREATE OR REPLACE FUNCTION believe_quotes._list_by_theme_first_page(
-  theme TEXT, "limit" BIGINT DEFAULT NULL, "skip" BIGINT DEFAULT NULL
+  theme TEXT, "limit" BIGINT DEFAULT NULL, skip BIGINT DEFAULT NULL
 )
 RETURNS believe_internal.page
 LANGUAGE plpgsql
@@ -602,7 +602,7 @@ STABLE
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
-    RETURN believe_quotes._list_by_theme_first_page_py(theme, "limit", "skip");
+    RETURN believe_quotes._list_by_theme_first_page_py(theme, "limit", skip);
   END;
 $$;
 
@@ -643,7 +643,7 @@ AS $$
 $$;
 
 CREATE OR REPLACE FUNCTION believe_quotes.list_by_theme(
-  theme TEXT, "limit" BIGINT DEFAULT NULL, "skip" BIGINT DEFAULT NULL
+  theme TEXT, "limit" BIGINT DEFAULT NULL, skip BIGINT DEFAULT NULL
 )
 RETURNS SETOF believe_quotes.quote
 LANGUAGE SQL
@@ -651,9 +651,7 @@ STABLE
 AS $$
   WITH RECURSIVE paginated AS (
     SELECT page.*
-    FROM believe_quotes._list_by_theme_first_page(
-      theme, "limit", "skip"
-    ) AS page
+    FROM believe_quotes._list_by_theme_first_page(theme, "limit", skip) AS page
 
     UNION ALL
 
@@ -662,5 +660,5 @@ AS $$
     CROSS JOIN believe_quotes._list_by_theme_next_page(paginated.next_request_options) AS page
     WHERE paginated.next_request_options IS NOT NULL
   )
-  SELECT (jsonb_populate_recordset(NULL::believe_quotes.quote, "data")).* FROM paginated;
+  SELECT (jsonb_populate_recordset(NULL::believe_quotes.quote, data)).* FROM paginated;
 $$;

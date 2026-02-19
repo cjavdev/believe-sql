@@ -1,5 +1,5 @@
 ALTER TYPE believe_team_members.coach
-  ADD ATTRIBUTE "id" TEXT,
+  ADD ATTRIBUTE id TEXT,
   ADD ATTRIBUTE character_id TEXT,
   ADD ATTRIBUTE specialty TEXT,
   ADD ATTRIBUTE team_id TEXT,
@@ -9,7 +9,7 @@ ALTER TYPE believe_team_members.coach
   ADD ATTRIBUTE win_rate DOUBLE PRECISION;
 
 CREATE OR REPLACE FUNCTION believe_team_members.make_coach(
-  "id" TEXT,
+  id TEXT,
   character_id TEXT,
   specialty TEXT,
   team_id TEXT,
@@ -23,7 +23,7 @@ LANGUAGE SQL
 IMMUTABLE
 AS $$
   SELECT ROW(
-    "id",
+    id,
     character_id,
     specialty,
     team_id,
@@ -35,7 +35,7 @@ AS $$
 $$;
 
 ALTER TYPE believe_team_members.equipment_manager
-  ADD ATTRIBUTE "id" TEXT,
+  ADD ATTRIBUTE id TEXT,
   ADD ATTRIBUTE character_id TEXT,
   ADD ATTRIBUTE team_id TEXT,
   ADD ATTRIBUTE years_with_team BIGINT,
@@ -44,7 +44,7 @@ ALTER TYPE believe_team_members.equipment_manager
   ADD ATTRIBUTE responsibilities TEXT[];
 
 CREATE OR REPLACE FUNCTION believe_team_members.make_equipment_manager(
-  "id" TEXT,
+  id TEXT,
   character_id TEXT,
   team_id TEXT,
   years_with_team BIGINT,
@@ -57,7 +57,7 @@ LANGUAGE SQL
 IMMUTABLE
 AS $$
   SELECT ROW(
-    "id",
+    id,
     character_id,
     team_id,
     years_with_team,
@@ -68,7 +68,7 @@ AS $$
 $$;
 
 ALTER TYPE believe_team_members.medical_staff
-  ADD ATTRIBUTE "id" TEXT,
+  ADD ATTRIBUTE id TEXT,
   ADD ATTRIBUTE character_id TEXT,
   ADD ATTRIBUTE specialty TEXT,
   ADD ATTRIBUTE team_id TEXT,
@@ -78,7 +78,7 @@ ALTER TYPE believe_team_members.medical_staff
   ADD ATTRIBUTE qualifications TEXT[];
 
 CREATE OR REPLACE FUNCTION believe_team_members.make_medical_staff(
-  "id" TEXT,
+  id TEXT,
   character_id TEXT,
   specialty TEXT,
   team_id TEXT,
@@ -92,7 +92,7 @@ LANGUAGE SQL
 IMMUTABLE
 AS $$
   SELECT ROW(
-    "id",
+    id,
     character_id,
     specialty,
     team_id,
@@ -104,7 +104,7 @@ AS $$
 $$;
 
 ALTER TYPE believe_team_members.player
-  ADD ATTRIBUTE "id" TEXT,
+  ADD ATTRIBUTE id TEXT,
   ADD ATTRIBUTE character_id TEXT,
   ADD ATTRIBUTE jersey_number BIGINT,
   ADD ATTRIBUTE "position" TEXT,
@@ -116,7 +116,7 @@ ALTER TYPE believe_team_members.player
   ADD ATTRIBUTE member_type TEXT;
 
 CREATE OR REPLACE FUNCTION believe_team_members.make_player(
-  "id" TEXT,
+  id TEXT,
   character_id TEXT,
   jersey_number BIGINT,
   "position" TEXT,
@@ -132,7 +132,7 @@ LANGUAGE SQL
 IMMUTABLE
 AS $$
   SELECT ROW(
-    "id",
+    id,
     character_id,
     jersey_number,
     "position",
@@ -146,7 +146,7 @@ AS $$
 $$;
 
 ALTER TYPE believe_team_members.team_member_create_response
-  ADD ATTRIBUTE "id" TEXT,
+  ADD ATTRIBUTE id TEXT,
   ADD ATTRIBUTE character_id TEXT,
   ADD ATTRIBUTE jersey_number BIGINT,
   ADD ATTRIBUTE "position" TEXT,
@@ -165,7 +165,7 @@ ALTER TYPE believe_team_members.team_member_create_response
   ADD ATTRIBUTE responsibilities TEXT[];
 
 CREATE OR REPLACE FUNCTION believe_team_members.make_team_member_create_response(
-  "id" TEXT,
+  id TEXT,
   character_id TEXT,
   team_id TEXT,
   years_with_team BIGINT,
@@ -188,7 +188,7 @@ LANGUAGE SQL
 IMMUTABLE
 AS $$
   SELECT ROW(
-    "id",
+    id,
     character_id,
     jersey_number,
     "position",
@@ -209,7 +209,7 @@ AS $$
 $$;
 
 ALTER TYPE believe_team_members.team_member_retrieve_response
-  ADD ATTRIBUTE "id" TEXT,
+  ADD ATTRIBUTE id TEXT,
   ADD ATTRIBUTE character_id TEXT,
   ADD ATTRIBUTE jersey_number BIGINT,
   ADD ATTRIBUTE "position" TEXT,
@@ -228,7 +228,7 @@ ALTER TYPE believe_team_members.team_member_retrieve_response
   ADD ATTRIBUTE responsibilities TEXT[];
 
 CREATE OR REPLACE FUNCTION believe_team_members.make_team_member_retrieve_response(
-  "id" TEXT,
+  id TEXT,
   character_id TEXT,
   team_id TEXT,
   years_with_team BIGINT,
@@ -251,7 +251,7 @@ LANGUAGE SQL
 IMMUTABLE
 AS $$
   SELECT ROW(
-    "id",
+    id,
     character_id,
     jersey_number,
     "position",
@@ -272,7 +272,7 @@ AS $$
 $$;
 
 ALTER TYPE believe_team_members.team_member_update_response
-  ADD ATTRIBUTE "id" TEXT,
+  ADD ATTRIBUTE id TEXT,
   ADD ATTRIBUTE character_id TEXT,
   ADD ATTRIBUTE jersey_number BIGINT,
   ADD ATTRIBUTE "position" TEXT,
@@ -291,7 +291,7 @@ ALTER TYPE believe_team_members.team_member_update_response
   ADD ATTRIBUTE responsibilities TEXT[];
 
 CREATE OR REPLACE FUNCTION believe_team_members.make_team_member_update_response(
-  "id" TEXT,
+  id TEXT,
   character_id TEXT,
   team_id TEXT,
   years_with_team BIGINT,
@@ -314,7 +314,7 @@ LANGUAGE SQL
 IMMUTABLE
 AS $$
   SELECT ROW(
-    "id",
+    id,
     character_id,
     jersey_number,
     "position",
@@ -335,7 +335,7 @@ AS $$
 $$;
 
 ALTER TYPE believe_team_members.team_member_list_response
-  ADD ATTRIBUTE "id" TEXT,
+  ADD ATTRIBUTE id TEXT,
   ADD ATTRIBUTE character_id TEXT,
   ADD ATTRIBUTE jersey_number BIGINT,
   ADD ATTRIBUTE "position" TEXT,
@@ -354,7 +354,7 @@ ALTER TYPE believe_team_members.team_member_list_response
   ADD ATTRIBUTE responsibilities TEXT[];
 
 CREATE OR REPLACE FUNCTION believe_team_members.make_team_member_list_response(
-  "id" TEXT,
+  id TEXT,
   character_id TEXT,
   team_id TEXT,
   years_with_team BIGINT,
@@ -377,7 +377,7 @@ LANGUAGE SQL
 IMMUTABLE
 AS $$
   SELECT ROW(
-    "id",
+    id,
     character_id,
     jersey_number,
     "position",
@@ -398,7 +398,7 @@ AS $$
 $$;
 
 ALTER TYPE believe_team_members.team_member_list_staff_response
-  ADD ATTRIBUTE "id" TEXT,
+  ADD ATTRIBUTE id TEXT,
   ADD ATTRIBUTE character_id TEXT,
   ADD ATTRIBUTE specialty TEXT,
   ADD ATTRIBUTE team_id TEXT,
@@ -410,7 +410,7 @@ ALTER TYPE believe_team_members.team_member_list_staff_response
   ADD ATTRIBUTE responsibilities TEXT[];
 
 CREATE OR REPLACE FUNCTION believe_team_members.make_team_member_list_staff_response(
-  "id" TEXT,
+  id TEXT,
   character_id TEXT,
   team_id TEXT,
   years_with_team BIGINT,
@@ -426,7 +426,7 @@ LANGUAGE SQL
 IMMUTABLE
 AS $$
   SELECT ROW(
-    "id",
+    id,
     character_id,
     specialty,
     team_id,
@@ -554,7 +554,7 @@ AS $$
 $$;
 
 CREATE OR REPLACE FUNCTION believe_team_members._create(
-  "member" believe_team_members.member
+  member believe_team_members.member
 )
 RETURNS JSONB
 LANGUAGE plpython3u
@@ -570,7 +570,7 @@ AS $$
 $$;
 
 CREATE OR REPLACE FUNCTION believe_team_members.create(
-  "member" believe_team_members.member
+  member believe_team_members.member
 )
 RETURNS believe_team_members.team_member_create_response
 LANGUAGE plpgsql
@@ -579,7 +579,7 @@ AS $$
     PERFORM believe_internal.ensure_context();
     RETURN jsonb_populate_record(
       NULL::believe_team_members.team_member_create_response,
-      believe_team_members._create("member")
+      believe_team_members._create(member)
     );
   END;
 $$;
@@ -648,7 +648,7 @@ $$;
 CREATE OR REPLACE FUNCTION believe_team_members._list_first_page_py(
   "limit" BIGINT DEFAULT NULL,
   member_type TEXT DEFAULT NULL,
-  "skip" BIGINT DEFAULT NULL,
+  skip BIGINT DEFAULT NULL,
   team_id TEXT DEFAULT NULL
 )
 RETURNS believe_internal.page
@@ -688,7 +688,7 @@ $$;
 CREATE OR REPLACE FUNCTION believe_team_members._list_first_page(
   "limit" BIGINT DEFAULT NULL,
   member_type TEXT DEFAULT NULL,
-  "skip" BIGINT DEFAULT NULL,
+  skip BIGINT DEFAULT NULL,
   team_id TEXT DEFAULT NULL
 )
 RETURNS believe_internal.page
@@ -698,7 +698,7 @@ AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN believe_team_members._list_first_page_py(
-      "limit", member_type, "skip", team_id
+      "limit", member_type, skip, team_id
     );
   END;
 $$;
@@ -742,7 +742,7 @@ $$;
 CREATE OR REPLACE FUNCTION believe_team_members.list(
   "limit" BIGINT DEFAULT NULL,
   member_type TEXT DEFAULT NULL,
-  "skip" BIGINT DEFAULT NULL,
+  skip BIGINT DEFAULT NULL,
   team_id TEXT DEFAULT NULL
 )
 RETURNS SETOF believe_team_members.team_member_list_response
@@ -752,7 +752,7 @@ AS $$
   WITH RECURSIVE paginated AS (
     SELECT page.*
     FROM believe_team_members._list_first_page(
-      "limit", member_type, "skip", team_id
+      "limit", member_type, skip, team_id
     ) AS page
 
     UNION ALL
@@ -762,7 +762,7 @@ AS $$
     CROSS JOIN believe_team_members._list_next_page(paginated.next_request_options) AS page
     WHERE paginated.next_request_options IS NOT NULL
   )
-  SELECT (jsonb_populate_recordset(NULL::believe_team_members.team_member_list_response, "data")).* FROM paginated;
+  SELECT (jsonb_populate_recordset(NULL::believe_team_members.team_member_list_response, data)).* FROM paginated;
 $$;
 
 CREATE OR REPLACE FUNCTION believe_team_members._delete(member_id TEXT)
@@ -786,7 +786,7 @@ $$;
 
 CREATE OR REPLACE FUNCTION believe_team_members._list_coaches_first_page_py(
   "limit" BIGINT DEFAULT NULL,
-  "skip" BIGINT DEFAULT NULL,
+  skip BIGINT DEFAULT NULL,
   specialty TEXT DEFAULT NULL,
   team_id TEXT DEFAULT NULL
 )
@@ -826,7 +826,7 @@ $$;
 -- A simpler wrapper around `believe_team_members._list_coaches_first_page` that ensures the global client is initialized.
 CREATE OR REPLACE FUNCTION believe_team_members._list_coaches_first_page(
   "limit" BIGINT DEFAULT NULL,
-  "skip" BIGINT DEFAULT NULL,
+  skip BIGINT DEFAULT NULL,
   specialty TEXT DEFAULT NULL,
   team_id TEXT DEFAULT NULL
 )
@@ -837,7 +837,7 @@ AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN believe_team_members._list_coaches_first_page_py(
-      "limit", "skip", specialty, team_id
+      "limit", skip, specialty, team_id
     );
   END;
 $$;
@@ -880,7 +880,7 @@ $$;
 
 CREATE OR REPLACE FUNCTION believe_team_members.list_coaches(
   "limit" BIGINT DEFAULT NULL,
-  "skip" BIGINT DEFAULT NULL,
+  skip BIGINT DEFAULT NULL,
   specialty TEXT DEFAULT NULL,
   team_id TEXT DEFAULT NULL
 )
@@ -891,7 +891,7 @@ AS $$
   WITH RECURSIVE paginated AS (
     SELECT page.*
     FROM believe_team_members._list_coaches_first_page(
-      "limit", "skip", specialty, team_id
+      "limit", skip, specialty, team_id
     ) AS page
 
     UNION ALL
@@ -901,13 +901,13 @@ AS $$
     CROSS JOIN believe_team_members._list_coaches_next_page(paginated.next_request_options) AS page
     WHERE paginated.next_request_options IS NOT NULL
   )
-  SELECT (jsonb_populate_recordset(NULL::believe_team_members.coach, "data")).* FROM paginated;
+  SELECT (jsonb_populate_recordset(NULL::believe_team_members.coach, data)).* FROM paginated;
 $$;
 
 CREATE OR REPLACE FUNCTION believe_team_members._list_players_first_page_py(
   "limit" BIGINT DEFAULT NULL,
   "position" TEXT DEFAULT NULL,
-  "skip" BIGINT DEFAULT NULL,
+  skip BIGINT DEFAULT NULL,
   team_id TEXT DEFAULT NULL
 )
 RETURNS believe_internal.page
@@ -947,7 +947,7 @@ $$;
 CREATE OR REPLACE FUNCTION believe_team_members._list_players_first_page(
   "limit" BIGINT DEFAULT NULL,
   "position" TEXT DEFAULT NULL,
-  "skip" BIGINT DEFAULT NULL,
+  skip BIGINT DEFAULT NULL,
   team_id TEXT DEFAULT NULL
 )
 RETURNS believe_internal.page
@@ -957,7 +957,7 @@ AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN believe_team_members._list_players_first_page_py(
-      "limit", "position", "skip", team_id
+      "limit", "position", skip, team_id
     );
   END;
 $$;
@@ -1001,7 +1001,7 @@ $$;
 CREATE OR REPLACE FUNCTION believe_team_members.list_players(
   "limit" BIGINT DEFAULT NULL,
   "position" TEXT DEFAULT NULL,
-  "skip" BIGINT DEFAULT NULL,
+  skip BIGINT DEFAULT NULL,
   team_id TEXT DEFAULT NULL
 )
 RETURNS SETOF believe_team_members.player
@@ -1011,7 +1011,7 @@ AS $$
   WITH RECURSIVE paginated AS (
     SELECT page.*
     FROM believe_team_members._list_players_first_page(
-      "limit", "position", "skip", team_id
+      "limit", "position", skip, team_id
     ) AS page
 
     UNION ALL
@@ -1021,12 +1021,12 @@ AS $$
     CROSS JOIN believe_team_members._list_players_next_page(paginated.next_request_options) AS page
     WHERE paginated.next_request_options IS NOT NULL
   )
-  SELECT (jsonb_populate_recordset(NULL::believe_team_members.player, "data")).* FROM paginated;
+  SELECT (jsonb_populate_recordset(NULL::believe_team_members.player, data)).* FROM paginated;
 $$;
 
 CREATE OR REPLACE FUNCTION believe_team_members._list_staff_first_page_py(
   "limit" BIGINT DEFAULT NULL,
-  "skip" BIGINT DEFAULT NULL,
+  skip BIGINT DEFAULT NULL,
   team_id TEXT DEFAULT NULL
 )
 RETURNS believe_internal.page
@@ -1064,7 +1064,7 @@ $$;
 -- A simpler wrapper around `believe_team_members._list_staff_first_page` that ensures the global client is initialized.
 CREATE OR REPLACE FUNCTION believe_team_members._list_staff_first_page(
   "limit" BIGINT DEFAULT NULL,
-  "skip" BIGINT DEFAULT NULL,
+  skip BIGINT DEFAULT NULL,
   team_id TEXT DEFAULT NULL
 )
 RETURNS believe_internal.page
@@ -1074,7 +1074,7 @@ AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN believe_team_members._list_staff_first_page_py(
-      "limit", "skip", team_id
+      "limit", skip, team_id
     );
   END;
 $$;
@@ -1117,7 +1117,7 @@ $$;
 
 CREATE OR REPLACE FUNCTION believe_team_members.list_staff(
   "limit" BIGINT DEFAULT NULL,
-  "skip" BIGINT DEFAULT NULL,
+  skip BIGINT DEFAULT NULL,
   team_id TEXT DEFAULT NULL
 )
 RETURNS SETOF believe_team_members.team_member_list_staff_response
@@ -1127,7 +1127,7 @@ AS $$
   WITH RECURSIVE paginated AS (
     SELECT page.*
     FROM believe_team_members._list_staff_first_page(
-      "limit", "skip", team_id
+      "limit", skip, team_id
     ) AS page
 
     UNION ALL
@@ -1137,5 +1137,5 @@ AS $$
     CROSS JOIN believe_team_members._list_staff_next_page(paginated.next_request_options) AS page
     WHERE paginated.next_request_options IS NOT NULL
   )
-  SELECT (jsonb_populate_recordset(NULL::believe_team_members.team_member_list_staff_response, "data")).* FROM paginated;
+  SELECT (jsonb_populate_recordset(NULL::believe_team_members.team_member_list_staff_response, data)).* FROM paginated;
 $$;

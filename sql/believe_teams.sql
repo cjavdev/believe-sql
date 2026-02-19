@@ -13,11 +13,11 @@ AS $$
 $$;
 
 ALTER TYPE believe_teams.team
-  ADD ATTRIBUTE "id" TEXT,
+  ADD ATTRIBUTE id TEXT,
   ADD ATTRIBUTE culture_score BIGINT,
   ADD ATTRIBUTE founded_year BIGINT,
   ADD ATTRIBUTE league TEXT,
-  ADD ATTRIBUTE "name" TEXT,
+  ADD ATTRIBUTE name TEXT,
   ADD ATTRIBUTE stadium TEXT,
   ADD ATTRIBUTE "values" believe_teams.team_values,
   ADD ATTRIBUTE annual_budget_gbp TEXT,
@@ -33,11 +33,11 @@ ALTER TYPE believe_teams.team
   ADD ATTRIBUTE win_percentage DOUBLE PRECISION;
 
 CREATE OR REPLACE FUNCTION believe_teams.make_team(
-  "id" TEXT,
+  id TEXT,
   culture_score BIGINT,
   founded_year BIGINT,
   league TEXT,
-  "name" TEXT,
+  name TEXT,
   stadium TEXT,
   "values" believe_teams.team_values,
   annual_budget_gbp TEXT DEFAULT NULL,
@@ -57,11 +57,11 @@ LANGUAGE SQL
 IMMUTABLE
 AS $$
   SELECT ROW(
-    "id",
+    id,
     culture_score,
     founded_year,
     league,
-    "name",
+    name,
     stadium,
     "values",
     annual_budget_gbp,
@@ -99,7 +99,7 @@ CREATE OR REPLACE FUNCTION believe_teams._create(
   culture_score BIGINT,
   founded_year BIGINT,
   league TEXT,
-  "name" TEXT,
+  name TEXT,
   stadium TEXT,
   "values" believe_teams.team_values,
   annual_budget_gbp JSONB DEFAULT NULL,
@@ -150,7 +150,7 @@ CREATE OR REPLACE FUNCTION believe_teams.create(
   culture_score BIGINT,
   founded_year BIGINT,
   league TEXT,
-  "name" TEXT,
+  name TEXT,
   stadium TEXT,
   "values" believe_teams.team_values,
   annual_budget_gbp JSONB DEFAULT NULL,
@@ -176,7 +176,7 @@ AS $$
         culture_score,
         founded_year,
         league,
-        "name",
+        name,
         stadium,
         "values",
         annual_budget_gbp,
@@ -232,7 +232,7 @@ CREATE OR REPLACE FUNCTION believe_teams._update(
   founded_year BIGINT DEFAULT NULL,
   is_active BOOLEAN DEFAULT NULL,
   league TEXT DEFAULT NULL,
-  "name" TEXT DEFAULT NULL,
+  name TEXT DEFAULT NULL,
   nickname TEXT DEFAULT NULL,
   primary_color TEXT DEFAULT NULL,
   rival_teams TEXT[] DEFAULT NULL,
@@ -285,7 +285,7 @@ CREATE OR REPLACE FUNCTION believe_teams.update(
   founded_year BIGINT DEFAULT NULL,
   is_active BOOLEAN DEFAULT NULL,
   league TEXT DEFAULT NULL,
-  "name" TEXT DEFAULT NULL,
+  name TEXT DEFAULT NULL,
   nickname TEXT DEFAULT NULL,
   primary_color TEXT DEFAULT NULL,
   rival_teams TEXT[] DEFAULT NULL,
@@ -312,7 +312,7 @@ AS $$
         founded_year,
         is_active,
         league,
-        "name",
+        name,
         nickname,
         primary_color,
         rival_teams,
@@ -331,7 +331,7 @@ CREATE OR REPLACE FUNCTION believe_teams._list_first_page_py(
   league TEXT DEFAULT NULL,
   "limit" BIGINT DEFAULT NULL,
   min_culture_score BIGINT DEFAULT NULL,
-  "skip" BIGINT DEFAULT NULL
+  skip BIGINT DEFAULT NULL
 )
 RETURNS believe_internal.page
 LANGUAGE plpython3u
@@ -371,7 +371,7 @@ CREATE OR REPLACE FUNCTION believe_teams._list_first_page(
   league TEXT DEFAULT NULL,
   "limit" BIGINT DEFAULT NULL,
   min_culture_score BIGINT DEFAULT NULL,
-  "skip" BIGINT DEFAULT NULL
+  skip BIGINT DEFAULT NULL
 )
 RETURNS believe_internal.page
 LANGUAGE plpgsql
@@ -380,7 +380,7 @@ AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN believe_teams._list_first_page_py(
-      league, "limit", min_culture_score, "skip"
+      league, "limit", min_culture_score, skip
     );
   END;
 $$;
@@ -425,7 +425,7 @@ CREATE OR REPLACE FUNCTION believe_teams.list(
   league TEXT DEFAULT NULL,
   "limit" BIGINT DEFAULT NULL,
   min_culture_score BIGINT DEFAULT NULL,
-  "skip" BIGINT DEFAULT NULL
+  skip BIGINT DEFAULT NULL
 )
 RETURNS SETOF believe_teams.team
 LANGUAGE SQL
@@ -434,7 +434,7 @@ AS $$
   WITH RECURSIVE paginated AS (
     SELECT page.*
     FROM believe_teams._list_first_page(
-      league, "limit", min_culture_score, "skip"
+      league, "limit", min_culture_score, skip
     ) AS page
 
     UNION ALL
@@ -444,7 +444,7 @@ AS $$
     CROSS JOIN believe_teams._list_next_page(paginated.next_request_options) AS page
     WHERE paginated.next_request_options IS NOT NULL
   )
-  SELECT (jsonb_populate_recordset(NULL::believe_teams.team, "data")).* FROM paginated;
+  SELECT (jsonb_populate_recordset(NULL::believe_teams.team, data)).* FROM paginated;
 $$;
 
 CREATE OR REPLACE FUNCTION believe_teams._delete(team_id TEXT)
