@@ -1,7 +1,7 @@
 ALTER TYPE believe_matches.match
-  ADD ATTRIBUTE "id" TEXT,
+  ADD ATTRIBUTE id TEXT,
   ADD ATTRIBUTE away_team_id TEXT,
-  ADD ATTRIBUTE "date" TIMESTAMP,
+  ADD ATTRIBUTE date TIMESTAMP,
   ADD ATTRIBUTE home_team_id TEXT,
   ADD ATTRIBUTE match_type TEXT,
   ADD ATTRIBUTE attendance BIGINT,
@@ -10,16 +10,16 @@ ALTER TYPE believe_matches.match
   ADD ATTRIBUTE home_score BIGINT,
   ADD ATTRIBUTE lesson_learned TEXT,
   ADD ATTRIBUTE possession_percentage DOUBLE PRECISION,
-  ADD ATTRIBUTE "result" TEXT,
+  ADD ATTRIBUTE result TEXT,
   ADD ATTRIBUTE ted_halftime_speech TEXT,
   ADD ATTRIBUTE ticket_revenue_gbp TEXT,
   ADD ATTRIBUTE turning_points believe_matches.turning_point[],
   ADD ATTRIBUTE weather_temp_celsius DOUBLE PRECISION;
 
 CREATE OR REPLACE FUNCTION believe_matches.make_match(
-  "id" TEXT,
+  id TEXT,
   away_team_id TEXT,
-  "date" TIMESTAMP,
+  date TIMESTAMP,
   home_team_id TEXT,
   match_type TEXT,
   attendance BIGINT DEFAULT NULL,
@@ -28,7 +28,7 @@ CREATE OR REPLACE FUNCTION believe_matches.make_match(
   home_score BIGINT DEFAULT NULL,
   lesson_learned TEXT DEFAULT NULL,
   possession_percentage DOUBLE PRECISION DEFAULT NULL,
-  "result" TEXT DEFAULT NULL,
+  result TEXT DEFAULT NULL,
   ted_halftime_speech TEXT DEFAULT NULL,
   ticket_revenue_gbp TEXT DEFAULT NULL,
   turning_points believe_matches.turning_point[] DEFAULT NULL,
@@ -39,9 +39,9 @@ LANGUAGE SQL
 IMMUTABLE
 AS $$
   SELECT ROW(
-    "id",
+    id,
     away_team_id,
-    "date",
+    date,
     home_team_id,
     match_type,
     attendance,
@@ -50,7 +50,7 @@ AS $$
     home_score,
     lesson_learned,
     possession_percentage,
-    "result",
+    result,
     ted_halftime_speech,
     ticket_revenue_gbp,
     turning_points,
@@ -61,13 +61,13 @@ $$;
 ALTER TYPE believe_matches.turning_point
   ADD ATTRIBUTE description TEXT,
   ADD ATTRIBUTE emotional_impact TEXT,
-  ADD ATTRIBUTE "minute" BIGINT,
+  ADD ATTRIBUTE minute BIGINT,
   ADD ATTRIBUTE character_involved TEXT;
 
 CREATE OR REPLACE FUNCTION believe_matches.make_turning_point(
   description TEXT,
   emotional_impact TEXT,
-  "minute" BIGINT,
+  minute BIGINT,
   character_involved TEXT DEFAULT NULL
 )
 RETURNS believe_matches.turning_point
@@ -75,13 +75,13 @@ LANGUAGE SQL
 IMMUTABLE
 AS $$
   SELECT ROW(
-    description, emotional_impact, "minute", character_involved
+    description, emotional_impact, minute, character_involved
   )::believe_matches.turning_point;
 $$;
 
 CREATE OR REPLACE FUNCTION believe_matches._create(
   away_team_id TEXT,
-  "date" TIMESTAMP,
+  date TIMESTAMP,
   home_team_id TEXT,
   match_type TEXT,
   attendance BIGINT DEFAULT NULL,
@@ -90,7 +90,7 @@ CREATE OR REPLACE FUNCTION believe_matches._create(
   home_score BIGINT DEFAULT NULL,
   lesson_learned TEXT DEFAULT NULL,
   possession_percentage DOUBLE PRECISION DEFAULT NULL,
-  "result" TEXT DEFAULT NULL,
+  result TEXT DEFAULT NULL,
   ted_halftime_speech TEXT DEFAULT NULL,
   ticket_revenue_gbp JSONB DEFAULT NULL,
   turning_points believe_matches.turning_point[] DEFAULT NULL,
@@ -128,7 +128,7 @@ $$;
 
 CREATE OR REPLACE FUNCTION believe_matches.create(
   away_team_id TEXT,
-  "date" TIMESTAMP,
+  date TIMESTAMP,
   home_team_id TEXT,
   match_type TEXT,
   attendance BIGINT DEFAULT NULL,
@@ -137,7 +137,7 @@ CREATE OR REPLACE FUNCTION believe_matches.create(
   home_score BIGINT DEFAULT NULL,
   lesson_learned TEXT DEFAULT NULL,
   possession_percentage DOUBLE PRECISION DEFAULT NULL,
-  "result" TEXT DEFAULT NULL,
+  result TEXT DEFAULT NULL,
   ted_halftime_speech TEXT DEFAULT NULL,
   ticket_revenue_gbp JSONB DEFAULT NULL,
   turning_points believe_matches.turning_point[] DEFAULT NULL,
@@ -152,7 +152,7 @@ AS $$
       NULL::believe_matches.match,
       believe_matches._create(
         away_team_id,
-        "date",
+        date,
         home_team_id,
         match_type,
         attendance,
@@ -161,7 +161,7 @@ AS $$
         home_score,
         lesson_learned,
         possession_percentage,
-        "result",
+        result,
         ted_halftime_speech,
         ticket_revenue_gbp,
         turning_points,
@@ -204,14 +204,14 @@ CREATE OR REPLACE FUNCTION believe_matches._update(
   attendance BIGINT DEFAULT NULL,
   away_score BIGINT DEFAULT NULL,
   away_team_id TEXT DEFAULT NULL,
-  "date" TIMESTAMP DEFAULT NULL,
+  date TIMESTAMP DEFAULT NULL,
   episode_id TEXT DEFAULT NULL,
   home_score BIGINT DEFAULT NULL,
   home_team_id TEXT DEFAULT NULL,
   lesson_learned TEXT DEFAULT NULL,
   match_type TEXT DEFAULT NULL,
   possession_percentage DOUBLE PRECISION DEFAULT NULL,
-  "result" TEXT DEFAULT NULL,
+  result TEXT DEFAULT NULL,
   ted_halftime_speech TEXT DEFAULT NULL,
   ticket_revenue_gbp JSONB DEFAULT NULL,
   turning_points believe_matches.turning_point[] DEFAULT NULL,
@@ -253,14 +253,14 @@ CREATE OR REPLACE FUNCTION believe_matches.update(
   attendance BIGINT DEFAULT NULL,
   away_score BIGINT DEFAULT NULL,
   away_team_id TEXT DEFAULT NULL,
-  "date" TIMESTAMP DEFAULT NULL,
+  date TIMESTAMP DEFAULT NULL,
   episode_id TEXT DEFAULT NULL,
   home_score BIGINT DEFAULT NULL,
   home_team_id TEXT DEFAULT NULL,
   lesson_learned TEXT DEFAULT NULL,
   match_type TEXT DEFAULT NULL,
   possession_percentage DOUBLE PRECISION DEFAULT NULL,
-  "result" TEXT DEFAULT NULL,
+  result TEXT DEFAULT NULL,
   ted_halftime_speech TEXT DEFAULT NULL,
   ticket_revenue_gbp JSONB DEFAULT NULL,
   turning_points believe_matches.turning_point[] DEFAULT NULL,
@@ -278,14 +278,14 @@ AS $$
         attendance,
         away_score,
         away_team_id,
-        "date",
+        date,
         episode_id,
         home_score,
         home_team_id,
         lesson_learned,
         match_type,
         possession_percentage,
-        "result",
+        result,
         ted_halftime_speech,
         ticket_revenue_gbp,
         turning_points,
@@ -298,8 +298,8 @@ $$;
 CREATE OR REPLACE FUNCTION believe_matches._list_first_page_py(
   "limit" BIGINT DEFAULT NULL,
   match_type TEXT DEFAULT NULL,
-  "result" TEXT DEFAULT NULL,
-  "skip" BIGINT DEFAULT NULL,
+  result TEXT DEFAULT NULL,
+  skip BIGINT DEFAULT NULL,
   team_id TEXT DEFAULT NULL
 )
 RETURNS believe_internal.page
@@ -340,8 +340,8 @@ $$;
 CREATE OR REPLACE FUNCTION believe_matches._list_first_page(
   "limit" BIGINT DEFAULT NULL,
   match_type TEXT DEFAULT NULL,
-  "result" TEXT DEFAULT NULL,
-  "skip" BIGINT DEFAULT NULL,
+  result TEXT DEFAULT NULL,
+  skip BIGINT DEFAULT NULL,
   team_id TEXT DEFAULT NULL
 )
 RETURNS believe_internal.page
@@ -351,7 +351,7 @@ AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN believe_matches._list_first_page_py(
-      "limit", match_type, "result", "skip", team_id
+      "limit", match_type, result, skip, team_id
     );
   END;
 $$;
@@ -395,8 +395,8 @@ $$;
 CREATE OR REPLACE FUNCTION believe_matches.list(
   "limit" BIGINT DEFAULT NULL,
   match_type TEXT DEFAULT NULL,
-  "result" TEXT DEFAULT NULL,
-  "skip" BIGINT DEFAULT NULL,
+  result TEXT DEFAULT NULL,
+  skip BIGINT DEFAULT NULL,
   team_id TEXT DEFAULT NULL
 )
 RETURNS SETOF believe_matches.match
@@ -406,7 +406,7 @@ AS $$
   WITH RECURSIVE paginated AS (
     SELECT page.*
     FROM believe_matches._list_first_page(
-      "limit", match_type, "result", "skip", team_id
+      "limit", match_type, result, skip, team_id
     ) AS page
 
     UNION ALL
@@ -416,7 +416,7 @@ AS $$
     CROSS JOIN believe_matches._list_next_page(paginated.next_request_options) AS page
     WHERE paginated.next_request_options IS NOT NULL
   )
-  SELECT (jsonb_populate_recordset(NULL::believe_matches.match, "data")).* FROM paginated;
+  SELECT (jsonb_populate_recordset(NULL::believe_matches.match, data)).* FROM paginated;
 $$;
 
 CREATE OR REPLACE FUNCTION believe_matches._delete(match_id TEXT)

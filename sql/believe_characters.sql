@@ -1,10 +1,10 @@
 ALTER TYPE believe_characters.character
-  ADD ATTRIBUTE "id" TEXT,
+  ADD ATTRIBUTE id TEXT,
   ADD ATTRIBUTE background TEXT,
   ADD ATTRIBUTE emotional_stats believe_characters.emotional_stats,
-  ADD ATTRIBUTE "name" TEXT,
+  ADD ATTRIBUTE name TEXT,
   ADD ATTRIBUTE personality_traits TEXT[],
-  ADD ATTRIBUTE "role" TEXT,
+  ADD ATTRIBUTE role TEXT,
   ADD ATTRIBUTE date_of_birth DATE,
   ADD ATTRIBUTE email TEXT,
   ADD ATTRIBUTE growth_arcs believe_characters.growth_arc[],
@@ -15,12 +15,12 @@ ALTER TYPE believe_characters.character
   ADD ATTRIBUTE team_id TEXT;
 
 CREATE OR REPLACE FUNCTION believe_characters.make_character(
-  "id" TEXT,
+  id TEXT,
   background TEXT,
   emotional_stats believe_characters.emotional_stats,
-  "name" TEXT,
+  name TEXT,
   personality_traits TEXT[],
-  "role" TEXT,
+  role TEXT,
   date_of_birth DATE DEFAULT NULL,
   email TEXT DEFAULT NULL,
   growth_arcs believe_characters.growth_arc[] DEFAULT NULL,
@@ -35,12 +35,12 @@ LANGUAGE SQL
 IMMUTABLE
 AS $$
   SELECT ROW(
-    "id",
+    id,
     background,
     emotional_stats,
-    "name",
+    name,
     personality_traits,
-    "role",
+    role,
     date_of_birth,
     email,
     growth_arcs,
@@ -101,9 +101,9 @@ $$;
 CREATE OR REPLACE FUNCTION believe_characters._create(
   background TEXT,
   emotional_stats believe_characters.emotional_stats,
-  "name" TEXT,
+  name TEXT,
   personality_traits TEXT[],
-  "role" TEXT,
+  role TEXT,
   date_of_birth DATE DEFAULT NULL,
   email TEXT DEFAULT NULL,
   growth_arcs believe_characters.growth_arc[] DEFAULT NULL,
@@ -144,9 +144,9 @@ $$;
 CREATE OR REPLACE FUNCTION believe_characters.create(
   background TEXT,
   emotional_stats believe_characters.emotional_stats,
-  "name" TEXT,
+  name TEXT,
   personality_traits TEXT[],
-  "role" TEXT,
+  role TEXT,
   date_of_birth DATE DEFAULT NULL,
   email TEXT DEFAULT NULL,
   growth_arcs believe_characters.growth_arc[] DEFAULT NULL,
@@ -166,9 +166,9 @@ AS $$
       believe_characters._create(
         background,
         emotional_stats,
-        "name",
+        name,
         personality_traits,
-        "role",
+        role,
         date_of_birth,
         email,
         growth_arcs,
@@ -219,10 +219,10 @@ CREATE OR REPLACE FUNCTION believe_characters._update(
   emotional_stats believe_characters.emotional_stats DEFAULT NULL,
   growth_arcs believe_characters.growth_arc[] DEFAULT NULL,
   height_meters DOUBLE PRECISION DEFAULT NULL,
-  "name" TEXT DEFAULT NULL,
+  name TEXT DEFAULT NULL,
   personality_traits TEXT[] DEFAULT NULL,
   profile_image_url TEXT DEFAULT NULL,
-  "role" TEXT DEFAULT NULL,
+  role TEXT DEFAULT NULL,
   salary_gbp JSONB DEFAULT NULL,
   signature_quotes TEXT[] DEFAULT NULL,
   team_id TEXT DEFAULT NULL
@@ -264,10 +264,10 @@ CREATE OR REPLACE FUNCTION believe_characters.update(
   emotional_stats believe_characters.emotional_stats DEFAULT NULL,
   growth_arcs believe_characters.growth_arc[] DEFAULT NULL,
   height_meters DOUBLE PRECISION DEFAULT NULL,
-  "name" TEXT DEFAULT NULL,
+  name TEXT DEFAULT NULL,
   personality_traits TEXT[] DEFAULT NULL,
   profile_image_url TEXT DEFAULT NULL,
-  "role" TEXT DEFAULT NULL,
+  role TEXT DEFAULT NULL,
   salary_gbp JSONB DEFAULT NULL,
   signature_quotes TEXT[] DEFAULT NULL,
   team_id TEXT DEFAULT NULL
@@ -287,10 +287,10 @@ AS $$
         emotional_stats,
         growth_arcs,
         height_meters,
-        "name",
+        name,
         personality_traits,
         profile_image_url,
-        "role",
+        role,
         salary_gbp,
         signature_quotes,
         team_id
@@ -302,8 +302,8 @@ $$;
 CREATE OR REPLACE FUNCTION believe_characters._list_first_page_py(
   "limit" BIGINT DEFAULT NULL,
   min_optimism BIGINT DEFAULT NULL,
-  "role" TEXT DEFAULT NULL,
-  "skip" BIGINT DEFAULT NULL,
+  role TEXT DEFAULT NULL,
+  skip BIGINT DEFAULT NULL,
   team_id TEXT DEFAULT NULL
 )
 RETURNS believe_internal.page
@@ -344,8 +344,8 @@ $$;
 CREATE OR REPLACE FUNCTION believe_characters._list_first_page(
   "limit" BIGINT DEFAULT NULL,
   min_optimism BIGINT DEFAULT NULL,
-  "role" TEXT DEFAULT NULL,
-  "skip" BIGINT DEFAULT NULL,
+  role TEXT DEFAULT NULL,
+  skip BIGINT DEFAULT NULL,
   team_id TEXT DEFAULT NULL
 )
 RETURNS believe_internal.page
@@ -355,7 +355,7 @@ AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN believe_characters._list_first_page_py(
-      "limit", min_optimism, "role", "skip", team_id
+      "limit", min_optimism, role, skip, team_id
     );
   END;
 $$;
@@ -399,8 +399,8 @@ $$;
 CREATE OR REPLACE FUNCTION believe_characters.list(
   "limit" BIGINT DEFAULT NULL,
   min_optimism BIGINT DEFAULT NULL,
-  "role" TEXT DEFAULT NULL,
-  "skip" BIGINT DEFAULT NULL,
+  role TEXT DEFAULT NULL,
+  skip BIGINT DEFAULT NULL,
   team_id TEXT DEFAULT NULL
 )
 RETURNS SETOF believe_characters.character
@@ -410,7 +410,7 @@ AS $$
   WITH RECURSIVE paginated AS (
     SELECT page.*
     FROM believe_characters._list_first_page(
-      "limit", min_optimism, "role", "skip", team_id
+      "limit", min_optimism, role, skip, team_id
     ) AS page
 
     UNION ALL
@@ -420,7 +420,7 @@ AS $$
     CROSS JOIN believe_characters._list_next_page(paginated.next_request_options) AS page
     WHERE paginated.next_request_options IS NOT NULL
   )
-  SELECT (jsonb_populate_recordset(NULL::believe_characters.character, "data")).* FROM paginated;
+  SELECT (jsonb_populate_recordset(NULL::believe_characters.character, data)).* FROM paginated;
 $$;
 
 CREATE OR REPLACE FUNCTION believe_characters._delete(character_id TEXT)

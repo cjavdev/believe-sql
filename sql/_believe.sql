@@ -99,7 +99,7 @@ AS $$
 $$;
 
 CREATE TYPE believe_internal.page AS (
-  "data" JSONB,
+  data JSONB,
   next_request_options JSONB
 );
 

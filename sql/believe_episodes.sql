@@ -1,5 +1,5 @@
 ALTER TYPE believe_episodes.episode
-  ADD ATTRIBUTE "id" TEXT,
+  ADD ATTRIBUTE id TEXT,
   ADD ATTRIBUTE air_date DATE,
   ADD ATTRIBUTE character_focus TEXT[],
   ADD ATTRIBUTE director TEXT,
@@ -17,7 +17,7 @@ ALTER TYPE believe_episodes.episode
   ADD ATTRIBUTE viewer_rating DOUBLE PRECISION;
 
 CREATE OR REPLACE FUNCTION believe_episodes.make_episode(
-  "id" TEXT,
+  id TEXT,
   air_date DATE,
   character_focus TEXT[],
   director TEXT,
@@ -39,7 +39,7 @@ LANGUAGE SQL
 IMMUTABLE
 AS $$
   SELECT ROW(
-    "id",
+    id,
     air_date,
     character_focus,
     director,
@@ -59,21 +59,21 @@ AS $$
 $$;
 
 ALTER TYPE believe_episodes.paginated_response
-  ADD ATTRIBUTE "data" believe_episodes.episode[],
+  ADD ATTRIBUTE data believe_episodes.episode[],
   ADD ATTRIBUTE has_more BOOLEAN,
   ADD ATTRIBUTE "limit" BIGINT,
   ADD ATTRIBUTE page BIGINT,
   ADD ATTRIBUTE pages BIGINT,
-  ADD ATTRIBUTE "skip" BIGINT,
+  ADD ATTRIBUTE skip BIGINT,
   ADD ATTRIBUTE total BIGINT;
 
 CREATE OR REPLACE FUNCTION believe_episodes.make_paginated_response(
-  "data" believe_episodes.episode[],
+  data believe_episodes.episode[],
   has_more BOOLEAN,
   "limit" BIGINT,
   page BIGINT,
   pages BIGINT,
-  "skip" BIGINT,
+  skip BIGINT,
   total BIGINT
 )
 RETURNS believe_episodes.paginated_response
@@ -81,7 +81,7 @@ LANGUAGE SQL
 IMMUTABLE
 AS $$
   SELECT ROW(
-    "data", has_more, "limit", page, pages, "skip", total
+    data, has_more, "limit", page, pages, skip, total
   )::believe_episodes.paginated_response;
 $$;
 
@@ -303,7 +303,7 @@ CREATE OR REPLACE FUNCTION believe_episodes._list_first_page_py(
   character_focus TEXT DEFAULT NULL,
   "limit" BIGINT DEFAULT NULL,
   season BIGINT DEFAULT NULL,
-  "skip" BIGINT DEFAULT NULL
+  skip BIGINT DEFAULT NULL
 )
 RETURNS believe_internal.page
 LANGUAGE plpython3u
@@ -343,7 +343,7 @@ CREATE OR REPLACE FUNCTION believe_episodes._list_first_page(
   character_focus TEXT DEFAULT NULL,
   "limit" BIGINT DEFAULT NULL,
   season BIGINT DEFAULT NULL,
-  "skip" BIGINT DEFAULT NULL
+  skip BIGINT DEFAULT NULL
 )
 RETURNS believe_internal.page
 LANGUAGE plpgsql
@@ -352,7 +352,7 @@ AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN believe_episodes._list_first_page_py(
-      character_focus, "limit", season, "skip"
+      character_focus, "limit", season, skip
     );
   END;
 $$;
@@ -397,7 +397,7 @@ CREATE OR REPLACE FUNCTION believe_episodes.list(
   character_focus TEXT DEFAULT NULL,
   "limit" BIGINT DEFAULT NULL,
   season BIGINT DEFAULT NULL,
-  "skip" BIGINT DEFAULT NULL
+  skip BIGINT DEFAULT NULL
 )
 RETURNS SETOF believe_episodes.episode
 LANGUAGE SQL
@@ -406,7 +406,7 @@ AS $$
   WITH RECURSIVE paginated AS (
     SELECT page.*
     FROM believe_episodes._list_first_page(
-      character_focus, "limit", season, "skip"
+      character_focus, "limit", season, skip
     ) AS page
 
     UNION ALL
@@ -416,7 +416,7 @@ AS $$
     CROSS JOIN believe_episodes._list_next_page(paginated.next_request_options) AS page
     WHERE paginated.next_request_options IS NOT NULL
   )
-  SELECT (jsonb_populate_recordset(NULL::believe_episodes.episode, "data")).* FROM paginated;
+  SELECT (jsonb_populate_recordset(NULL::believe_episodes.episode, data)).* FROM paginated;
 $$;
 
 CREATE OR REPLACE FUNCTION believe_episodes._delete(episode_id TEXT)
@@ -465,7 +465,7 @@ AS $$
 $$;
 
 CREATE OR REPLACE FUNCTION believe_episodes._list_by_season_first_page_py(
-  season_number BIGINT, "limit" BIGINT DEFAULT NULL, "skip" BIGINT DEFAULT NULL
+  season_number BIGINT, "limit" BIGINT DEFAULT NULL, skip BIGINT DEFAULT NULL
 )
 RETURNS believe_internal.page
 LANGUAGE plpython3u
@@ -501,7 +501,7 @@ $$;
 
 -- A simpler wrapper around `believe_episodes._list_by_season_first_page` that ensures the global client is initialized.
 CREATE OR REPLACE FUNCTION believe_episodes._list_by_season_first_page(
-  season_number BIGINT, "limit" BIGINT DEFAULT NULL, "skip" BIGINT DEFAULT NULL
+  season_number BIGINT, "limit" BIGINT DEFAULT NULL, skip BIGINT DEFAULT NULL
 )
 RETURNS believe_internal.page
 LANGUAGE plpgsql
@@ -510,7 +510,7 @@ AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN believe_episodes._list_by_season_first_page_py(
-      season_number, "limit", "skip"
+      season_number, "limit", skip
     );
   END;
 $$;
@@ -552,7 +552,7 @@ AS $$
 $$;
 
 CREATE OR REPLACE FUNCTION believe_episodes.list_by_season(
-  season_number BIGINT, "limit" BIGINT DEFAULT NULL, "skip" BIGINT DEFAULT NULL
+  season_number BIGINT, "limit" BIGINT DEFAULT NULL, skip BIGINT DEFAULT NULL
 )
 RETURNS SETOF believe_episodes.episode
 LANGUAGE SQL
@@ -561,7 +561,7 @@ AS $$
   WITH RECURSIVE paginated AS (
     SELECT page.*
     FROM believe_episodes._list_by_season_first_page(
-      season_number, "limit", "skip"
+      season_number, "limit", skip
     ) AS page
 
     UNION ALL
@@ -571,5 +571,5 @@ AS $$
     CROSS JOIN believe_episodes._list_by_season_next_page(paginated.next_request_options) AS page
     WHERE paginated.next_request_options IS NOT NULL
   )
-  SELECT (jsonb_populate_recordset(NULL::believe_episodes.episode, "data")).* FROM paginated;
+  SELECT (jsonb_populate_recordset(NULL::believe_episodes.episode, data)).* FROM paginated;
 $$;

@@ -76,7 +76,7 @@ AS $$
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_teams_logo._upload(team_id TEXT, "file" TEXT)
+CREATE OR REPLACE FUNCTION believe_teams_logo._upload(team_id TEXT, file TEXT)
 RETURNS JSONB
 LANGUAGE plpython3u
 AS $$
@@ -91,7 +91,7 @@ AS $$
   return response.text()
 $$;
 
-CREATE OR REPLACE FUNCTION believe_teams_logo.upload(team_id TEXT, "file" TEXT)
+CREATE OR REPLACE FUNCTION believe_teams_logo.upload(team_id TEXT, file TEXT)
 RETURNS believe_teams_logo.file_upload
 LANGUAGE plpgsql
 AS $$
@@ -99,7 +99,7 @@ AS $$
     PERFORM believe_internal.ensure_context();
     RETURN jsonb_populate_record(
       NULL::believe_teams_logo.file_upload,
-      believe_teams_logo._upload(team_id, "file")
+      believe_teams_logo._upload(team_id, file)
     );
   END;
 $$;
