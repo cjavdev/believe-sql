@@ -61,5 +61,10 @@ done
 echo "==> Running setup.sql"
 psql -d postgres -f test/sql/create_extension.sql
 
-echo "==> Starting psql REPL"
-psql -d postgres
+if command -v pgcli &>/dev/null; then
+  echo "==> Starting pgcli REPL"
+  pgcli postgres
+else
+  echo "==> Starting psql REPL (TIP: Install pgcli for better autocomplete!)"
+  psql -d postgres
+fi

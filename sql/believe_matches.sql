@@ -1,7 +1,7 @@
-ALTER TYPE believe_match.match
-  ADD ATTRIBUTE "id" TEXT,
+ALTER TYPE believe_matches.match
+  ADD ATTRIBUTE id TEXT,
   ADD ATTRIBUTE away_team_id TEXT,
-  ADD ATTRIBUTE "date" TIMESTAMP,
+  ADD ATTRIBUTE date TIMESTAMP,
   ADD ATTRIBUTE home_team_id TEXT,
   ADD ATTRIBUTE match_type TEXT,
   ADD ATTRIBUTE attendance BIGINT,
@@ -10,16 +10,16 @@ ALTER TYPE believe_match.match
   ADD ATTRIBUTE home_score BIGINT,
   ADD ATTRIBUTE lesson_learned TEXT,
   ADD ATTRIBUTE possession_percentage DOUBLE PRECISION,
-  ADD ATTRIBUTE "result" TEXT,
+  ADD ATTRIBUTE result TEXT,
   ADD ATTRIBUTE ted_halftime_speech TEXT,
   ADD ATTRIBUTE ticket_revenue_gbp TEXT,
-  ADD ATTRIBUTE turning_points believe_match.turning_point[],
+  ADD ATTRIBUTE turning_points believe_matches.turning_point[],
   ADD ATTRIBUTE weather_temp_celsius DOUBLE PRECISION;
 
-CREATE OR REPLACE FUNCTION believe_match.make_match(
-  "id" TEXT,
+CREATE OR REPLACE FUNCTION believe_matches.make_match(
+  id TEXT,
   away_team_id TEXT,
-  "date" TIMESTAMP,
+  date TIMESTAMP,
   home_team_id TEXT,
   match_type TEXT,
   attendance BIGINT DEFAULT NULL,
@@ -28,20 +28,20 @@ CREATE OR REPLACE FUNCTION believe_match.make_match(
   home_score BIGINT DEFAULT NULL,
   lesson_learned TEXT DEFAULT NULL,
   possession_percentage DOUBLE PRECISION DEFAULT NULL,
-  "result" TEXT DEFAULT NULL,
+  result TEXT DEFAULT NULL,
   ted_halftime_speech TEXT DEFAULT NULL,
   ticket_revenue_gbp TEXT DEFAULT NULL,
-  turning_points believe_match.turning_point[] DEFAULT NULL,
+  turning_points believe_matches.turning_point[] DEFAULT NULL,
   weather_temp_celsius DOUBLE PRECISION DEFAULT NULL
 )
-RETURNS believe_match.match
+RETURNS believe_matches.match
 LANGUAGE SQL
 IMMUTABLE
 AS $$
   SELECT ROW(
-    "id",
+    id,
     away_team_id,
-    "date",
+    date,
     home_team_id,
     match_type,
     attendance,
@@ -50,38 +50,38 @@ AS $$
     home_score,
     lesson_learned,
     possession_percentage,
-    "result",
+    result,
     ted_halftime_speech,
     ticket_revenue_gbp,
     turning_points,
     weather_temp_celsius
-  )::believe_match.match;
+  )::believe_matches.match;
 $$;
 
-ALTER TYPE believe_match.turning_point
+ALTER TYPE believe_matches.turning_point
   ADD ATTRIBUTE description TEXT,
   ADD ATTRIBUTE emotional_impact TEXT,
-  ADD ATTRIBUTE "minute" BIGINT,
+  ADD ATTRIBUTE minute BIGINT,
   ADD ATTRIBUTE character_involved TEXT;
 
-CREATE OR REPLACE FUNCTION believe_match.make_turning_point(
+CREATE OR REPLACE FUNCTION believe_matches.make_turning_point(
   description TEXT,
   emotional_impact TEXT,
-  "minute" BIGINT,
+  minute BIGINT,
   character_involved TEXT DEFAULT NULL
 )
-RETURNS believe_match.turning_point
+RETURNS believe_matches.turning_point
 LANGUAGE SQL
 IMMUTABLE
 AS $$
   SELECT ROW(
-    description, emotional_impact, "minute", character_involved
-  )::believe_match.turning_point;
+    description, emotional_impact, minute, character_involved
+  )::believe_matches.turning_point;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_match._create(
+CREATE OR REPLACE FUNCTION believe_matches._create(
   away_team_id TEXT,
-  "date" TIMESTAMP,
+  date TIMESTAMP,
   home_team_id TEXT,
   match_type TEXT,
   attendance BIGINT DEFAULT NULL,
@@ -90,10 +90,10 @@ CREATE OR REPLACE FUNCTION believe_match._create(
   home_score BIGINT DEFAULT NULL,
   lesson_learned TEXT DEFAULT NULL,
   possession_percentage DOUBLE PRECISION DEFAULT NULL,
-  "result" TEXT DEFAULT NULL,
+  result TEXT DEFAULT NULL,
   ted_halftime_speech TEXT DEFAULT NULL,
   ticket_revenue_gbp JSONB DEFAULT NULL,
-  turning_points believe_match.turning_point[] DEFAULT NULL,
+  turning_points believe_matches.turning_point[] DEFAULT NULL,
   weather_temp_celsius DOUBLE PRECISION DEFAULT NULL
 )
 RETURNS JSONB
@@ -126,9 +126,9 @@ AS $$
   return response.text()
 $$;
 
-CREATE OR REPLACE FUNCTION believe_match.create(
+CREATE OR REPLACE FUNCTION believe_matches.create(
   away_team_id TEXT,
-  "date" TIMESTAMP,
+  date TIMESTAMP,
   home_team_id TEXT,
   match_type TEXT,
   attendance BIGINT DEFAULT NULL,
@@ -137,22 +137,22 @@ CREATE OR REPLACE FUNCTION believe_match.create(
   home_score BIGINT DEFAULT NULL,
   lesson_learned TEXT DEFAULT NULL,
   possession_percentage DOUBLE PRECISION DEFAULT NULL,
-  "result" TEXT DEFAULT NULL,
+  result TEXT DEFAULT NULL,
   ted_halftime_speech TEXT DEFAULT NULL,
   ticket_revenue_gbp JSONB DEFAULT NULL,
-  turning_points believe_match.turning_point[] DEFAULT NULL,
+  turning_points believe_matches.turning_point[] DEFAULT NULL,
   weather_temp_celsius DOUBLE PRECISION DEFAULT NULL
 )
-RETURNS believe_match.match
+RETURNS believe_matches.match
 LANGUAGE plpgsql
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN jsonb_populate_record(
-      NULL::believe_match.match,
-      believe_match._create(
+      NULL::believe_matches.match,
+      believe_matches._create(
         away_team_id,
-        "date",
+        date,
         home_team_id,
         match_type,
         attendance,
@@ -161,7 +161,7 @@ AS $$
         home_score,
         lesson_learned,
         possession_percentage,
-        "result",
+        result,
         ted_halftime_speech,
         ticket_revenue_gbp,
         turning_points,
@@ -171,7 +171,7 @@ AS $$
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_match._retrieve(match_id TEXT)
+CREATE OR REPLACE FUNCTION believe_matches._retrieve(match_id TEXT)
 RETURNS JSONB
 LANGUAGE plpython3u
 STABLE
@@ -186,35 +186,35 @@ AS $$
   return response.text()
 $$;
 
-CREATE OR REPLACE FUNCTION believe_match.retrieve(match_id TEXT)
-RETURNS believe_match.match
+CREATE OR REPLACE FUNCTION believe_matches.retrieve(match_id TEXT)
+RETURNS believe_matches.match
 LANGUAGE plpgsql
 STABLE
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN jsonb_populate_record(
-      NULL::believe_match.match, believe_match._retrieve(match_id)
+      NULL::believe_matches.match, believe_matches._retrieve(match_id)
     );
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_match._update(
+CREATE OR REPLACE FUNCTION believe_matches._update(
   match_id TEXT,
   attendance BIGINT DEFAULT NULL,
   away_score BIGINT DEFAULT NULL,
   away_team_id TEXT DEFAULT NULL,
-  "date" TIMESTAMP DEFAULT NULL,
+  date TIMESTAMP DEFAULT NULL,
   episode_id TEXT DEFAULT NULL,
   home_score BIGINT DEFAULT NULL,
   home_team_id TEXT DEFAULT NULL,
   lesson_learned TEXT DEFAULT NULL,
   match_type TEXT DEFAULT NULL,
   possession_percentage DOUBLE PRECISION DEFAULT NULL,
-  "result" TEXT DEFAULT NULL,
+  result TEXT DEFAULT NULL,
   ted_halftime_speech TEXT DEFAULT NULL,
   ticket_revenue_gbp JSONB DEFAULT NULL,
-  turning_points believe_match.turning_point[] DEFAULT NULL,
+  turning_points believe_matches.turning_point[] DEFAULT NULL,
   weather_temp_celsius DOUBLE PRECISION DEFAULT NULL
 )
 RETURNS JSONB
@@ -248,44 +248,44 @@ AS $$
   return response.text()
 $$;
 
-CREATE OR REPLACE FUNCTION believe_match.update(
+CREATE OR REPLACE FUNCTION believe_matches.update(
   match_id TEXT,
   attendance BIGINT DEFAULT NULL,
   away_score BIGINT DEFAULT NULL,
   away_team_id TEXT DEFAULT NULL,
-  "date" TIMESTAMP DEFAULT NULL,
+  date TIMESTAMP DEFAULT NULL,
   episode_id TEXT DEFAULT NULL,
   home_score BIGINT DEFAULT NULL,
   home_team_id TEXT DEFAULT NULL,
   lesson_learned TEXT DEFAULT NULL,
   match_type TEXT DEFAULT NULL,
   possession_percentage DOUBLE PRECISION DEFAULT NULL,
-  "result" TEXT DEFAULT NULL,
+  result TEXT DEFAULT NULL,
   ted_halftime_speech TEXT DEFAULT NULL,
   ticket_revenue_gbp JSONB DEFAULT NULL,
-  turning_points believe_match.turning_point[] DEFAULT NULL,
+  turning_points believe_matches.turning_point[] DEFAULT NULL,
   weather_temp_celsius DOUBLE PRECISION DEFAULT NULL
 )
-RETURNS believe_match.match
+RETURNS believe_matches.match
 LANGUAGE plpgsql
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN jsonb_populate_record(
-      NULL::believe_match.match,
-      believe_match._update(
+      NULL::believe_matches.match,
+      believe_matches._update(
         match_id,
         attendance,
         away_score,
         away_team_id,
-        "date",
+        date,
         episode_id,
         home_score,
         home_team_id,
         lesson_learned,
         match_type,
         possession_percentage,
-        "result",
+        result,
         ted_halftime_speech,
         ticket_revenue_gbp,
         turning_points,
@@ -295,11 +295,11 @@ AS $$
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_match._list_first_page_py(
+CREATE OR REPLACE FUNCTION believe_matches._list_first_page_py(
   "limit" BIGINT DEFAULT NULL,
   match_type TEXT DEFAULT NULL,
-  "result" TEXT DEFAULT NULL,
-  "skip" BIGINT DEFAULT NULL,
+  result TEXT DEFAULT NULL,
+  skip BIGINT DEFAULT NULL,
   team_id TEXT DEFAULT NULL
 )
 RETURNS believe_internal.page
@@ -336,12 +336,12 @@ AS $$
   )
 $$;
 
--- A simpler wrapper around `believe_match._list_first_page` that ensures the global client is initialized.
-CREATE OR REPLACE FUNCTION believe_match._list_first_page(
+-- A simpler wrapper around `believe_matches._list_first_page` that ensures the global client is initialized.
+CREATE OR REPLACE FUNCTION believe_matches._list_first_page(
   "limit" BIGINT DEFAULT NULL,
   match_type TEXT DEFAULT NULL,
-  "result" TEXT DEFAULT NULL,
-  "skip" BIGINT DEFAULT NULL,
+  result TEXT DEFAULT NULL,
+  skip BIGINT DEFAULT NULL,
   team_id TEXT DEFAULT NULL
 )
 RETURNS believe_internal.page
@@ -350,13 +350,13 @@ STABLE
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
-    RETURN believe_match._list_first_page_py(
-      "limit", match_type, "result", "skip", team_id
+    RETURN believe_matches._list_first_page_py(
+      "limit", match_type, result, skip, team_id
     );
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_match._list_next_page(request_options JSONB)
+CREATE OR REPLACE FUNCTION believe_matches._list_next_page(request_options JSONB)
 RETURNS believe_internal.page
 LANGUAGE plpython3u
 STABLE
@@ -392,34 +392,34 @@ AS $$
   )
 $$;
 
-CREATE OR REPLACE FUNCTION believe_match.list(
+CREATE OR REPLACE FUNCTION believe_matches.list(
   "limit" BIGINT DEFAULT NULL,
   match_type TEXT DEFAULT NULL,
-  "result" TEXT DEFAULT NULL,
-  "skip" BIGINT DEFAULT NULL,
+  result TEXT DEFAULT NULL,
+  skip BIGINT DEFAULT NULL,
   team_id TEXT DEFAULT NULL
 )
-RETURNS SETOF believe_match.match
+RETURNS SETOF believe_matches.match
 LANGUAGE SQL
 STABLE
 AS $$
   WITH RECURSIVE paginated AS (
     SELECT page.*
-    FROM believe_match._list_first_page(
-      "limit", match_type, "result", "skip", team_id
+    FROM believe_matches._list_first_page(
+      "limit", match_type, result, skip, team_id
     ) AS page
 
     UNION ALL
 
     SELECT page.*
     FROM paginated
-    CROSS JOIN believe_match._list_next_page(paginated.next_request_options) AS page
+    CROSS JOIN believe_matches._list_next_page(paginated.next_request_options) AS page
     WHERE paginated.next_request_options IS NOT NULL
   )
-  SELECT (jsonb_populate_recordset(NULL::believe_match.match, "data")).* FROM paginated;
+  SELECT (jsonb_populate_recordset(NULL::believe_matches.match, data)).* FROM paginated;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_match._delete(match_id TEXT)
+CREATE OR REPLACE FUNCTION believe_matches._delete(match_id TEXT)
 RETURNS VOID
 LANGUAGE plpython3u
 AS $$
@@ -428,17 +428,17 @@ AS $$
   )
 $$;
 
-CREATE OR REPLACE FUNCTION believe_match.delete(match_id TEXT)
+CREATE OR REPLACE FUNCTION believe_matches.delete(match_id TEXT)
 RETURNS VOID
 LANGUAGE plpgsql
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
-    PERFORM believe_match._delete(match_id);
+    PERFORM believe_matches._delete(match_id);
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_match._get_lesson(match_id TEXT)
+CREATE OR REPLACE FUNCTION believe_matches._get_lesson(match_id TEXT)
 RETURNS JSONB
 LANGUAGE plpython3u
 STABLE
@@ -453,18 +453,18 @@ AS $$
   return response.text()
 $$;
 
-CREATE OR REPLACE FUNCTION believe_match.get_lesson(match_id TEXT)
+CREATE OR REPLACE FUNCTION believe_matches.get_lesson(match_id TEXT)
 RETURNS JSONB
 LANGUAGE plpgsql
 STABLE
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
-    RETURN believe_match._get_lesson(match_id);
+    RETURN believe_matches._get_lesson(match_id);
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_match._get_turning_points(match_id TEXT)
+CREATE OR REPLACE FUNCTION believe_matches._get_turning_points(match_id TEXT)
 RETURNS JSONB
 LANGUAGE plpython3u
 STABLE
@@ -479,18 +479,18 @@ AS $$
   return response.text()
 $$;
 
-CREATE OR REPLACE FUNCTION believe_match.get_turning_points(match_id TEXT)
+CREATE OR REPLACE FUNCTION believe_matches.get_turning_points(match_id TEXT)
 RETURNS SETOF JSONB
 LANGUAGE plpgsql
 STABLE
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
-    RETURN believe_match._get_turning_points(match_id);
+    RETURN believe_matches._get_turning_points(match_id);
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_match._stream_live(
+CREATE OR REPLACE FUNCTION believe_matches._stream_live(
   away_team TEXT DEFAULT NULL,
   excitement_level BIGINT DEFAULT NULL,
   home_team TEXT DEFAULT NULL,
@@ -510,7 +510,7 @@ AS $$
   )
 $$;
 
-CREATE OR REPLACE FUNCTION believe_match.stream_live(
+CREATE OR REPLACE FUNCTION believe_matches.stream_live(
   away_team TEXT DEFAULT NULL,
   excitement_level BIGINT DEFAULT NULL,
   home_team TEXT DEFAULT NULL,
@@ -522,7 +522,7 @@ STABLE
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
-    PERFORM believe_match._stream_live(
+    PERFORM believe_matches._stream_live(
       away_team, excitement_level, home_team, speed
     );
   END;

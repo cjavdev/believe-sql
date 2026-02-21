@@ -5,7 +5,7 @@
 >
 > This extension has not yet been exhaustively tested in production environments and may be missing some features you'd expect in a stable release. As we continue development, there may be breaking changes that require updates to your code.
 >
-> **We'd love your feedback!** Please share any suggestions, bug reports, feature requests, or general thoughts by [filing an issue](https://www.github.com/stainless-sdks/believe-sql/issues/new).
+> **We'd love your feedback!** Please share any suggestions, bug reports, feature requests, or general thoughts by [filing an issue](https://www.github.com/cjavdev/believe-sql/issues/new).
 
 The Believe API PostgreSQL Extension provides convenient access to the Believe REST API from PostgreSQL.
 
@@ -13,10 +13,102 @@ It is generated with [Stainless](https://www.stainless.com/).
 
 ## Installation
 
+Install the extension from [PGXN](https://pgxn.org/dist/believe):
+
+```sh
+pgxn install believe
+```
+
+Load it into your database:
+
+```sh
+pgxn load -d yourb believe
+```
+
+And install the Python SDK dependency:
+
+```sh
+# install from the production repo
+pip install git+ssh://git@github.com/cjavdev/believe-python.git
+```
+
+See [PGXN Client's documentation](https://pgxn.github.io/pgxnclient) for more information on installing from PGXN, and [`./scripts/test`](./scripts/test) how to use a [Python virtual environment](https://docs.python.org/3/library/sys_path_init.html#sys-path-init-virtual-environments) if you prefer that instead.
+
+Use [the troubleshooting section](#troubleshooting) if you encounter issues during or after installation.
+
+## Requirements
+
+This extension requires:
+
+- PostgreSQL 14 or higher
+- [PL/Python](https://www.postgresql.org/docs/current/plpython.html)
+- Python 3.9 or higher
+- The believe Python package
+
+## Usage
+
+```sql
+SELECT *
+FROM believe_characters.list();
+```
+
+## Client configuration
+
+Configure the client by setting configuration parameters at the database level:
+
+```sql
+ALTER DATABASE my_database SET believe.api_key = 'My API Key';
+```
+
+> [!NOTE] > `ALTER DATABASE` persistently alters the database, but doesn't take effect until the next session. To
+> ephemerally modify the current session, use `SET believe.api_key TO 'My API Key';`.
+
+See this table for the available configuration parameters:
+
+| Parameter          | Required | Default value                |
+| ------------------ | -------- | ---------------------------- |
+| `believe.api_key`  | true     | -                            |
+| `believe.base_url` | false    | `'https://believe.cjav.dev'` |
+
+## Requests and responses
+
+To send a request to the Believe API, call the relevant SQL function with values corresponding to the parameter types and `SELECT` the columns you need from the returned rows.
+
+To construct [composite type](https://www.postgresql.org/docs/current/rowtypes.html) parameters, use the parameter type's provided `make_*` function. For example, `believe_characters.emotional_stats` may be constructed like so:
+
+```sql
+believe_characters.make_emotional_stats(
+  curiosity := 40,
+  empathy := 85,
+  optimism := 45,
+  resilience := 95,
+  vulnerability := 60
+)
+```
+
+## Pagination
+
+For Believe API endpoints that return a paginated lists of results, the extension automatically fetches more pages as needed.
+
+For example, the following query will make the minimum number of requests necessary to satisfy the `LIMIT`:
+
+```sql
+SELECT *
+FROM believe_characters.list()
+LIMIT 200;
+```
+
+> [!IMPORTANT]
+> Place your `LIMIT` as close to the paginated function call as possible. If the `LIMIT` is too far
+> removed, then PostgreSQL may not [push down the condition](https://wiki.postgresql.org/wiki/Inlining_of_SQL_functions),
+> causing all pages to be requested and buffered.
+
+## Manual installation
+
 Clone the repository:
 
 ```sh
-git clone git@github.com:stainless-sdks/believe-sql.git
+git clone git@github.com:cjavdev/believe-sql.git
 cd believe-sql
 ```
 
@@ -26,14 +118,35 @@ Install the extension:
 make install
 ```
 
-And load it into the relevant database:
+Load it into the relevant database:
 
 ```sql
 CREATE EXTENSION IF NOT EXISTS plpython3u; -- Dependency
 CREATE EXTENSION believe;
 ```
 
-### Troubleshooting
+And install the Python SDK dependency:
+
+```sh
+# install from the production repo
+pip install git+ssh://git@github.com/cjavdev/believe-python.git
+```
+
+See [`./scripts/test`](./scripts/test) how to use a [Python virtual environment](https://docs.python.org/3/library/sys_path_init.html#sys-path-init-virtual-environments) if you prefer that instead.
+
+Use [the troubleshooting section](#troubleshooting) if you encounter issues during or after installation.
+
+## Troubleshooting
+
+### Installation
+
+If you encounter an error such as:
+
+```
+Operation not permitted
+```
+
+Then run with `sudo`. If necessary, ensure your terminal has full disk access.
 
 If you encounter an error such as:
 
@@ -60,68 +173,19 @@ extension_control_path = '/usr/local/extras/postgresql/share:$system'
 dynamic_library_path   = '/usr/local/extras/postgresql/lib:$libdir'
 ```
 
-## Requirements
+### Loading
 
-This extension requires:
+If you encounter an error such as:
 
-- PostgreSQL 14 or higher
-- [PL/Python](https://www.postgresql.org/docs/current/plpython.html)
-- Python 3.9 or higher
-
-## Usage
-
-```sql
-SELECT *
-FROM believe_character.list();
+```
+ERROR: could not load library
 ```
 
-## Client configuration
+Then ensure your Python installation is linked to the directory where PostgreSQL was looking for it. You can print out the directory of your Python installation with this command:
 
-Configure the client by setting configuration parameters at the database level:
-
-```sql
-ALTER DATABASE my_database SET believe.api_key = 'My API Key';
+```sh
+python3 -c "import sys; print(sys.prefix)"
 ```
-
-See this table for the available configuration parameters:
-
-| Parameter          | Required | Default value                |
-| ------------------ | -------- | ---------------------------- |
-| `believe.api_key`  | true     | -                            |
-| `believe.base_url` | false    | `'https://believe.cjav.dev'` |
-
-## Requests and responses
-
-To send a request to the Believe API, call the relevant SQL function with values corresponding to the parameter types and `SELECT` the columns you need from the returned rows.
-
-To construct [composite type](https://www.postgresql.org/docs/current/rowtypes.html) parameters, use the parameter type's provided `make_*` function. For example, `believe_character.emotional_stats` may be constructed like so:
-
-```sql
-believe_character.make_emotional_stats(
-  curiosity := 40,
-  empathy := 85,
-  optimism := 45,
-  resilience := 95,
-  vulnerability := 60
-)
-```
-
-## Pagination
-
-For Believe API endpoints that return a paginated lists of results, the extension automatically fetches more pages as needed.
-
-For example, the following query will make the minimum number of requests necessary to satisfy the `LIMIT`:
-
-```sql
-SELECT *
-FROM believe_character.list()
-LIMIT 200;
-```
-
-> [!IMPORTANT]
-> Place your `LIMIT` as close to the paginated function call as possible. If the `LIMIT` is too far
-> removed, then PostgreSQL may not [push down the condition](https://wiki.postgresql.org/wiki/Inlining_of_SQL_functions),
-> causing all pages to be requested and buffered.
 
 ## Semantic versioning
 
@@ -132,4 +196,4 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks/believe-sql/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/cjavdev/believe-sql/issues) with questions, bugs, or suggestions.

@@ -1,25 +1,25 @@
-ALTER TYPE believe_team.geo_location
+ALTER TYPE believe_teams.geo_location
   ADD ATTRIBUTE latitude DOUBLE PRECISION,
   ADD ATTRIBUTE longitude DOUBLE PRECISION;
 
-CREATE OR REPLACE FUNCTION believe_team.make_geo_location(
+CREATE OR REPLACE FUNCTION believe_teams.make_geo_location(
   latitude DOUBLE PRECISION, longitude DOUBLE PRECISION
 )
-RETURNS believe_team.geo_location
+RETURNS believe_teams.geo_location
 LANGUAGE SQL
 IMMUTABLE
 AS $$
-  SELECT ROW(latitude, longitude)::believe_team.geo_location;
+  SELECT ROW(latitude, longitude)::believe_teams.geo_location;
 $$;
 
-ALTER TYPE believe_team.team
-  ADD ATTRIBUTE "id" TEXT,
+ALTER TYPE believe_teams.team
+  ADD ATTRIBUTE id TEXT,
   ADD ATTRIBUTE culture_score BIGINT,
   ADD ATTRIBUTE founded_year BIGINT,
   ADD ATTRIBUTE league TEXT,
-  ADD ATTRIBUTE "name" TEXT,
+  ADD ATTRIBUTE name TEXT,
   ADD ATTRIBUTE stadium TEXT,
-  ADD ATTRIBUTE "values" believe_team.team_values,
+  ADD ATTRIBUTE "values" believe_teams.team_values,
   ADD ATTRIBUTE annual_budget_gbp TEXT,
   ADD ATTRIBUTE average_attendance DOUBLE PRECISION,
   ADD ATTRIBUTE contact_email TEXT,
@@ -28,18 +28,18 @@ ALTER TYPE believe_team.team
   ADD ATTRIBUTE primary_color TEXT,
   ADD ATTRIBUTE rival_teams TEXT[],
   ADD ATTRIBUTE secondary_color TEXT,
-  ADD ATTRIBUTE stadium_location believe_team.geo_location,
+  ADD ATTRIBUTE stadium_location believe_teams.geo_location,
   ADD ATTRIBUTE website TEXT,
   ADD ATTRIBUTE win_percentage DOUBLE PRECISION;
 
-CREATE OR REPLACE FUNCTION believe_team.make_team(
-  "id" TEXT,
+CREATE OR REPLACE FUNCTION believe_teams.make_team(
+  id TEXT,
   culture_score BIGINT,
   founded_year BIGINT,
   league TEXT,
-  "name" TEXT,
+  name TEXT,
   stadium TEXT,
-  "values" believe_team.team_values,
+  "values" believe_teams.team_values,
   annual_budget_gbp TEXT DEFAULT NULL,
   average_attendance DOUBLE PRECISION DEFAULT NULL,
   contact_email TEXT DEFAULT NULL,
@@ -48,20 +48,20 @@ CREATE OR REPLACE FUNCTION believe_team.make_team(
   primary_color TEXT DEFAULT NULL,
   rival_teams TEXT[] DEFAULT NULL,
   secondary_color TEXT DEFAULT NULL,
-  stadium_location believe_team.geo_location DEFAULT NULL,
+  stadium_location believe_teams.geo_location DEFAULT NULL,
   website TEXT DEFAULT NULL,
   win_percentage DOUBLE PRECISION DEFAULT NULL
 )
-RETURNS believe_team.team
+RETURNS believe_teams.team
 LANGUAGE SQL
 IMMUTABLE
 AS $$
   SELECT ROW(
-    "id",
+    id,
     culture_score,
     founded_year,
     league,
-    "name",
+    name,
     stadium,
     "values",
     annual_budget_gbp,
@@ -75,33 +75,33 @@ AS $$
     stadium_location,
     website,
     win_percentage
-  )::believe_team.team;
+  )::believe_teams.team;
 $$;
 
-ALTER TYPE believe_team.team_values
+ALTER TYPE believe_teams.team_values
   ADD ATTRIBUTE primary_value TEXT,
   ADD ATTRIBUTE secondary_values TEXT[],
   ADD ATTRIBUTE team_motto TEXT;
 
-CREATE OR REPLACE FUNCTION believe_team.make_team_values(
+CREATE OR REPLACE FUNCTION believe_teams.make_team_values(
   primary_value TEXT, secondary_values TEXT[], team_motto TEXT
 )
-RETURNS believe_team.team_values
+RETURNS believe_teams.team_values
 LANGUAGE SQL
 IMMUTABLE
 AS $$
   SELECT ROW(
     primary_value, secondary_values, team_motto
-  )::believe_team.team_values;
+  )::believe_teams.team_values;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_team._create(
+CREATE OR REPLACE FUNCTION believe_teams._create(
   culture_score BIGINT,
   founded_year BIGINT,
   league TEXT,
-  "name" TEXT,
+  name TEXT,
   stadium TEXT,
-  "values" believe_team.team_values,
+  "values" believe_teams.team_values,
   annual_budget_gbp JSONB DEFAULT NULL,
   average_attendance DOUBLE PRECISION DEFAULT NULL,
   contact_email TEXT DEFAULT NULL,
@@ -110,7 +110,7 @@ CREATE OR REPLACE FUNCTION believe_team._create(
   primary_color TEXT DEFAULT NULL,
   rival_teams TEXT[] DEFAULT NULL,
   secondary_color TEXT DEFAULT NULL,
-  stadium_location believe_team.geo_location DEFAULT NULL,
+  stadium_location believe_teams.geo_location DEFAULT NULL,
   website TEXT DEFAULT NULL,
   win_percentage DOUBLE PRECISION DEFAULT NULL
 )
@@ -146,13 +146,13 @@ AS $$
   return response.text()
 $$;
 
-CREATE OR REPLACE FUNCTION believe_team.create(
+CREATE OR REPLACE FUNCTION believe_teams.create(
   culture_score BIGINT,
   founded_year BIGINT,
   league TEXT,
-  "name" TEXT,
+  name TEXT,
   stadium TEXT,
-  "values" believe_team.team_values,
+  "values" believe_teams.team_values,
   annual_budget_gbp JSONB DEFAULT NULL,
   average_attendance DOUBLE PRECISION DEFAULT NULL,
   contact_email TEXT DEFAULT NULL,
@@ -161,22 +161,22 @@ CREATE OR REPLACE FUNCTION believe_team.create(
   primary_color TEXT DEFAULT NULL,
   rival_teams TEXT[] DEFAULT NULL,
   secondary_color TEXT DEFAULT NULL,
-  stadium_location believe_team.geo_location DEFAULT NULL,
+  stadium_location believe_teams.geo_location DEFAULT NULL,
   website TEXT DEFAULT NULL,
   win_percentage DOUBLE PRECISION DEFAULT NULL
 )
-RETURNS believe_team.team
+RETURNS believe_teams.team
 LANGUAGE plpgsql
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN jsonb_populate_record(
-      NULL::believe_team.team,
-      believe_team._create(
+      NULL::believe_teams.team,
+      believe_teams._create(
         culture_score,
         founded_year,
         league,
-        "name",
+        name,
         stadium,
         "values",
         annual_budget_gbp,
@@ -195,7 +195,7 @@ AS $$
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_team._retrieve(team_id TEXT)
+CREATE OR REPLACE FUNCTION believe_teams._retrieve(team_id TEXT)
 RETURNS JSONB
 LANGUAGE plpython3u
 STABLE
@@ -210,20 +210,20 @@ AS $$
   return response.text()
 $$;
 
-CREATE OR REPLACE FUNCTION believe_team.retrieve(team_id TEXT)
-RETURNS believe_team.team
+CREATE OR REPLACE FUNCTION believe_teams.retrieve(team_id TEXT)
+RETURNS believe_teams.team
 LANGUAGE plpgsql
 STABLE
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN jsonb_populate_record(
-      NULL::believe_team.team, believe_team._retrieve(team_id)
+      NULL::believe_teams.team, believe_teams._retrieve(team_id)
     );
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_team._update(
+CREATE OR REPLACE FUNCTION believe_teams._update(
   team_id TEXT,
   annual_budget_gbp JSONB DEFAULT NULL,
   average_attendance DOUBLE PRECISION DEFAULT NULL,
@@ -232,14 +232,14 @@ CREATE OR REPLACE FUNCTION believe_team._update(
   founded_year BIGINT DEFAULT NULL,
   is_active BOOLEAN DEFAULT NULL,
   league TEXT DEFAULT NULL,
-  "name" TEXT DEFAULT NULL,
+  name TEXT DEFAULT NULL,
   nickname TEXT DEFAULT NULL,
   primary_color TEXT DEFAULT NULL,
   rival_teams TEXT[] DEFAULT NULL,
   secondary_color TEXT DEFAULT NULL,
   stadium TEXT DEFAULT NULL,
-  stadium_location believe_team.geo_location DEFAULT NULL,
-  "values" believe_team.team_values DEFAULT NULL,
+  stadium_location believe_teams.geo_location DEFAULT NULL,
+  "values" believe_teams.team_values DEFAULT NULL,
   website TEXT DEFAULT NULL,
   win_percentage DOUBLE PRECISION DEFAULT NULL
 )
@@ -276,7 +276,7 @@ AS $$
   return response.text()
 $$;
 
-CREATE OR REPLACE FUNCTION believe_team.update(
+CREATE OR REPLACE FUNCTION believe_teams.update(
   team_id TEXT,
   annual_budget_gbp JSONB DEFAULT NULL,
   average_attendance DOUBLE PRECISION DEFAULT NULL,
@@ -285,25 +285,25 @@ CREATE OR REPLACE FUNCTION believe_team.update(
   founded_year BIGINT DEFAULT NULL,
   is_active BOOLEAN DEFAULT NULL,
   league TEXT DEFAULT NULL,
-  "name" TEXT DEFAULT NULL,
+  name TEXT DEFAULT NULL,
   nickname TEXT DEFAULT NULL,
   primary_color TEXT DEFAULT NULL,
   rival_teams TEXT[] DEFAULT NULL,
   secondary_color TEXT DEFAULT NULL,
   stadium TEXT DEFAULT NULL,
-  stadium_location believe_team.geo_location DEFAULT NULL,
-  "values" believe_team.team_values DEFAULT NULL,
+  stadium_location believe_teams.geo_location DEFAULT NULL,
+  "values" believe_teams.team_values DEFAULT NULL,
   website TEXT DEFAULT NULL,
   win_percentage DOUBLE PRECISION DEFAULT NULL
 )
-RETURNS believe_team.team
+RETURNS believe_teams.team
 LANGUAGE plpgsql
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN jsonb_populate_record(
-      NULL::believe_team.team,
-      believe_team._update(
+      NULL::believe_teams.team,
+      believe_teams._update(
         team_id,
         annual_budget_gbp,
         average_attendance,
@@ -312,7 +312,7 @@ AS $$
         founded_year,
         is_active,
         league,
-        "name",
+        name,
         nickname,
         primary_color,
         rival_teams,
@@ -327,11 +327,11 @@ AS $$
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_team._list_first_page_py(
+CREATE OR REPLACE FUNCTION believe_teams._list_first_page_py(
   league TEXT DEFAULT NULL,
   "limit" BIGINT DEFAULT NULL,
   min_culture_score BIGINT DEFAULT NULL,
-  "skip" BIGINT DEFAULT NULL
+  skip BIGINT DEFAULT NULL
 )
 RETURNS believe_internal.page
 LANGUAGE plpython3u
@@ -366,12 +366,12 @@ AS $$
   )
 $$;
 
--- A simpler wrapper around `believe_team._list_first_page` that ensures the global client is initialized.
-CREATE OR REPLACE FUNCTION believe_team._list_first_page(
+-- A simpler wrapper around `believe_teams._list_first_page` that ensures the global client is initialized.
+CREATE OR REPLACE FUNCTION believe_teams._list_first_page(
   league TEXT DEFAULT NULL,
   "limit" BIGINT DEFAULT NULL,
   min_culture_score BIGINT DEFAULT NULL,
-  "skip" BIGINT DEFAULT NULL
+  skip BIGINT DEFAULT NULL
 )
 RETURNS believe_internal.page
 LANGUAGE plpgsql
@@ -379,13 +379,13 @@ STABLE
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
-    RETURN believe_team._list_first_page_py(
-      league, "limit", min_culture_score, "skip"
+    RETURN believe_teams._list_first_page_py(
+      league, "limit", min_culture_score, skip
     );
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_team._list_next_page(request_options JSONB)
+CREATE OR REPLACE FUNCTION believe_teams._list_next_page(request_options JSONB)
 RETURNS believe_internal.page
 LANGUAGE plpython3u
 STABLE
@@ -421,33 +421,33 @@ AS $$
   )
 $$;
 
-CREATE OR REPLACE FUNCTION believe_team.list(
+CREATE OR REPLACE FUNCTION believe_teams.list(
   league TEXT DEFAULT NULL,
   "limit" BIGINT DEFAULT NULL,
   min_culture_score BIGINT DEFAULT NULL,
-  "skip" BIGINT DEFAULT NULL
+  skip BIGINT DEFAULT NULL
 )
-RETURNS SETOF believe_team.team
+RETURNS SETOF believe_teams.team
 LANGUAGE SQL
 STABLE
 AS $$
   WITH RECURSIVE paginated AS (
     SELECT page.*
-    FROM believe_team._list_first_page(
-      league, "limit", min_culture_score, "skip"
+    FROM believe_teams._list_first_page(
+      league, "limit", min_culture_score, skip
     ) AS page
 
     UNION ALL
 
     SELECT page.*
     FROM paginated
-    CROSS JOIN believe_team._list_next_page(paginated.next_request_options) AS page
+    CROSS JOIN believe_teams._list_next_page(paginated.next_request_options) AS page
     WHERE paginated.next_request_options IS NOT NULL
   )
-  SELECT (jsonb_populate_recordset(NULL::believe_team.team, "data")).* FROM paginated;
+  SELECT (jsonb_populate_recordset(NULL::believe_teams.team, data)).* FROM paginated;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_team._delete(team_id TEXT)
+CREATE OR REPLACE FUNCTION believe_teams._delete(team_id TEXT)
 RETURNS VOID
 LANGUAGE plpython3u
 AS $$
@@ -456,17 +456,17 @@ AS $$
   )
 $$;
 
-CREATE OR REPLACE FUNCTION believe_team.delete(team_id TEXT)
+CREATE OR REPLACE FUNCTION believe_teams.delete(team_id TEXT)
 RETURNS VOID
 LANGUAGE plpgsql
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
-    PERFORM believe_team._delete(team_id);
+    PERFORM believe_teams._delete(team_id);
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_team._get_culture(team_id TEXT)
+CREATE OR REPLACE FUNCTION believe_teams._get_culture(team_id TEXT)
 RETURNS JSONB
 LANGUAGE plpython3u
 STABLE
@@ -481,18 +481,18 @@ AS $$
   return response.text()
 $$;
 
-CREATE OR REPLACE FUNCTION believe_team.get_culture(team_id TEXT)
+CREATE OR REPLACE FUNCTION believe_teams.get_culture(team_id TEXT)
 RETURNS JSONB
 LANGUAGE plpgsql
 STABLE
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
-    RETURN believe_team._get_culture(team_id);
+    RETURN believe_teams._get_culture(team_id);
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_team._get_rivals(team_id TEXT)
+CREATE OR REPLACE FUNCTION believe_teams._get_rivals(team_id TEXT)
 RETURNS JSONB
 LANGUAGE plpython3u
 STABLE
@@ -507,20 +507,20 @@ AS $$
   return response.text()
 $$;
 
-CREATE OR REPLACE FUNCTION believe_team.get_rivals(team_id TEXT)
-RETURNS SETOF believe_team.team
+CREATE OR REPLACE FUNCTION believe_teams.get_rivals(team_id TEXT)
+RETURNS SETOF believe_teams.team
 LANGUAGE plpgsql
 STABLE
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN QUERY SELECT * FROM jsonb_populate_recordset(
-      NULL::believe_team.team, believe_team._get_rivals(team_id)
+      NULL::believe_teams.team, believe_teams._get_rivals(team_id)
     );
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_team._list_logos(team_id TEXT)
+CREATE OR REPLACE FUNCTION believe_teams._list_logos(team_id TEXT)
 RETURNS JSONB
 LANGUAGE plpython3u
 STABLE
@@ -535,15 +535,15 @@ AS $$
   return response.text()
 $$;
 
-CREATE OR REPLACE FUNCTION believe_team.list_logos(team_id TEXT)
-RETURNS SETOF believe_team_logo.file_upload
+CREATE OR REPLACE FUNCTION believe_teams.list_logos(team_id TEXT)
+RETURNS SETOF believe_teams_logo.file_upload
 LANGUAGE plpgsql
 STABLE
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN QUERY SELECT * FROM jsonb_populate_recordset(
-      NULL::believe_team_logo.file_upload, believe_team._list_logos(team_id)
+      NULL::believe_teams_logo.file_upload, believe_teams._list_logos(team_id)
     );
   END;
 $$;

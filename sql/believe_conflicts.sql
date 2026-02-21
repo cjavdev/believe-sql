@@ -1,4 +1,4 @@
-ALTER TYPE believe_conflict.conflict_resolve_response
+ALTER TYPE believe_conflicts.conflict_resolve_response
   ADD ATTRIBUTE barbecue_sauce_wisdom TEXT,
   ADD ATTRIBUTE diagnosis TEXT,
   ADD ATTRIBUTE diamond_dogs_advice TEXT,
@@ -6,7 +6,7 @@ ALTER TYPE believe_conflict.conflict_resolve_response
   ADD ATTRIBUTE steps_to_resolution TEXT[],
   ADD ATTRIBUTE ted_approach TEXT;
 
-CREATE OR REPLACE FUNCTION believe_conflict.make_conflict_resolve_response(
+CREATE OR REPLACE FUNCTION believe_conflicts.make_conflict_resolve_response(
   barbecue_sauce_wisdom TEXT,
   diagnosis TEXT,
   diamond_dogs_advice TEXT,
@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION believe_conflict.make_conflict_resolve_response(
   steps_to_resolution TEXT[],
   ted_approach TEXT
 )
-RETURNS believe_conflict.conflict_resolve_response
+RETURNS believe_conflicts.conflict_resolve_response
 LANGUAGE SQL
 IMMUTABLE
 AS $$
@@ -25,10 +25,10 @@ AS $$
     potential_outcome,
     steps_to_resolution,
     ted_approach
-  )::believe_conflict.conflict_resolve_response;
+  )::believe_conflicts.conflict_resolve_response;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_conflict._resolve(
+CREATE OR REPLACE FUNCTION believe_conflicts._resolve(
   conflict_type TEXT,
   description TEXT,
   parties_involved TEXT[],
@@ -52,20 +52,20 @@ AS $$
   return response.text()
 $$;
 
-CREATE OR REPLACE FUNCTION believe_conflict.resolve(
+CREATE OR REPLACE FUNCTION believe_conflicts.resolve(
   conflict_type TEXT,
   description TEXT,
   parties_involved TEXT[],
   attempts_made TEXT[] DEFAULT NULL
 )
-RETURNS believe_conflict.conflict_resolve_response
+RETURNS believe_conflicts.conflict_resolve_response
 LANGUAGE plpgsql
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN jsonb_populate_record(
-      NULL::believe_conflict.conflict_resolve_response,
-      believe_conflict._resolve(
+      NULL::believe_conflicts.conflict_resolve_response,
+      believe_conflicts._resolve(
         conflict_type, description, parties_involved, attempts_made
       )
     );

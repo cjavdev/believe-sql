@@ -1,29 +1,29 @@
-ALTER TYPE believe_coaching_principle.coaching_principle
-  ADD ATTRIBUTE "id" TEXT,
+ALTER TYPE believe_coaching_principles.coaching_principle
+  ADD ATTRIBUTE id TEXT,
   ADD ATTRIBUTE application TEXT,
   ADD ATTRIBUTE example_from_show TEXT,
   ADD ATTRIBUTE explanation TEXT,
   ADD ATTRIBUTE principle TEXT,
   ADD ATTRIBUTE ted_quote TEXT;
 
-CREATE OR REPLACE FUNCTION believe_coaching_principle.make_coaching_principle(
-  "id" TEXT,
+CREATE OR REPLACE FUNCTION believe_coaching_principles.make_coaching_principle(
+  id TEXT,
   application TEXT,
   example_from_show TEXT,
   explanation TEXT,
   principle TEXT,
   ted_quote TEXT
 )
-RETURNS believe_coaching_principle.coaching_principle
+RETURNS believe_coaching_principles.coaching_principle
 LANGUAGE SQL
 IMMUTABLE
 AS $$
   SELECT ROW(
-    "id", application, example_from_show, explanation, principle, ted_quote
-  )::believe_coaching_principle.coaching_principle;
+    id, application, example_from_show, explanation, principle, ted_quote
+  )::believe_coaching_principles.coaching_principle;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_coaching_principle._retrieve(
+CREATE OR REPLACE FUNCTION believe_coaching_principles._retrieve(
   principle_id TEXT
 )
 RETURNS JSONB
@@ -40,24 +40,24 @@ AS $$
   return response.text()
 $$;
 
-CREATE OR REPLACE FUNCTION believe_coaching_principle.retrieve(
+CREATE OR REPLACE FUNCTION believe_coaching_principles.retrieve(
   principle_id TEXT
 )
-RETURNS believe_coaching_principle.coaching_principle
+RETURNS believe_coaching_principles.coaching_principle
 LANGUAGE plpgsql
 STABLE
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN jsonb_populate_record(
-      NULL::believe_coaching_principle.coaching_principle,
-      believe_coaching_principle._retrieve(principle_id)
+      NULL::believe_coaching_principles.coaching_principle,
+      believe_coaching_principles._retrieve(principle_id)
     );
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_coaching_principle._list_first_page_py(
-  "limit" BIGINT DEFAULT NULL, "skip" BIGINT DEFAULT NULL
+CREATE OR REPLACE FUNCTION believe_coaching_principles._list_first_page_py(
+  "limit" BIGINT DEFAULT NULL, skip BIGINT DEFAULT NULL
 )
 RETURNS believe_internal.page
 LANGUAGE plpython3u
@@ -90,9 +90,9 @@ AS $$
   )
 $$;
 
--- A simpler wrapper around `believe_coaching_principle._list_first_page` that ensures the global client is initialized.
-CREATE OR REPLACE FUNCTION believe_coaching_principle._list_first_page(
-  "limit" BIGINT DEFAULT NULL, "skip" BIGINT DEFAULT NULL
+-- A simpler wrapper around `believe_coaching_principles._list_first_page` that ensures the global client is initialized.
+CREATE OR REPLACE FUNCTION believe_coaching_principles._list_first_page(
+  "limit" BIGINT DEFAULT NULL, skip BIGINT DEFAULT NULL
 )
 RETURNS believe_internal.page
 LANGUAGE plpgsql
@@ -100,11 +100,11 @@ STABLE
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
-    RETURN believe_coaching_principle._list_first_page_py("limit", "skip");
+    RETURN believe_coaching_principles._list_first_page_py("limit", skip);
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_coaching_principle._list_next_page(request_options JSONB)
+CREATE OR REPLACE FUNCTION believe_coaching_principles._list_next_page(request_options JSONB)
 RETURNS believe_internal.page
 LANGUAGE plpython3u
 STABLE
@@ -140,28 +140,28 @@ AS $$
   )
 $$;
 
-CREATE OR REPLACE FUNCTION believe_coaching_principle.list(
-  "limit" BIGINT DEFAULT NULL, "skip" BIGINT DEFAULT NULL
+CREATE OR REPLACE FUNCTION believe_coaching_principles.list(
+  "limit" BIGINT DEFAULT NULL, skip BIGINT DEFAULT NULL
 )
-RETURNS SETOF believe_coaching_principle.coaching_principle
+RETURNS SETOF believe_coaching_principles.coaching_principle
 LANGUAGE SQL
 STABLE
 AS $$
   WITH RECURSIVE paginated AS (
     SELECT page.*
-    FROM believe_coaching_principle._list_first_page("limit", "skip") AS page
+    FROM believe_coaching_principles._list_first_page("limit", skip) AS page
 
     UNION ALL
 
     SELECT page.*
     FROM paginated
-    CROSS JOIN believe_coaching_principle._list_next_page(paginated.next_request_options) AS page
+    CROSS JOIN believe_coaching_principles._list_next_page(paginated.next_request_options) AS page
     WHERE paginated.next_request_options IS NOT NULL
   )
-  SELECT (jsonb_populate_recordset(NULL::believe_coaching_principle.coaching_principle, "data")).* FROM paginated;
+  SELECT (jsonb_populate_recordset(NULL::believe_coaching_principles.coaching_principle, data)).* FROM paginated;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_coaching_principle._get_random()
+CREATE OR REPLACE FUNCTION believe_coaching_principles._get_random()
 RETURNS JSONB
 LANGUAGE plpython3u
 STABLE
@@ -174,16 +174,16 @@ AS $$
   return response.text()
 $$;
 
-CREATE OR REPLACE FUNCTION believe_coaching_principle.get_random()
-RETURNS believe_coaching_principle.coaching_principle
+CREATE OR REPLACE FUNCTION believe_coaching_principles.get_random()
+RETURNS believe_coaching_principles.coaching_principle
 LANGUAGE plpgsql
 STABLE
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN jsonb_populate_record(
-      NULL::believe_coaching_principle.coaching_principle,
-      believe_coaching_principle._get_random()
+      NULL::believe_coaching_principles.coaching_principle,
+      believe_coaching_principles._get_random()
     );
   END;
 $$;
