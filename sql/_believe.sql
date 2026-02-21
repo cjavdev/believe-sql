@@ -201,3 +201,5 @@ CREATE TYPE believe_webhooks.match_completed_data AS ();
 CREATE SCHEMA IF NOT EXISTS believe_health;
 
 CREATE SCHEMA IF NOT EXISTS believe_version;
+
+CREATE SCHEMA IF NOT EXISTS believe_client_ws;
