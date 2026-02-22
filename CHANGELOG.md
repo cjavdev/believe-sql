@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.0 (2026-02-21)
+
+Full Changelog: [v0.2.0...v0.3.0](https://github.com/cjavdev/believe-sql/compare/v0.2.0...v0.3.0)
+
+### Features
+
+* **api:** manual updates ([5961aa8](https://github.com/cjavdev/believe-sql/commit/5961aa8a515e297adc1c82c4a4d5dd593f418a84))
+
 ## 0.2.0 (2026-02-21)
 
 Full Changelog: [v0.1.0...v0.2.0](https://github.com/cjavdev/believe-sql/compare/v0.1.0...v0.2.0)
