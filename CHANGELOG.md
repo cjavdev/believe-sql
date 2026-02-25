@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.1 (2026-02-25)
+
+Full Changelog: [v0.3.0...v0.3.1](https://github.com/cjavdev/believe-sql/compare/v0.3.0...v0.3.1)
+
+### Bug Fixes
+
+* **internal:** only upload release asset if release created ([6a17d05](https://github.com/cjavdev/believe-sql/commit/6a17d05b68d6631a1c50833a387b2da9956bed30))
+
 ## 0.3.0 (2026-02-21)
 
 Full Changelog: [v0.2.0...v0.3.0](https://github.com/cjavdev/believe-sql/compare/v0.2.0...v0.3.0)
