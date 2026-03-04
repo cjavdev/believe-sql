@@ -1,6 +1,7 @@
 # Believe API PostgreSQL Extension
 
 > [!NOTE]
+>
 > The Believe API PostgreSQL Extension is currently **experimental** and we're excited for you to experiment with it!
 >
 > This extension has not yet been exhaustively tested in production environments and may be missing some features you'd expect in a stable release. As we continue development, there may be breaking changes that require updates to your code.
@@ -60,7 +61,9 @@ Configure the client by setting configuration parameters at the database level:
 ALTER DATABASE my_database SET believe.api_key = 'My API Key';
 ```
 
-> [!NOTE] > `ALTER DATABASE` persistently alters the database, but doesn't take effect until the next session. To
+> [!NOTE]
+>
+> `ALTER DATABASE` persistently alters the database, but doesn't take effect until the next session. To
 > ephemerally modify the current session, use `SET believe.api_key TO 'My API Key';`.
 
 See this table for the available configuration parameters:
@@ -99,6 +102,7 @@ LIMIT 200;
 ```
 
 > [!IMPORTANT]
+>
 > Place your `LIMIT` as close to the paginated function call as possible. If the `LIMIT` is too far
 > removed, then PostgreSQL may not [push down the condition](https://wiki.postgresql.org/wiki/Inlining_of_SQL_functions),
 > causing all pages to be requested and buffered.
