@@ -232,13 +232,13 @@ $$;
 
 ALTER TYPE believe_webhooks.unwrap_webhook_event
   ADD ATTRIBUTE created_at TIMESTAMP,
-  ADD ATTRIBUTE data believe_webhooks.match_completed_webhook_event_data1,
+  ADD ATTRIBUTE data believe_webhooks.unwrap_webhook_event_data,
   ADD ATTRIBUTE event_id TEXT,
   ADD ATTRIBUTE event_type TEXT;
 
 CREATE OR REPLACE FUNCTION believe_webhooks.make_unwrap_webhook_event(
   created_at TIMESTAMP,
-  data believe_webhooks.match_completed_webhook_event_data1,
+  data believe_webhooks.unwrap_webhook_event_data,
   event_id TEXT,
   event_type TEXT
 )
@@ -251,7 +251,7 @@ AS $$
   )::believe_webhooks.unwrap_webhook_event;
 $$;
 
-ALTER TYPE believe_webhooks.match_completed_webhook_event_data1
+ALTER TYPE believe_webhooks.unwrap_webhook_event_data
   ADD ATTRIBUTE away_score BIGINT,
   ADD ATTRIBUTE away_team_id TEXT,
   ADD ATTRIBUTE completed_at TIMESTAMP,
@@ -276,7 +276,7 @@ ALTER TYPE believe_webhooks.match_completed_webhook_event_data1
   ADD ATTRIBUTE transfer_fee_gbp TEXT,
   ADD ATTRIBUTE years_with_previous_team BIGINT;
 
-CREATE OR REPLACE FUNCTION believe_webhooks.make_match_completed_webhook_event_data1(
+CREATE OR REPLACE FUNCTION believe_webhooks.make_unwrap_webhook_event_data(
   away_score BIGINT DEFAULT NULL,
   away_team_id TEXT DEFAULT NULL,
   completed_at TIMESTAMP DEFAULT NULL,
@@ -301,7 +301,7 @@ CREATE OR REPLACE FUNCTION believe_webhooks.make_match_completed_webhook_event_d
   transfer_fee_gbp TEXT DEFAULT NULL,
   years_with_previous_team BIGINT DEFAULT NULL
 )
-RETURNS believe_webhooks.match_completed_webhook_event_data1
+RETURNS believe_webhooks.unwrap_webhook_event_data
 LANGUAGE SQL
 IMMUTABLE
 AS $$
@@ -329,24 +329,25 @@ AS $$
     previous_team_name,
     transfer_fee_gbp,
     years_with_previous_team
-  )::believe_webhooks.match_completed_webhook_event_data1;
+  )::believe_webhooks.unwrap_webhook_event_data;
 $$;
 
-ALTER TYPE believe_webhooks.payload
-  ADD ATTRIBUTE data believe_webhooks.match_completed_data,
+ALTER TYPE believe_webhooks.trigger_event_params_payload
+  ADD ATTRIBUTE data believe_webhooks.trigger_event_params_payload_trigger_event_params_data,
   ADD ATTRIBUTE event_type TEXT;
 
-CREATE OR REPLACE FUNCTION believe_webhooks.make_payload(
-  data believe_webhooks.match_completed_data, event_type TEXT DEFAULT NULL
+CREATE OR REPLACE FUNCTION believe_webhooks.make_trigger_event_params_payload(
+  data believe_webhooks.trigger_event_params_payload_trigger_event_params_data,
+  event_type TEXT DEFAULT NULL
 )
-RETURNS believe_webhooks.payload
+RETURNS believe_webhooks.trigger_event_params_payload
 LANGUAGE SQL
 IMMUTABLE
 AS $$
-  SELECT ROW(data, event_type)::believe_webhooks.payload;
+  SELECT ROW(data, event_type)::believe_webhooks.trigger_event_params_payload;
 $$;
 
-ALTER TYPE believe_webhooks.match_completed_data
+ALTER TYPE believe_webhooks.trigger_event_params_payload_trigger_event_params_data
   ADD ATTRIBUTE away_score BIGINT,
   ADD ATTRIBUTE away_team_id TEXT,
   ADD ATTRIBUTE completed_at TIMESTAMP,
@@ -371,7 +372,7 @@ ALTER TYPE believe_webhooks.match_completed_data
   ADD ATTRIBUTE transfer_fee_gbp TEXT,
   ADD ATTRIBUTE years_with_previous_team BIGINT;
 
-CREATE OR REPLACE FUNCTION believe_webhooks.make_match_completed_data(
+CREATE OR REPLACE FUNCTION believe_webhooks.make_trigger_event_params_payload_trigger_event_params_data(
   away_score BIGINT DEFAULT NULL,
   away_team_id TEXT DEFAULT NULL,
   completed_at TIMESTAMP DEFAULT NULL,
@@ -396,7 +397,7 @@ CREATE OR REPLACE FUNCTION believe_webhooks.make_match_completed_data(
   transfer_fee_gbp TEXT DEFAULT NULL,
   years_with_previous_team BIGINT DEFAULT NULL
 )
-RETURNS believe_webhooks.match_completed_data
+RETURNS believe_webhooks.trigger_event_params_payload_trigger_event_params_data
 LANGUAGE SQL
 IMMUTABLE
 AS $$
@@ -424,7 +425,7 @@ AS $$
     previous_team_name,
     transfer_fee_gbp,
     years_with_previous_team
-  )::believe_webhooks.match_completed_data;
+  )::believe_webhooks.trigger_event_params_payload_trigger_event_params_data;
 $$;
 
 CREATE OR REPLACE FUNCTION believe_webhooks._create(
@@ -542,7 +543,8 @@ AS $$
 $$;
 
 CREATE OR REPLACE FUNCTION believe_webhooks._trigger_event(
-  event_type TEXT, payload believe_webhooks.payload DEFAULT NULL
+  event_type TEXT,
+  payload believe_webhooks.trigger_event_params_payload DEFAULT NULL
 )
 RETURNS JSONB
 LANGUAGE plpython3u
@@ -561,7 +563,8 @@ AS $$
 $$;
 
 CREATE OR REPLACE FUNCTION believe_webhooks.trigger_event(
-  event_type TEXT, payload believe_webhooks.payload DEFAULT NULL
+  event_type TEXT,
+  payload believe_webhooks.trigger_event_params_payload DEFAULT NULL
 )
 RETURNS believe_webhooks.webhook_trigger_event_response
 LANGUAGE plpgsql
