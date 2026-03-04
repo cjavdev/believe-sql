@@ -439,7 +439,7 @@ AS $$
   )::believe_team_members.team_member_list_staff_response;
 $$;
 
-ALTER TYPE believe_team_members.member
+ALTER TYPE believe_team_members.create_params_member
   ADD ATTRIBUTE character_id TEXT,
   ADD ATTRIBUTE jersey_number BIGINT,
   ADD ATTRIBUTE "position" TEXT,
@@ -457,7 +457,7 @@ ALTER TYPE believe_team_members.member
   ADD ATTRIBUTE is_head_kitman BOOLEAN,
   ADD ATTRIBUTE responsibilities TEXT[];
 
-CREATE OR REPLACE FUNCTION believe_team_members.make_member(
+CREATE OR REPLACE FUNCTION believe_team_members.make_create_params_member(
   character_id TEXT,
   team_id TEXT,
   years_with_team BIGINT,
@@ -475,7 +475,7 @@ CREATE OR REPLACE FUNCTION believe_team_members.make_member(
   is_head_kitman BOOLEAN DEFAULT NULL,
   responsibilities TEXT[] DEFAULT NULL
 )
-RETURNS believe_team_members.member
+RETURNS believe_team_members.create_params_member
 LANGUAGE SQL
 IMMUTABLE
 AS $$
@@ -496,10 +496,10 @@ AS $$
     qualifications,
     is_head_kitman,
     responsibilities
-  )::believe_team_members.member;
+  )::believe_team_members.create_params_member;
 $$;
 
-ALTER TYPE believe_team_members.update
+ALTER TYPE believe_team_members.update_params_update
   ADD ATTRIBUTE assists BIGINT,
   ADD ATTRIBUTE goals_scored BIGINT,
   ADD ATTRIBUTE is_captain BOOLEAN,
@@ -515,7 +515,7 @@ ALTER TYPE believe_team_members.update
   ADD ATTRIBUTE is_head_kitman BOOLEAN,
   ADD ATTRIBUTE responsibilities TEXT[];
 
-CREATE OR REPLACE FUNCTION believe_team_members.make_update(
+CREATE OR REPLACE FUNCTION believe_team_members.make_update_params_update(
   assists BIGINT DEFAULT NULL,
   goals_scored BIGINT DEFAULT NULL,
   is_captain BOOLEAN DEFAULT NULL,
@@ -531,7 +531,7 @@ CREATE OR REPLACE FUNCTION believe_team_members.make_update(
   is_head_kitman BOOLEAN DEFAULT NULL,
   responsibilities TEXT[] DEFAULT NULL
 )
-RETURNS believe_team_members.update
+RETURNS believe_team_members.update_params_update
 LANGUAGE SQL
 IMMUTABLE
 AS $$
@@ -550,11 +550,11 @@ AS $$
     qualifications,
     is_head_kitman,
     responsibilities
-  )::believe_team_members.update;
+  )::believe_team_members.update_params_update;
 $$;
 
 CREATE OR REPLACE FUNCTION believe_team_members._create(
-  member believe_team_members.member
+  member believe_team_members.create_params_member
 )
 RETURNS JSONB
 LANGUAGE plpython3u
@@ -570,7 +570,7 @@ AS $$
 $$;
 
 CREATE OR REPLACE FUNCTION believe_team_members.create(
-  member believe_team_members.member
+  member believe_team_members.create_params_member
 )
 RETURNS believe_team_members.team_member_create_response
 LANGUAGE plpgsql
@@ -614,7 +614,7 @@ AS $$
 $$;
 
 CREATE OR REPLACE FUNCTION believe_team_members._update(
-  member_id TEXT, updates believe_team_members.update
+  member_id TEXT, updates believe_team_members.update_params_update
 )
 RETURNS JSONB
 LANGUAGE plpython3u
@@ -631,7 +631,7 @@ AS $$
 $$;
 
 CREATE OR REPLACE FUNCTION believe_team_members.update(
-  member_id TEXT, updates believe_team_members.update
+  member_id TEXT, updates believe_team_members.update_params_update
 )
 RETURNS believe_team_members.team_member_update_response
 LANGUAGE plpgsql
