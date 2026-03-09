@@ -1,4 +1,4 @@
-ALTER TYPE believe_client_ticket_sales.ticket_sale_create_response
+ALTER TYPE believe_ticket_sales.ticket_sale
   ADD ATTRIBUTE id TEXT,
   ADD ATTRIBUTE buyer_name TEXT,
   ADD ATTRIBUTE currency TEXT,
@@ -13,7 +13,7 @@ ALTER TYPE believe_client_ticket_sales.ticket_sale_create_response
   ADD ATTRIBUTE buyer_email TEXT,
   ADD ATTRIBUTE coupon_code TEXT;
 
-CREATE OR REPLACE FUNCTION believe_client_ticket_sales.make_ticket_sale_create_response(
+CREATE OR REPLACE FUNCTION believe_ticket_sales.make_ticket_sale(
   id TEXT,
   buyer_name TEXT,
   currency TEXT,
@@ -28,7 +28,7 @@ CREATE OR REPLACE FUNCTION believe_client_ticket_sales.make_ticket_sale_create_r
   buyer_email TEXT DEFAULT NULL,
   coupon_code TEXT DEFAULT NULL
 )
-RETURNS believe_client_ticket_sales.ticket_sale_create_response
+RETURNS believe_ticket_sales.ticket_sale
 LANGUAGE SQL
 IMMUTABLE
 AS $$
@@ -46,163 +46,10 @@ AS $$
     unit_price,
     buyer_email,
     coupon_code
-  )::believe_client_ticket_sales.ticket_sale_create_response;
+  )::believe_ticket_sales.ticket_sale;
 $$;
 
-ALTER TYPE believe_client_ticket_sales.ticket_sale_retrieve_response
-  ADD ATTRIBUTE id TEXT,
-  ADD ATTRIBUTE buyer_name TEXT,
-  ADD ATTRIBUTE currency TEXT,
-  ADD ATTRIBUTE discount TEXT,
-  ADD ATTRIBUTE match_id TEXT,
-  ADD ATTRIBUTE purchase_method TEXT,
-  ADD ATTRIBUTE quantity BIGINT,
-  ADD ATTRIBUTE subtotal TEXT,
-  ADD ATTRIBUTE tax TEXT,
-  ADD ATTRIBUTE total TEXT,
-  ADD ATTRIBUTE unit_price TEXT,
-  ADD ATTRIBUTE buyer_email TEXT,
-  ADD ATTRIBUTE coupon_code TEXT;
-
-CREATE OR REPLACE FUNCTION believe_client_ticket_sales.make_ticket_sale_retrieve_response(
-  id TEXT,
-  buyer_name TEXT,
-  currency TEXT,
-  discount TEXT,
-  match_id TEXT,
-  purchase_method TEXT,
-  quantity BIGINT,
-  subtotal TEXT,
-  tax TEXT,
-  total TEXT,
-  unit_price TEXT,
-  buyer_email TEXT DEFAULT NULL,
-  coupon_code TEXT DEFAULT NULL
-)
-RETURNS believe_client_ticket_sales.ticket_sale_retrieve_response
-LANGUAGE SQL
-IMMUTABLE
-AS $$
-  SELECT ROW(
-    id,
-    buyer_name,
-    currency,
-    discount,
-    match_id,
-    purchase_method,
-    quantity,
-    subtotal,
-    tax,
-    total,
-    unit_price,
-    buyer_email,
-    coupon_code
-  )::believe_client_ticket_sales.ticket_sale_retrieve_response;
-$$;
-
-ALTER TYPE believe_client_ticket_sales.ticket_sale_update_response
-  ADD ATTRIBUTE id TEXT,
-  ADD ATTRIBUTE buyer_name TEXT,
-  ADD ATTRIBUTE currency TEXT,
-  ADD ATTRIBUTE discount TEXT,
-  ADD ATTRIBUTE match_id TEXT,
-  ADD ATTRIBUTE purchase_method TEXT,
-  ADD ATTRIBUTE quantity BIGINT,
-  ADD ATTRIBUTE subtotal TEXT,
-  ADD ATTRIBUTE tax TEXT,
-  ADD ATTRIBUTE total TEXT,
-  ADD ATTRIBUTE unit_price TEXT,
-  ADD ATTRIBUTE buyer_email TEXT,
-  ADD ATTRIBUTE coupon_code TEXT;
-
-CREATE OR REPLACE FUNCTION believe_client_ticket_sales.make_ticket_sale_update_response(
-  id TEXT,
-  buyer_name TEXT,
-  currency TEXT,
-  discount TEXT,
-  match_id TEXT,
-  purchase_method TEXT,
-  quantity BIGINT,
-  subtotal TEXT,
-  tax TEXT,
-  total TEXT,
-  unit_price TEXT,
-  buyer_email TEXT DEFAULT NULL,
-  coupon_code TEXT DEFAULT NULL
-)
-RETURNS believe_client_ticket_sales.ticket_sale_update_response
-LANGUAGE SQL
-IMMUTABLE
-AS $$
-  SELECT ROW(
-    id,
-    buyer_name,
-    currency,
-    discount,
-    match_id,
-    purchase_method,
-    quantity,
-    subtotal,
-    tax,
-    total,
-    unit_price,
-    buyer_email,
-    coupon_code
-  )::believe_client_ticket_sales.ticket_sale_update_response;
-$$;
-
-ALTER TYPE believe_client_ticket_sales.ticket_sale_list_response
-  ADD ATTRIBUTE id TEXT,
-  ADD ATTRIBUTE buyer_name TEXT,
-  ADD ATTRIBUTE currency TEXT,
-  ADD ATTRIBUTE discount TEXT,
-  ADD ATTRIBUTE match_id TEXT,
-  ADD ATTRIBUTE purchase_method TEXT,
-  ADD ATTRIBUTE quantity BIGINT,
-  ADD ATTRIBUTE subtotal TEXT,
-  ADD ATTRIBUTE tax TEXT,
-  ADD ATTRIBUTE total TEXT,
-  ADD ATTRIBUTE unit_price TEXT,
-  ADD ATTRIBUTE buyer_email TEXT,
-  ADD ATTRIBUTE coupon_code TEXT;
-
-CREATE OR REPLACE FUNCTION believe_client_ticket_sales.make_ticket_sale_list_response(
-  id TEXT,
-  buyer_name TEXT,
-  currency TEXT,
-  discount TEXT,
-  match_id TEXT,
-  purchase_method TEXT,
-  quantity BIGINT,
-  subtotal TEXT,
-  tax TEXT,
-  total TEXT,
-  unit_price TEXT,
-  buyer_email TEXT DEFAULT NULL,
-  coupon_code TEXT DEFAULT NULL
-)
-RETURNS believe_client_ticket_sales.ticket_sale_list_response
-LANGUAGE SQL
-IMMUTABLE
-AS $$
-  SELECT ROW(
-    id,
-    buyer_name,
-    currency,
-    discount,
-    match_id,
-    purchase_method,
-    quantity,
-    subtotal,
-    tax,
-    total,
-    unit_price,
-    buyer_email,
-    coupon_code
-  )::believe_client_ticket_sales.ticket_sale_list_response;
-$$;
-
-CREATE OR REPLACE FUNCTION believe_client_ticket_sales._create(
+CREATE OR REPLACE FUNCTION believe_ticket_sales._create(
   buyer_name TEXT,
   currency TEXT,
   discount TEXT,
@@ -221,7 +68,7 @@ LANGUAGE plpython3u
 AS $$
   from believe._types import not_given
 
-  response = GD["__believe_context__"].client.client.ticket_sales.with_raw_response.create(
+  response = GD["__believe_context__"].client.ticket_sales.with_raw_response.create(
       buyer_name=buyer_name,
       currency=currency,
       discount=discount,
@@ -242,7 +89,7 @@ AS $$
   return response.text()
 $$;
 
-CREATE OR REPLACE FUNCTION believe_client_ticket_sales.create(
+CREATE OR REPLACE FUNCTION believe_ticket_sales.create(
   buyer_name TEXT,
   currency TEXT,
   discount TEXT,
@@ -256,14 +103,14 @@ CREATE OR REPLACE FUNCTION believe_client_ticket_sales.create(
   buyer_email TEXT DEFAULT NULL,
   coupon_code TEXT DEFAULT NULL
 )
-RETURNS believe_client_ticket_sales.ticket_sale_create_response
+RETURNS believe_ticket_sales.ticket_sale
 LANGUAGE plpgsql
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN jsonb_populate_record(
-      NULL::believe_client_ticket_sales.ticket_sale_create_response,
-      believe_client_ticket_sales._create(
+      NULL::believe_ticket_sales.ticket_sale,
+      believe_ticket_sales._create(
         buyer_name,
         currency,
         discount,
@@ -281,14 +128,12 @@ AS $$
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_client_ticket_sales._retrieve(
-  ticket_sale_id TEXT
-)
+CREATE OR REPLACE FUNCTION believe_ticket_sales._retrieve(ticket_sale_id TEXT)
 RETURNS JSONB
 LANGUAGE plpython3u
 STABLE
 AS $$
-  response = GD["__believe_context__"].client.client.ticket_sales.with_raw_response.retrieve(
+  response = GD["__believe_context__"].client.ticket_sales.with_raw_response.retrieve(
       ticket_sale_id=ticket_sale_id,
   )
 
@@ -298,23 +143,21 @@ AS $$
   return response.text()
 $$;
 
-CREATE OR REPLACE FUNCTION believe_client_ticket_sales.retrieve(
-  ticket_sale_id TEXT
-)
-RETURNS believe_client_ticket_sales.ticket_sale_retrieve_response
+CREATE OR REPLACE FUNCTION believe_ticket_sales.retrieve(ticket_sale_id TEXT)
+RETURNS believe_ticket_sales.ticket_sale
 LANGUAGE plpgsql
 STABLE
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN jsonb_populate_record(
-      NULL::believe_client_ticket_sales.ticket_sale_retrieve_response,
-      believe_client_ticket_sales._retrieve(ticket_sale_id)
+      NULL::believe_ticket_sales.ticket_sale,
+      believe_ticket_sales._retrieve(ticket_sale_id)
     );
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_client_ticket_sales._update(
+CREATE OR REPLACE FUNCTION believe_ticket_sales._update(
   ticket_sale_id TEXT,
   buyer_email TEXT DEFAULT NULL,
   buyer_name TEXT DEFAULT NULL,
@@ -334,7 +177,7 @@ LANGUAGE plpython3u
 AS $$
   from believe._types import not_given
 
-  response = GD["__believe_context__"].client.client.ticket_sales.with_raw_response.update(
+  response = GD["__believe_context__"].client.ticket_sales.with_raw_response.update(
       ticket_sale_id=ticket_sale_id,
       buyer_email=not_given if buyer_email is None else buyer_email,
       buyer_name=not_given if buyer_name is None else buyer_name,
@@ -356,7 +199,7 @@ AS $$
   return response.text()
 $$;
 
-CREATE OR REPLACE FUNCTION believe_client_ticket_sales.update(
+CREATE OR REPLACE FUNCTION believe_ticket_sales.update(
   ticket_sale_id TEXT,
   buyer_email TEXT DEFAULT NULL,
   buyer_name TEXT DEFAULT NULL,
@@ -371,14 +214,14 @@ CREATE OR REPLACE FUNCTION believe_client_ticket_sales.update(
   total TEXT DEFAULT NULL,
   unit_price TEXT DEFAULT NULL
 )
-RETURNS believe_client_ticket_sales.ticket_sale_update_response
+RETURNS believe_ticket_sales.ticket_sale
 LANGUAGE plpgsql
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN jsonb_populate_record(
-      NULL::believe_client_ticket_sales.ticket_sale_update_response,
-      believe_client_ticket_sales._update(
+      NULL::believe_ticket_sales.ticket_sale,
+      believe_ticket_sales._update(
         ticket_sale_id,
         buyer_email,
         buyer_name,
@@ -397,7 +240,7 @@ AS $$
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_client_ticket_sales._list_first_page_py(
+CREATE OR REPLACE FUNCTION believe_ticket_sales._list_first_page_py(
   coupon_code TEXT DEFAULT NULL,
   currency TEXT DEFAULT NULL,
   "limit" BIGINT DEFAULT NULL,
@@ -413,7 +256,7 @@ AS $$
   from pydantic import TypeAdapter
   from typing import Any
 
-  page = GD["__believe_context__"].client.client.ticket_sales.list(
+  page = GD["__believe_context__"].client.ticket_sales.list(
       coupon_code=not_given if coupon_code is None else coupon_code,
       currency=not_given if currency is None else currency,
       limit=not_given if limit is None else limit,
@@ -440,8 +283,8 @@ AS $$
   )
 $$;
 
--- A simpler wrapper around `believe_client_ticket_sales._list_first_page` that ensures the global client is initialized.
-CREATE OR REPLACE FUNCTION believe_client_ticket_sales._list_first_page(
+-- A simpler wrapper around `believe_ticket_sales._list_first_page` that ensures the global client is initialized.
+CREATE OR REPLACE FUNCTION believe_ticket_sales._list_first_page(
   coupon_code TEXT DEFAULT NULL,
   currency TEXT DEFAULT NULL,
   "limit" BIGINT DEFAULT NULL,
@@ -455,27 +298,27 @@ STABLE
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
-    RETURN believe_client_ticket_sales._list_first_page_py(
+    RETURN believe_ticket_sales._list_first_page_py(
       coupon_code, currency, "limit", match_id, purchase_method, skip
     );
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_client_ticket_sales._list_next_page(request_options JSONB)
+CREATE OR REPLACE FUNCTION believe_ticket_sales._list_next_page(request_options JSONB)
 RETURNS believe_internal.page
 LANGUAGE plpython3u
 STABLE
 AS $$
   import json
-  from believe.types.client import TicketSaleListResponse
+  from believe.types import TicketSale
   from believe.pagination import SyncSkipLimitPage
   from believe._models import FinalRequestOptions
   from pydantic import TypeAdapter
   from typing import Any
 
   page = GD["__believe_context__"].client._request_api_list(
-    model=TicketSaleListResponse,
-    page=SyncSkipLimitPage[TicketSaleListResponse],
+    model=TicketSale,
+    page=SyncSkipLimitPage[TicketSale],
     options=FinalRequestOptions.construct(**json.loads(request_options))
   )
   next_page_info = page.next_page_info()
@@ -497,7 +340,7 @@ AS $$
   )
 $$;
 
-CREATE OR REPLACE FUNCTION believe_client_ticket_sales.list(
+CREATE OR REPLACE FUNCTION believe_ticket_sales.list(
   coupon_code TEXT DEFAULT NULL,
   currency TEXT DEFAULT NULL,
   "limit" BIGINT DEFAULT NULL,
@@ -505,13 +348,13 @@ CREATE OR REPLACE FUNCTION believe_client_ticket_sales.list(
   purchase_method TEXT DEFAULT NULL,
   skip BIGINT DEFAULT NULL
 )
-RETURNS SETOF believe_client_ticket_sales.ticket_sale_list_response
+RETURNS SETOF believe_ticket_sales.ticket_sale
 LANGUAGE SQL
 STABLE
 AS $$
   WITH RECURSIVE paginated AS (
     SELECT page.*
-    FROM believe_client_ticket_sales._list_first_page(
+    FROM believe_ticket_sales._list_first_page(
       coupon_code, currency, "limit", match_id, purchase_method, skip
     ) AS page
 
@@ -519,31 +362,27 @@ AS $$
 
     SELECT page.*
     FROM paginated
-    CROSS JOIN believe_client_ticket_sales._list_next_page(paginated.next_request_options) AS page
+    CROSS JOIN believe_ticket_sales._list_next_page(paginated.next_request_options) AS page
     WHERE paginated.next_request_options IS NOT NULL
   )
-  SELECT (jsonb_populate_recordset(NULL::believe_client_ticket_sales.ticket_sale_list_response, data)).* FROM paginated;
+  SELECT (jsonb_populate_recordset(NULL::believe_ticket_sales.ticket_sale, data)).* FROM paginated;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_client_ticket_sales._delete(
-  ticket_sale_id TEXT
-)
+CREATE OR REPLACE FUNCTION believe_ticket_sales._delete(ticket_sale_id TEXT)
 RETURNS VOID
 LANGUAGE plpython3u
 AS $$
-  GD["__believe_context__"].client.client.ticket_sales.delete(
+  GD["__believe_context__"].client.ticket_sales.delete(
       ticket_sale_id=ticket_sale_id,
   )
 $$;
 
-CREATE OR REPLACE FUNCTION believe_client_ticket_sales.delete(
-  ticket_sale_id TEXT
-)
+CREATE OR REPLACE FUNCTION believe_ticket_sales.delete(ticket_sale_id TEXT)
 RETURNS VOID
 LANGUAGE plpgsql
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
-    PERFORM believe_client_ticket_sales._delete(ticket_sale_id);
+    PERFORM believe_ticket_sales._delete(ticket_sale_id);
   END;
 $$;
