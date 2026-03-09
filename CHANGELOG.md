@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.4.0 (2026-03-09)
+
+Full Changelog: [v0.3.0...v0.4.0](https://github.com/cjavdev/believe-sql/compare/v0.3.0...v0.4.0)
+
+### Features
+
+* Add ticket sales data model and more examples ([c9e68ab](https://github.com/cjavdev/believe-sql/commit/c9e68ab013f70f4f373b7d80cff17a9ea4bb2034))
+* **api:** manual updates ([8b2350c](https://github.com/cjavdev/believe-sql/commit/8b2350c3f8235ac97702ecf17088cc1b19468403))
+
+
+### Bug Fixes
+
+* improve names ([7284165](https://github.com/cjavdev/believe-sql/commit/728416591e97348c32488cf008592013ddd6a06f))
+* **internal:** only upload release asset if release created ([6a17d05](https://github.com/cjavdev/believe-sql/commit/6a17d05b68d6631a1c50833a387b2da9956bed30))
+* sorting of `DEFAULT NULL` params/fields ([46def1f](https://github.com/cjavdev/believe-sql/commit/46def1f26115edf943c41b766b53f7640a2b8ab1))
+
+
+### Documentation
+
+* fix admonition line wrapping ([baaaf0b](https://github.com/cjavdev/believe-sql/commit/baaaf0b6f28e0312400bbc075324c7fb57407785))
+
 ## 0.3.0 (2026-02-21)
 
 Full Changelog: [v0.2.0...v0.3.0](https://github.com/cjavdev/believe-sql/compare/v0.2.0...v0.3.0)
