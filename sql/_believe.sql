@@ -203,3 +203,10 @@ CREATE SCHEMA IF NOT EXISTS believe_health;
 CREATE SCHEMA IF NOT EXISTS believe_version;
 
 CREATE SCHEMA IF NOT EXISTS believe_client_ws;
+
+CREATE SCHEMA IF NOT EXISTS believe_client_ticket_sales;
+
+CREATE TYPE believe_client_ticket_sales.ticket_sale_create_response AS ();
+CREATE TYPE believe_client_ticket_sales.ticket_sale_retrieve_response AS ();
+CREATE TYPE believe_client_ticket_sales.ticket_sale_update_response AS ();
+CREATE TYPE believe_client_ticket_sales.ticket_sale_list_response AS ();
