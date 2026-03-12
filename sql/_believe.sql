@@ -180,8 +180,8 @@ CREATE TYPE believe_team_members.team_member_retrieve_response AS ();
 CREATE TYPE believe_team_members.team_member_update_response AS ();
 CREATE TYPE believe_team_members.team_member_list_response AS ();
 CREATE TYPE believe_team_members.team_member_list_staff_response AS ();
-CREATE TYPE believe_team_members.member AS ();
-CREATE TYPE believe_team_members.update AS ();
+CREATE TYPE believe_team_members.create_params_member AS ();
+CREATE TYPE believe_team_members.update_params_update AS ();
 
 CREATE SCHEMA IF NOT EXISTS believe_webhooks;
 
@@ -194,9 +194,13 @@ CREATE TYPE believe_webhooks.match_completed_webhook_event_data AS ();
 CREATE TYPE believe_webhooks.team_member_transferred_webhook_event AS ();
 CREATE TYPE believe_webhooks.team_member_transferred_webhook_event_data AS ();
 CREATE TYPE believe_webhooks.unwrap_webhook_event AS ();
-CREATE TYPE believe_webhooks.match_completed_webhook_event_data1 AS ();
-CREATE TYPE believe_webhooks.payload AS ();
-CREATE TYPE believe_webhooks.match_completed_data AS ();
+CREATE TYPE believe_webhooks.unwrap_webhook_event_data AS ();
+CREATE TYPE believe_webhooks.trigger_event_params_payload AS ();
+CREATE TYPE believe_webhooks.trigger_event_params_payload_trigger_event_params_data AS ();
+
+CREATE SCHEMA IF NOT EXISTS believe_ticket_sales;
+
+CREATE TYPE believe_ticket_sales.ticket_sale AS ();
 
 CREATE SCHEMA IF NOT EXISTS believe_health;
 

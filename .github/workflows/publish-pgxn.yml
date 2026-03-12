@@ -15,8 +15,8 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Bundle the release
-        id: bundle
-        run: pgxn-bundle
+         id: bundle
+         run: pgxn-bundle
 
       - name: Release on PGXN
         env:
