@@ -1,4 +1,4 @@
-configured_endpoints: 71
+configured_endpoints: 74
 openapi_spec_url: https://storage.googleapis.com/stainless-sdk-openapi-specs/cjavdev%2Fbelieve-e7677d01cc7a893aaf019a5a12b277be5de3206fbefcedc294e185e6f338a54f.yml
 openapi_spec_hash: 61f3fef9584675757ba0b349f86e2571
-config_hash: a8ec7cea24a0ada0f4c785bce9090ab8
+config_hash: ff6d077a96e573bb2f41b96a7c4123de

@@ -195,3 +195,9 @@ CREATE TYPE believe_webhooks.trigger_event_params_payload_trigger_event_params_d
 CREATE SCHEMA IF NOT EXISTS believe_ticket_sales;
 
 CREATE TYPE believe_ticket_sales.ticket_sale AS ();
+
+CREATE SCHEMA IF NOT EXISTS believe_health;
+
+CREATE SCHEMA IF NOT EXISTS believe_version;
+
+CREATE SCHEMA IF NOT EXISTS believe_client_ws;
