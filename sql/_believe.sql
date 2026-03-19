@@ -180,3 +180,12 @@ CREATE TYPE believe_team_members.team_member_list_response AS ();
 CREATE TYPE believe_team_members.team_member_list_staff_response AS ();
 CREATE TYPE believe_team_members.create_params_member AS ();
 CREATE TYPE believe_team_members.update_params_update AS ();
+
+CREATE SCHEMA IF NOT EXISTS believe_webhooks;
+
+CREATE TYPE believe_webhooks.registered_webhook AS ();
+CREATE TYPE believe_webhooks.webhook_create_response AS ();
+CREATE TYPE believe_webhooks.webhook_trigger_event_response AS ();
+CREATE TYPE believe_webhooks.webhook_trigger_event_response_delivery AS ();
+CREATE TYPE believe_webhooks.trigger_event_params_payload AS ();
+CREATE TYPE believe_webhooks.trigger_event_params_payload_trigger_event_params_data AS ();
