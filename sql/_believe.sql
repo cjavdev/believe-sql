@@ -103,6 +103,8 @@ CREATE TYPE believe_internal.page AS (
   next_request_options JSONB
 );
 
+CREATE SCHEMA IF NOT EXISTS believe;
+
 CREATE SCHEMA IF NOT EXISTS believe_characters;
 
 CREATE TYPE believe_characters.character AS ();
@@ -189,3 +191,7 @@ CREATE TYPE believe_webhooks.webhook_trigger_event_response AS ();
 CREATE TYPE believe_webhooks.webhook_trigger_event_response_delivery AS ();
 CREATE TYPE believe_webhooks.trigger_event_params_payload AS ();
 CREATE TYPE believe_webhooks.trigger_event_params_payload_trigger_event_params_data AS ();
+
+CREATE SCHEMA IF NOT EXISTS believe_ticket_sales;
+
+CREATE TYPE believe_ticket_sales.ticket_sale AS ();
