@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.5.0 (2026-03-24)
+
+Full Changelog: [v0.4.0...v0.5.0](https://github.com/cjavdev/believe-sql/compare/v0.4.0...v0.5.0)
+
+### Features
+
+* **api:** manual updates ([e465511](https://github.com/cjavdev/believe-sql/commit/e4655111619dd956f0e249a8aa1f965ca5a25882))
+* **api:** manual updates ([002da7f](https://github.com/cjavdev/believe-sql/commit/002da7f387fa7a1e5564494ab520fc9ca94ff958))
+* **api:** manual updates ([6ee4cc6](https://github.com/cjavdev/believe-sql/commit/6ee4cc6081734e0da39d0eae625574039e0356e2))
+* **api:** manual updates ([9afc228](https://github.com/cjavdev/believe-sql/commit/9afc2285d71f0dcee24923480641aa3cc8161513))
+* **api:** manual updates ([f39c31d](https://github.com/cjavdev/believe-sql/commit/f39c31dd68b09c630337bcf283c6095046de881b))
+
+
+### Chores
+
+* **internal:** codegen related update ([c6e2771](https://github.com/cjavdev/believe-sql/commit/c6e2771165e091639a7f7e8ca9f360ae0679e772))
+* **internal:** support env vars in `./scripts/repl` ([a0aa21c](https://github.com/cjavdev/believe-sql/commit/a0aa21c64f1229398fb0f56e2d6b5793bfd0aea1))
+* **internal:** tweak CI branches ([a304e8f](https://github.com/cjavdev/believe-sql/commit/a304e8fde1dfb737f5c651f1d6cbfa1d771e307c))
+* **internal:** update gitignore ([01ec6be](https://github.com/cjavdev/believe-sql/commit/01ec6be4af59dcd7ccb326161f95f060d0cabc8d))
+
+
+### Documentation
+
+* explain caching ([c87cbce](https://github.com/cjavdev/believe-sql/commit/c87cbce66e0e2eb2aa0766525401b09ce7f52e41))
+
 ## 0.4.0 (2026-03-09)
 
 Full Changelog: [v0.3.0...v0.4.0](https://github.com/cjavdev/believe-sql/compare/v0.3.0...v0.4.0)
