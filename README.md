@@ -29,8 +29,8 @@ pgxn load -d yourb believe
 And install the Python SDK dependency:
 
 ```sh
-# install from the production repo
-pip install git+ssh://git@github.com/cjavdev/believe-python.git
+# install from PyPI
+pip install believe
 ```
 
 See [PGXN Client's documentation](https://pgxn.github.io/pgxnclient) for more information on installing from PGXN, and [`./scripts/test`](./scripts/test) how to use a [Python virtual environment](https://docs.python.org/3/library/sys_path_init.html#sys-path-init-virtual-environments) if you prefer that instead.
@@ -149,8 +149,8 @@ CREATE EXTENSION believe;
 And install the Python SDK dependency:
 
 ```sh
-# install from the production repo
-pip install git+ssh://git@github.com/cjavdev/believe-python.git
+# install from PyPI
+pip install believe
 ```
 
 See [`./scripts/test`](./scripts/test) how to use a [Python virtual environment](https://docs.python.org/3/library/sys_path_init.html#sys-path-init-virtual-environments) if you prefer that instead.
