@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.0 (2026-04-13)
+
+Full Changelog: [v0.5.1...v0.6.0](https://github.com/cjavdev/believe-sql/compare/v0.5.1...v0.6.0)
+
+### Features
+
+* **api:** release PRs ([abc1aa8](https://github.com/cjavdev/believe-sql/commit/abc1aa8492308f4202db8f98d7f7200d12ed24f7))
+
 ## 0.5.1 (2026-04-04)
 
 Full Changelog: [v0.5.0...v0.5.1](https://github.com/cjavdev/believe-sql/compare/v0.5.0...v0.5.1)
