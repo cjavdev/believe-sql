@@ -442,12 +442,14 @@ AS $$
   END;
 $$;
 
-CREATE OR REPLACE FUNCTION believe_characters._get_quotes(character_id TEXT)
+CREATE OR REPLACE FUNCTION believe_characters._retrieve_quotes(
+  character_id TEXT
+)
 RETURNS JSONB
 LANGUAGE plpython3u
 STABLE
 AS $$
-  response = GD["__believe_context__"].client.characters.with_raw_response.get_quotes(
+  response = GD["__believe_context__"].client.characters.with_raw_response.retrieve_quotes(
       character_id=character_id,
   )
 
@@ -457,7 +459,7 @@ AS $$
   return response.text()
 $$;
 
-CREATE OR REPLACE FUNCTION believe_characters.get_quotes(character_id TEXT)
+CREATE OR REPLACE FUNCTION believe_characters.retrieve_quotes(character_id TEXT)
 RETURNS SETOF TEXT
 LANGUAGE plpgsql
 STABLE
@@ -465,7 +467,7 @@ AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN QUERY SELECT * FROM jsonb_populate_recordset(
-      NULL::TEXT, believe_characters._get_quotes(character_id)
+      NULL::TEXT, believe_characters._retrieve_quotes(character_id)
     );
   END;
 $$;

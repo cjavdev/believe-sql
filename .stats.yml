@@ -1,4 +1,4 @@
 configured_endpoints: 74
-openapi_spec_url: https://storage.googleapis.com/stainless-sdk-openapi-specs/cjavdev%2Fbelieve-55fd7db2a8464493244d84b5156c9005ef2527ae9ed9818fc82acc9bb0d2b625.yml
-openapi_spec_hash: 4e088cb19e9bcd858053d718af304e1c
-config_hash: a3cc681fe127d6f6f406ea3c6ed1301a
+openapi_spec_url: /home/runner/work/believe/believe/openapi.json
+openapi_spec_hash: 00d60a4d2c9c0f0bc25cc3460da142b6
+config_hash: de07ad2de256cfe6e3ff2b6ab8521cfd
