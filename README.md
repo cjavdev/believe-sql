@@ -33,7 +33,7 @@ And install the Python SDK dependency:
 pip install believe
 ```
 
-See [PGXN Client's documentation](https://pgxn.github.io/pgxnclient) for more information on installing from PGXN, and [`./scripts/test`](./scripts/test) how to use a [Python virtual environment](https://docs.python.org/3/library/sys_path_init.html#sys-path-init-virtual-environments) if you prefer that instead.
+See [PGXN Client's documentation](https://pgxn.github.io/pgxnclient) for more information on installing     from PGXN, and [`./scripts/test`](./scripts/test) how to use a     [Python virtual environment](https://docs.python.org/3/library/sys_path_init.html#sys-path-init-virtual-environments)     if you prefer that instead.
 
 Use [the troubleshooting section](#troubleshooting) if you encounter issues during or after installation.
 
@@ -75,9 +75,9 @@ See this table for the available configuration parameters:
 
 ## Requests and responses
 
-To send a request to the Believe API, call the relevant SQL function with values corresponding to the parameter types and `SELECT` the columns you need from the returned rows.
+To send a request to the Believe API, call the relevant SQL function with values corresponding to       the parameter types and `SELECT` the columns you need from the returned rows.
 
-To construct [composite type](https://www.postgresql.org/docs/current/rowtypes.html) parameters, use the parameter type's provided `make_*` function. For example, `believe_characters.emotional_stats` may be constructed like so:
+To construct [composite type](https://www.postgresql.org/docs/current/rowtypes.html) parameters, use         the parameter type's provided `make_*` function. For example, `believe_characters.emotional_stats` may be constructed like so:
 
 ```sql
 believe_characters.make_emotional_stats(
@@ -91,9 +91,9 @@ believe_characters.make_emotional_stats(
 
 ## Pagination
 
-For Believe API endpoints that return a paginated lists of results, the extension automatically fetches more pages as needed.
+For Believe API endpoints that return a paginated lists of results, the extension automatically     fetches more pages as needed.
 
-For example, the following query will make the minimum number of requests necessary to satisfy the `LIMIT`:
+For example, the following query will make the minimum number of requests necessary to satisfy the     `LIMIT`:
 
 ```sql
 SELECT *
@@ -109,7 +109,7 @@ LIMIT 200;
 
 ## Caching
 
-Sending requests to the Believe API for every SQL query can be slow. Combine [materialized views](https://www.postgresql.org/docs/current/rules-materializedviews.html) with [`pg_cron`](https://github.com/citusdata/pg_cron) for scheduled data pulls:
+Sending requests to the Believe API for every SQL query can be slow. Combine     [materialized views](https://www.postgresql.org/docs/current/rules-materializedviews.html) with     [`pg_cron`](https://github.com/citusdata/pg_cron) for scheduled data pulls:
 
 ```sql
 CREATE MATERIALIZED VIEW believe_characters_characterzs AS
@@ -153,7 +153,7 @@ And install the Python SDK dependency:
 pip install believe
 ```
 
-See [`./scripts/test`](./scripts/test) how to use a [Python virtual environment](https://docs.python.org/3/library/sys_path_init.html#sys-path-init-virtual-environments) if you prefer that instead.
+See [`./scripts/test`](./scripts/test) how to use a     [Python virtual environment](https://docs.python.org/3/library/sys_path_init.html#sys-path-init-virtual-environments)     if you prefer that instead.
 
 Use [the troubleshooting section](#troubleshooting) if you encounter issues during or after installation.
 
@@ -163,50 +163,50 @@ Use [the troubleshooting section](#troubleshooting) if you encounter issues duri
 
 If you encounter an error such as:
 
-```
+~~~
 Operation not permitted
-```
+~~~
 
 Then run with `sudo`. If necessary, ensure your terminal has full disk access.
 
 If you encounter an error such as:
 
-```
+~~~
 make: pg_config: Command not found
-```
+~~~
 
-Then ensure you have `pg_config` installed and in your `PATH`. If necessary, tell `make` where to find it:
+Then ensure you have `pg_config` installed and in your `PATH`. If necessary, tell `make` where to   find it:
 
-```sh
+~~~sh
 PG_CONFIG=/path/to/pg_config make install
-```
+~~~
 
 To install the extension in a custom prefix on PostgreSQL 18 or later, pass the `prefix` argument:
 
-```sh
+~~~sh
 make install prefix=/usr/local/extras
-```
+~~~
 
-You must also ensure that the prefix is included in the following [`postgresql.conf` parameters](https://www.postgresql.org/docs/current/config-setting.html#CONFIG-SETTING-CONFIGURATION-FILE):
+You must also ensure that the prefix is included in the following   [`postgresql.conf` parameters](https://www.postgresql.org/docs/current/config-setting.html#CONFIG-SETTING-CONFIGURATION-FILE):
 
-```conf
+~~~conf
 extension_control_path = '/usr/local/extras/postgresql/share:$system'
 dynamic_library_path   = '/usr/local/extras/postgresql/lib:$libdir'
-```
+~~~
 
 ### Loading
 
 If you encounter an error such as:
 
-```
+~~~
 ERROR: could not load library
-```
+~~~
 
-Then ensure your Python installation is linked to the directory where PostgreSQL was looking for it. You can print out the directory of your Python installation with this command:
+Then ensure your Python installation is linked to the directory where PostgreSQL was looking for it. You   can print out the directory of your Python installation with this command:
 
-```sh
+~~~sh
 python3 -c "import sys; print(sys.prefix)"
-```
+~~~
 
 ## Semantic versioning
 
