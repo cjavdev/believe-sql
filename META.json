@@ -7,7 +7,7 @@
     "rest",
     "sdk"
   ],
-  "version": "0.0.1",
+  "version": "0.8.0",
   "release_status": "testing",
   "maintainer": "Believe <wave@cjav.dev>",
   "generated_by": "Stainless (https://stainless.com)",
@@ -27,9 +27,9 @@
   "provides": {
     "believe": {
       "abstract": "The official PostgreSQL extension for the Believe API.",
-      "file": "sql/build/believe--0.0.1.sql",
+      "file": "sql/build/believe--0.8.0.sql",
       "docfile": "README.md",
-      "version": "0.0.1"
+      "version": "0.8.0"
     }
   },
   "prereqs": {
