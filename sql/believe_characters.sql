@@ -1,4 +1,4 @@
-ALTER TYPE believe_characters.characterz
+ALTER TYPE believe_characters.character
   ADD ATTRIBUTE id TEXT,
   ADD ATTRIBUTE background TEXT,
   ADD ATTRIBUTE emotional_stats believe_characters.emotional_stats,
@@ -14,7 +14,7 @@ ALTER TYPE believe_characters.characterz
   ADD ATTRIBUTE signature_quotes TEXT[],
   ADD ATTRIBUTE team_id TEXT;
 
-CREATE OR REPLACE FUNCTION believe_characters.make_characterz(
+CREATE OR REPLACE FUNCTION believe_characters.make_character(
   id TEXT,
   background TEXT,
   emotional_stats believe_characters.emotional_stats,
@@ -30,7 +30,7 @@ CREATE OR REPLACE FUNCTION believe_characters.make_characterz(
   signature_quotes TEXT[] DEFAULT NULL,
   team_id TEXT DEFAULT NULL
 )
-RETURNS believe_characters.characterz
+RETURNS believe_characters.character
 LANGUAGE SQL
 IMMUTABLE
 AS $$
@@ -49,7 +49,7 @@ AS $$
     salary_gbp,
     signature_quotes,
     team_id
-  )::believe_characters.characterz;
+  )::believe_characters.character;
 $$;
 
 ALTER TYPE believe_characters.emotional_stats
@@ -156,13 +156,13 @@ CREATE OR REPLACE FUNCTION believe_characters.create(
   signature_quotes TEXT[] DEFAULT NULL,
   team_id TEXT DEFAULT NULL
 )
-RETURNS believe_characters.characterz
+RETURNS believe_characters.character
 LANGUAGE plpgsql
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN jsonb_populate_record(
-      NULL::believe_characters.characterz,
+      NULL::believe_characters.character,
       believe_characters._create(
         background,
         emotional_stats,
@@ -198,14 +198,14 @@ AS $$
 $$;
 
 CREATE OR REPLACE FUNCTION believe_characters.retrieve(character_id TEXT)
-RETURNS believe_characters.characterz
+RETURNS believe_characters.character
 LANGUAGE plpgsql
 STABLE
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN jsonb_populate_record(
-      NULL::believe_characters.characterz,
+      NULL::believe_characters.character,
       believe_characters._retrieve(character_id)
     );
   END;
@@ -272,13 +272,13 @@ CREATE OR REPLACE FUNCTION believe_characters.update(
   signature_quotes TEXT[] DEFAULT NULL,
   team_id TEXT DEFAULT NULL
 )
-RETURNS believe_characters.characterz
+RETURNS believe_characters.character
 LANGUAGE plpgsql
 AS $$
   BEGIN
     PERFORM believe_internal.ensure_context();
     RETURN jsonb_populate_record(
-      NULL::believe_characters.characterz,
+      NULL::believe_characters.character,
       believe_characters._update(
         character_id,
         background,
@@ -366,15 +366,15 @@ LANGUAGE plpython3u
 STABLE
 AS $$
   import json
-  from believe.types import Characterz
+  from believe.types import Character
   from believe.pagination import SyncSkipLimitPage
   from believe._models import FinalRequestOptions
   from pydantic import TypeAdapter
   from typing import Any
 
   page = GD["__believe_context__"].client._request_api_list(
-    model=Characterz,
-    page=SyncSkipLimitPage[Characterz],
+    model=Character,
+    page=SyncSkipLimitPage[Character],
     options=FinalRequestOptions.construct(**json.loads(request_options))
   )
   next_page_info = page.next_page_info()
@@ -403,7 +403,7 @@ CREATE OR REPLACE FUNCTION believe_characters.list(
   skip BIGINT DEFAULT NULL,
   team_id TEXT DEFAULT NULL
 )
-RETURNS SETOF believe_characters.characterz
+RETURNS SETOF believe_characters.character
 LANGUAGE SQL
 STABLE
 AS $$
@@ -420,7 +420,7 @@ AS $$
     CROSS JOIN believe_characters._list_next_page(paginated.next_request_options) AS page
     WHERE paginated.next_request_options IS NOT NULL
   )
-  SELECT (jsonb_populate_recordset(NULL::believe_characters.characterz, data)).* FROM paginated;
+  SELECT (jsonb_populate_recordset(NULL::believe_characters.character, data)).* FROM paginated;
 $$;
 
 CREATE OR REPLACE FUNCTION believe_characters._delete(character_id TEXT)
