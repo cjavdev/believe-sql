@@ -112,15 +112,15 @@ LIMIT 200;
 Sending requests to the Believe API for every SQL query can be slow. Combine [materialized views](https://www.postgresql.org/docs/current/rules-materializedviews.html) with [`pg_cron`](https://github.com/citusdata/pg_cron) for scheduled data pulls:
 
 ```sql
-CREATE MATERIALIZED VIEW believe_characters AS
+CREATE MATERIALIZED VIEW believe_characters_characterzs AS
 SELECT *
 FROM believe_characters.list();
 
 -- Refresh the view every 4 hours.
 SELECT cron.schedule(
-  'refresh-believe-characters',
+  'refresh-believe-characters-characterzs',
   '0 */4 * * *',
-  'REFRESH MATERIALIZED VIEW CONCURRENTLY believe_characters'
+  'REFRESH MATERIALIZED VIEW CONCURRENTLY believe_characters_characterzs'
 );
 ```
 
