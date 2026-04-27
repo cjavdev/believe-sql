@@ -103,7 +103,7 @@ wheels = [
 
 [[package]]
 name = "believe"
-version = "0.7.1"
+version = "0.8.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "anyio" },
