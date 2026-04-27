@@ -107,7 +107,7 @@ CREATE SCHEMA IF NOT EXISTS believe;
 
 CREATE SCHEMA IF NOT EXISTS believe_characters;
 
-CREATE TYPE believe_characters.characterz AS ();
+CREATE TYPE believe_characters.character AS ();
 CREATE TYPE believe_characters.emotional_stats AS ();
 CREATE TYPE believe_characters.growth_arc AS ();
 
