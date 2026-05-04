@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.11.1 (2026-05-04)
+
+Full Changelog: [v0.11.0...v0.11.1](https://github.com/cjavdev/believe-sql/compare/v0.11.0...v0.11.1)
+
+### Chores
+
+* **internal:** codegen related update ([ec44e71](https://github.com/cjavdev/believe-sql/commit/ec44e717a05a683d278cf54ea033d2f26cd17827))
+* **internal:** codegen related update ([2b3f3d1](https://github.com/cjavdev/believe-sql/commit/2b3f3d1bc05b4e1cf81e00d7e2eee62064906f11))
+* **internal:** codegen related update ([49e1edb](https://github.com/cjavdev/believe-sql/commit/49e1edb249bff93935d65e59abe66f95e123caf8))
+
 ## 0.11.0 (2026-04-27)
 
 Full Changelog: [v0.10.0...v0.11.0](https://github.com/cjavdev/believe-sql/compare/v0.10.0...v0.11.0)
