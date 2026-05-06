@@ -37,7 +37,7 @@ CREATE OR REPLACE FUNCTION believe_conflicts._resolve(
 RETURNS JSONB
 LANGUAGE plpython3u
 AS $$
-  from believe._types import not_given
+  from believe_py._types import not_given
 
   response = GD["__believe_context__"].client.conflicts.with_raw_response.resolve(
       conflict_type=conflict_type,

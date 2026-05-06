@@ -34,7 +34,7 @@ CREATE OR REPLACE FUNCTION believe_believe._submit(
 RETURNS JSONB
 LANGUAGE plpython3u
 AS $$
-  from believe._types import not_given
+  from believe_py._types import not_given
 
   response = GD["__believe_context__"].client.believe.with_raw_response.submit(
       situation=situation,

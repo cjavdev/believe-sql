@@ -31,7 +31,7 @@ CREATE OR REPLACE FUNCTION believe_press._simulate(
 RETURNS JSONB
 LANGUAGE plpython3u
 AS $$
-  from believe._types import not_given
+  from believe_py._types import not_given
 
   response = GD["__believe_context__"].client.press.with_raw_response.simulate(
       question=question,

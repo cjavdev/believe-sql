@@ -30,7 +30,7 @@ And install the Python SDK dependency:
 
 ```sh
 # install from PyPI
-pip install believe
+pip install believe_py
 ```
 
 See [PGXN Client's documentation](https://pgxn.github.io/pgxnclient) for more information on installing from PGXN, and [`./scripts/test`](./scripts/test) how to use a [Python virtual environment](https://docs.python.org/3/library/sys_path_init.html#sys-path-init-virtual-environments) if you prefer that instead.
@@ -44,7 +44,7 @@ This extension requires:
 - PostgreSQL 14 or higher
 - [PL/Python](https://www.postgresql.org/docs/current/plpython.html)
 - Python 3.9 or higher
-- The believe Python package
+- The believe_py Python package
 
 ## Usage
 
@@ -150,7 +150,7 @@ And install the Python SDK dependency:
 
 ```sh
 # install from PyPI
-pip install believe
+pip install believe_py
 ```
 
 See [`./scripts/test`](./scripts/test) how to use a [Python virtual environment](https://docs.python.org/3/library/sys_path_init.html#sys-path-init-virtual-environments) if you prefer that instead.

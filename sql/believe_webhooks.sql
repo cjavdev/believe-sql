@@ -434,7 +434,7 @@ CREATE OR REPLACE FUNCTION believe_webhooks._create(
 RETURNS JSONB
 LANGUAGE plpython3u
 AS $$
-  from believe._types import not_given
+  from believe_py._types import not_given
 
   response = GD["__believe_context__"].client.webhooks.with_raw_response.create(
       url=url,
@@ -549,7 +549,7 @@ CREATE OR REPLACE FUNCTION believe_webhooks._trigger_event(
 RETURNS JSONB
 LANGUAGE plpython3u
 AS $$
-  from believe._types import not_given
+  from believe_py._types import not_given
 
   response = GD["__believe_context__"].client.webhooks.with_raw_response.trigger_event(
       event_type=event_type,
