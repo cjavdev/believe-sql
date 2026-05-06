@@ -1,5 +1,5 @@
 EXTENSION = believe
-EXTVERSION = 0.8.0
+EXTVERSION = 0.11.0
 
 DATA = sql/build/$(EXTENSION)--$(EXTVERSION).sql
 DOCS = README.md
