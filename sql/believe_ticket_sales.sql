@@ -66,7 +66,7 @@ CREATE OR REPLACE FUNCTION believe_ticket_sales._create(
 RETURNS JSONB
 LANGUAGE plpython3u
 AS $$
-  from believe._types import not_given
+  from believe_py._types import not_given
 
   response = GD["__believe_context__"].client.ticket_sales.with_raw_response.create(
       buyer_name=buyer_name,
@@ -175,7 +175,7 @@ CREATE OR REPLACE FUNCTION believe_ticket_sales._update(
 RETURNS JSONB
 LANGUAGE plpython3u
 AS $$
-  from believe._types import not_given
+  from believe_py._types import not_given
 
   response = GD["__believe_context__"].client.ticket_sales.with_raw_response.update(
       ticket_sale_id=ticket_sale_id,
@@ -252,7 +252,7 @@ RETURNS believe_internal.page
 LANGUAGE plpython3u
 STABLE
 AS $$
-  from believe._types import not_given
+  from believe_py._types import not_given
   from pydantic import TypeAdapter
   from typing import Any
 
@@ -310,9 +310,9 @@ LANGUAGE plpython3u
 STABLE
 AS $$
   import json
-  from believe.types import TicketSale
-  from believe.pagination import SyncSkipLimitPage
-  from believe._models import FinalRequestOptions
+  from believe_py.types import TicketSale
+  from believe_py.pagination import SyncSkipLimitPage
+  from believe_py._models import FinalRequestOptions
   from pydantic import TypeAdapter
   from typing import Any
 
