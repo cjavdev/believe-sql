@@ -89,7 +89,7 @@ CREATE OR REPLACE FUNCTION believe_quotes._create(
 RETURNS JSONB
 LANGUAGE plpython3u
 AS $$
-  from believe._types import not_given
+  from believe_py._types import not_given
 
   response = GD["__believe_context__"].client.quotes.with_raw_response.create(
       character_id=character_id,
@@ -193,7 +193,7 @@ CREATE OR REPLACE FUNCTION believe_quotes._update(
 RETURNS JSONB
 LANGUAGE plpython3u
 AS $$
-  from believe._types import not_given
+  from believe_py._types import not_given
 
   response = GD["__believe_context__"].client.quotes.with_raw_response.update(
       quote_id=quote_id,
@@ -268,7 +268,7 @@ RETURNS believe_internal.page
 LANGUAGE plpython3u
 STABLE
 AS $$
-  from believe._types import not_given
+  from believe_py._types import not_given
   from pydantic import TypeAdapter
   from typing import Any
 
@@ -328,9 +328,9 @@ LANGUAGE plpython3u
 STABLE
 AS $$
   import json
-  from believe.types import Quote
-  from believe.pagination import SyncSkipLimitPage
-  from believe._models import FinalRequestOptions
+  from believe_py.types import Quote
+  from believe_py.pagination import SyncSkipLimitPage
+  from believe_py._models import FinalRequestOptions
   from pydantic import TypeAdapter
   from typing import Any
 
@@ -415,7 +415,7 @@ RETURNS JSONB
 LANGUAGE plpython3u
 STABLE
 AS $$
-  from believe._types import not_given
+  from believe_py._types import not_given
 
   response = GD["__believe_context__"].client.quotes.with_raw_response.get_random(
       character_id=not_given if character_id is None else character_id,
@@ -454,7 +454,7 @@ RETURNS believe_internal.page
 LANGUAGE plpython3u
 STABLE
 AS $$
-  from believe._types import not_given
+  from believe_py._types import not_given
   from pydantic import TypeAdapter
   from typing import Any
 
@@ -504,9 +504,9 @@ LANGUAGE plpython3u
 STABLE
 AS $$
   import json
-  from believe.types import Quote
-  from believe.pagination import SyncSkipLimitPage
-  from believe._models import FinalRequestOptions
+  from believe_py.types import Quote
+  from believe_py.pagination import SyncSkipLimitPage
+  from believe_py._models import FinalRequestOptions
   from pydantic import TypeAdapter
   from typing import Any
 
@@ -564,7 +564,7 @@ RETURNS believe_internal.page
 LANGUAGE plpython3u
 STABLE
 AS $$
-  from believe._types import not_given
+  from believe_py._types import not_given
   from pydantic import TypeAdapter
   from typing import Any
 
@@ -612,9 +612,9 @@ LANGUAGE plpython3u
 STABLE
 AS $$
   import json
-  from believe.types import Quote
-  from believe.pagination import SyncSkipLimitPage
-  from believe._models import FinalRequestOptions
+  from believe_py.types import Quote
+  from believe_py.pagination import SyncSkipLimitPage
+  from believe_py._models import FinalRequestOptions
   from pydantic import TypeAdapter
   from typing import Any
 

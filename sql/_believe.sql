@@ -58,7 +58,7 @@ RETURNS void
 LANGUAGE plpython3u
 AS $$
   from types import SimpleNamespace
-  from believe import Believe
+  from believe_py import Believe
 
   if "__believe_context__" in GD:
       # The context was already created.

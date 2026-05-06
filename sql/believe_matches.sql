@@ -100,7 +100,7 @@ RETURNS JSONB
 LANGUAGE plpython3u
 AS $$
   import json
-  from believe._types import not_given
+  from believe_py._types import not_given
 
   response = GD["__believe_context__"].client.matches.with_raw_response.create(
       away_team_id=away_team_id,
@@ -221,7 +221,7 @@ RETURNS JSONB
 LANGUAGE plpython3u
 AS $$
   import json
-  from believe._types import not_given
+  from believe_py._types import not_given
 
   response = GD["__believe_context__"].client.matches.with_raw_response.update(
       match_id=match_id,
@@ -306,7 +306,7 @@ RETURNS believe_internal.page
 LANGUAGE plpython3u
 STABLE
 AS $$
-  from believe._types import not_given
+  from believe_py._types import not_given
   from pydantic import TypeAdapter
   from typing import Any
 
@@ -362,9 +362,9 @@ LANGUAGE plpython3u
 STABLE
 AS $$
   import json
-  from believe.types import Match
-  from believe.pagination import SyncSkipLimitPage
-  from believe._models import FinalRequestOptions
+  from believe_py.types import Match
+  from believe_py.pagination import SyncSkipLimitPage
+  from believe_py._models import FinalRequestOptions
   from pydantic import TypeAdapter
   from typing import Any
 
@@ -500,7 +500,7 @@ RETURNS VOID
 LANGUAGE plpython3u
 STABLE
 AS $$
-  from believe._types import not_given
+  from believe_py._types import not_given
 
   GD["__believe_context__"].client.matches.stream_live(
       away_team=not_given if away_team is None else away_team,

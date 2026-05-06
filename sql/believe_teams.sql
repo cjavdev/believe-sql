@@ -118,7 +118,7 @@ RETURNS JSONB
 LANGUAGE plpython3u
 AS $$
   import json
-  from believe._types import not_given
+  from believe_py._types import not_given
 
   response = GD["__believe_context__"].client.teams.with_raw_response.create(
       culture_score=culture_score,
@@ -247,7 +247,7 @@ RETURNS JSONB
 LANGUAGE plpython3u
 AS $$
   import json
-  from believe._types import not_given
+  from believe_py._types import not_given
 
   response = GD["__believe_context__"].client.teams.with_raw_response.update(
       team_id=team_id,
@@ -337,7 +337,7 @@ RETURNS believe_internal.page
 LANGUAGE plpython3u
 STABLE
 AS $$
-  from believe._types import not_given
+  from believe_py._types import not_given
   from pydantic import TypeAdapter
   from typing import Any
 
@@ -391,9 +391,9 @@ LANGUAGE plpython3u
 STABLE
 AS $$
   import json
-  from believe.types import Team
-  from believe.pagination import SyncSkipLimitPage
-  from believe._models import FinalRequestOptions
+  from believe_py.types import Team
+  from believe_py.pagination import SyncSkipLimitPage
+  from believe_py._models import FinalRequestOptions
   from pydantic import TypeAdapter
   from typing import Any
 
