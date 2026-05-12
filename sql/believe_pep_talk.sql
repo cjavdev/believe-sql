@@ -37,7 +37,7 @@ RETURNS JSONB
 LANGUAGE plpython3u
 STABLE
 AS $$
-  from believe._types import not_given
+  from believe_py._types import not_given
 
   response = GD["__believe_context__"].client.pep_talk.with_raw_response.retrieve(
       stream=not_given if stream is None else stream,

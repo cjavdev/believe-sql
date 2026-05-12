@@ -31,7 +31,7 @@ CREATE OR REPLACE FUNCTION believe_reframe._transform_negative_thoughts(
 RETURNS JSONB
 LANGUAGE plpython3u
 AS $$
-  from believe._types import not_given
+  from believe_py._types import not_given
 
   response = GD["__believe_context__"].client.reframe.with_raw_response.transform_negative_thoughts(
       negative_thought=negative_thought,
