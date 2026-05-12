@@ -36,6 +36,7 @@ ALTER TYPE believe_quotes.quote
   ADD ATTRIBUTE is_funny BOOLEAN,
   ADD ATTRIBUTE is_inspirational BOOLEAN,
   ADD ATTRIBUTE popularity_score DOUBLE PRECISION,
+  ADD ATTRIBUTE season BIGINT,
   ADD ATTRIBUTE secondary_themes TEXT[],
   ADD ATTRIBUTE times_shared BIGINT;
 
@@ -50,6 +51,7 @@ CREATE OR REPLACE FUNCTION believe_quotes.make_quote(
   is_funny BOOLEAN DEFAULT NULL,
   is_inspirational BOOLEAN DEFAULT NULL,
   popularity_score DOUBLE PRECISION DEFAULT NULL,
+  season BIGINT DEFAULT NULL,
   secondary_themes TEXT[] DEFAULT NULL,
   times_shared BIGINT DEFAULT NULL
 )
@@ -68,6 +70,7 @@ AS $$
     is_funny,
     is_inspirational,
     popularity_score,
+    season,
     secondary_themes,
     times_shared
   )::believe_quotes.quote;
@@ -83,6 +86,7 @@ CREATE OR REPLACE FUNCTION believe_quotes._create(
   is_funny BOOLEAN DEFAULT NULL,
   is_inspirational BOOLEAN DEFAULT NULL,
   popularity_score DOUBLE PRECISION DEFAULT NULL,
+  season BIGINT DEFAULT NULL,
   secondary_themes TEXT[] DEFAULT NULL,
   times_shared BIGINT DEFAULT NULL
 )
@@ -101,6 +105,7 @@ AS $$
       is_funny=not_given if is_funny is None else is_funny,
       is_inspirational=not_given if is_inspirational is None else is_inspirational,
       popularity_score=not_given if popularity_score is None else popularity_score,
+      season=not_given if season is None else season,
       secondary_themes=not_given if secondary_themes is None else secondary_themes,
       times_shared=not_given if times_shared is None else times_shared,
   )
@@ -121,6 +126,7 @@ CREATE OR REPLACE FUNCTION believe_quotes.create(
   is_funny BOOLEAN DEFAULT NULL,
   is_inspirational BOOLEAN DEFAULT NULL,
   popularity_score DOUBLE PRECISION DEFAULT NULL,
+  season BIGINT DEFAULT NULL,
   secondary_themes TEXT[] DEFAULT NULL,
   times_shared BIGINT DEFAULT NULL
 )
@@ -141,6 +147,7 @@ AS $$
         is_funny,
         is_inspirational,
         popularity_score,
+        season,
         secondary_themes,
         times_shared
       )
@@ -185,6 +192,7 @@ CREATE OR REPLACE FUNCTION believe_quotes._update(
   is_inspirational BOOLEAN DEFAULT NULL,
   moment_type TEXT DEFAULT NULL,
   popularity_score DOUBLE PRECISION DEFAULT NULL,
+  season BIGINT DEFAULT NULL,
   secondary_themes TEXT[] DEFAULT NULL,
   text TEXT DEFAULT NULL,
   theme TEXT DEFAULT NULL,
@@ -204,6 +212,7 @@ AS $$
       is_inspirational=not_given if is_inspirational is None else is_inspirational,
       moment_type=not_given if moment_type is None else moment_type,
       popularity_score=not_given if popularity_score is None else popularity_score,
+      season=not_given if season is None else season,
       secondary_themes=not_given if secondary_themes is None else secondary_themes,
       text=not_given if text is None else text,
       theme=not_given if theme is None else theme,
@@ -225,6 +234,7 @@ CREATE OR REPLACE FUNCTION believe_quotes.update(
   is_inspirational BOOLEAN DEFAULT NULL,
   moment_type TEXT DEFAULT NULL,
   popularity_score DOUBLE PRECISION DEFAULT NULL,
+  season BIGINT DEFAULT NULL,
   secondary_themes TEXT[] DEFAULT NULL,
   text TEXT DEFAULT NULL,
   theme TEXT DEFAULT NULL,
@@ -246,6 +256,7 @@ AS $$
         is_inspirational,
         moment_type,
         popularity_score,
+        season,
         secondary_themes,
         text,
         theme,
